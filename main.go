@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/BuildWithYou/fetroshop-api/helper"
-	"github.com/BuildWithYou/fetroshop-api/model/api"
-	"github.com/BuildWithYou/fetroshop-api/routes"
+	"github.com/BuildWithYou/fetroshop-api/app/helper"
+	"github.com/BuildWithYou/fetroshop-api/app/middleware"
+	"github.com/BuildWithYou/fetroshop-api/app/model/api"
+	"github.com/BuildWithYou/fetroshop-api/app/routes"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/spf13/viper"
 )
 
@@ -22,22 +24,24 @@ func main() {
 		WriteTimeout: time.Second * 30,
 		ReadTimeout:  time.Second * 30,
 		Prefork:      true,
+		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
+			ctx.Status(fiber.StatusInternalServerError)
+			return ctx.JSON(api.Response{
+				Code:    fiber.ErrInternalServerError.Code,
+				Status:  fiber.ErrInternalServerError.Message,
+				Message: err.Error(),
+			})
+
+		},
 	})
 
-	app.Use(func(c *fiber.Ctx) error {
-		err := c.Next()
-		return err
-	})
+	app.Use(recover.New()) // Panic Handler
 
+	// Routing
 	routes.ApiRoutes(app)
 
-	// 404 Handler
-	app.Use(func(ctx *fiber.Ctx) error {
-		return ctx.JSON(api.Response{
-			Code:   fiber.ErrNotFound.Code,
-			Status: fiber.ErrNotFound.Message,
-		})
-	})
+	// Middleware
+	middleware.NotFoundMiddleware(app) // 404 Handler
 
 	host := config.GetString("app.host")
 	port := config.GetInt("app.port")
