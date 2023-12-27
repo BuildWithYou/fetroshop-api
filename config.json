@@ -1,0 +1,12 @@
+{
+   "app": {
+      "name": "Fetroshop API",
+      "version": "1.0.0",
+      "host": "localhost",
+      "port": 3000,
+      "env": "development"
+   },
+   "database": {
+      "dialect": "postgres"
+   }
+}
