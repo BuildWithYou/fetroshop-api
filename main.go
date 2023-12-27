@@ -6,8 +6,7 @@ import (
 
 	"github.com/BuildWithYou/fetroshop-api/app/helper"
 	"github.com/BuildWithYou/fetroshop-api/app/middleware"
-	"github.com/BuildWithYou/fetroshop-api/app/model/api"
-	"github.com/BuildWithYou/fetroshop-api/app/routes"
+	"github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/spf13/viper"
@@ -26,7 +25,7 @@ func main() {
 		Prefork:      true,
 		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
 			ctx.Status(fiber.StatusInternalServerError)
-			return ctx.JSON(api.Response{
+			return ctx.JSON(model.Response{
 				Code:    fiber.ErrInternalServerError.Code,
 				Status:  fiber.ErrInternalServerError.Message,
 				Message: err.Error(),
@@ -38,7 +37,7 @@ func main() {
 	app.Use(recover.New()) // Panic Handler
 
 	// Routing
-	routes.ApiRoutes(app)
+	ApiRoutes(app)
 
 	// Middleware
 	middleware.NotFoundMiddleware(app) // 404 Handler
