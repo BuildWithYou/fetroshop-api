@@ -1,0 +1,45 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Backend API",
+    "description": "API usually works as expected. But sometimes its not true.",
+    "termsOfService": "http://someurl.oxox",
+    "contact": {
+      "name": "Parvez",
+      "email": "abce@email.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://en.wikipedia.org/wiki/MIT_License"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://www.fake.com",
+      "description": " Server-1"
+    },
+    {
+      "url": "http://www.fake2.com",
+      "description": " Server-2"
+    }
+  ],
+  "paths": {},
+  "components": {
+    "securitySchemes": {
+      "AuthorizationHeader": {
+        "type": "http",
+        "description": "Input your token",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "security": [
+    {
+      "AuthorizationHeader": [
+        "read",
+        "write"
+      ]
+    }
+  ]
+}
