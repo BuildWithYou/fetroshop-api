@@ -1,0 +1,16 @@
+---
+app:
+   name: Fetroshop API
+   version: 1.0.0
+   host: localhost
+   port: 3000
+   env: development
+   url: http://localhost:3000
+   recovery: true
+database:
+   dialect: postgres
+swagger:
+   deepLinking: false
+   # If set to true, enables deep linking for tags and operations. default: true
+   docExpansion: none
+   # Controls the default expansion setting for the operations and tags. 'list' (default, expands only the tags), 'full' (expands the tags and operations), 'none' (expands nothing)

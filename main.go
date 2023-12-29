@@ -16,7 +16,7 @@ import (
 func main() {
 	// Config
 	config := viper.New()
-	config.SetConfigFile("config.json")
+	config.SetConfigFile("config.yaml")
 	err := config.ReadInConfig()
 	helper.PanicIfError(err)
 
