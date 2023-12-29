@@ -29,6 +29,5 @@ func (router *Router) Init(app *fiber.App) {
 	app.Get("/docs/cms/*", router.Docs.SwaggerCms())
 
 	// registration
-	app.Post("/web/api/register", router.WebRouter.Registration.Register)
-	app.Get("/web/api/register", router.WebRouter.Registration.Register)
+	app.Post("/api/web/register", router.WebRouter.Registration.Register)
 }

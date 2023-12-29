@@ -1,27 +1,29 @@
 package controller
 
 import (
-	"github.com/BuildWithYou/fetroshop-api/app/model"
+	"github.com/BuildWithYou/fetroshop-api/app/helper"
+	"github.com/BuildWithYou/fetroshop-api/app/modules/web/auth/registration"
 	"github.com/gofiber/fiber/v2"
 )
 
-// ShowAccount godoc
-// @Summary      Show an account
-// @Description  get string by ID
-// @Tags         accounts
+// @Summary      Register new user
+// @Description
+// @Tags         Authentication
 // @Accept       json
 // @Produce      json
-// @Param        id   path      int  true  "Account ID"
-// @Success      200  {object}  model.Response
-// @Failure      400  {object}  model.Response
-// @Failure      404  {object}  model.Response
-// @Failure      500  {object}  model.Response
-// @Router       /accounts/{id} [get]
+// @Param        body  body      registration.RegistrationRequest  true  "Registration Request"
+// @Success      200  {object}  model.GeneralResponse
+// @Failure      400  {object}  model.GeneralResponse
+// @Failure      404  {object}  model.GeneralResponse
+// @Failure      500  {object}  model.GeneralResponse
+// @Router       /api/web/register [post]
 func (r *RegistrationControllerImpl) Register(ctx *fiber.Ctx) (err error) {
-	// TODO - Implement Register
-	return ctx.JSON(model.Response{
-		Code:    fiber.ErrInternalServerError.Code,
-		Status:  fiber.ErrInternalServerError.Message,
-		Message: "Not Implemented",
+	registerResponse, err := r.RegistrationService.Register(&registration.RegistrationRequest{
+		Username: ctx.FormValue("username"),
+		Phone:    ctx.FormValue("phone"),
+		Email:    ctx.FormValue("email"),
+		FullName: ctx.FormValue("fullname"),
 	})
+	helper.PanicIfError(err)
+	return ctx.JSON(registerResponse)
 }

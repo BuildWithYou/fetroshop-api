@@ -2,11 +2,12 @@ package service
 
 import (
 	"github.com/BuildWithYou/fetroshop-api/app/domain/users"
-	"github.com/gofiber/fiber/v2"
+	"github.com/BuildWithYou/fetroshop-api/app/model"
+	"github.com/BuildWithYou/fetroshop-api/app/modules/web/auth/registration"
 )
 
 type RegistrationService interface {
-	Register(ctx *fiber.Ctx) (err error)
+	Register(*registration.RegistrationRequest) (*model.GeneralResponse, error)
 }
 
 type RegistrationServiceImpl struct {

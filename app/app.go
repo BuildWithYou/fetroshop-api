@@ -17,7 +17,9 @@ type App struct {
 
 func (app *App) Start() error {
 
-	app.FiberApp.Use(recover.New()) // Panic Handler
+	if app.Config.GetBool("app.recovery") {
+		app.FiberApp.Use(recover.New()) // Panic Handler
+	}
 
 	app.Router.Init(app.FiberApp)
 

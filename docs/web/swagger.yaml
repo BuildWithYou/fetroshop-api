@@ -1,4 +1,3 @@
-basePath: /api/v1
 definitions:
   model.Response:
     properties:
@@ -10,31 +9,37 @@ definitions:
       status:
         type: string
     type: object
-host: localhost:8080
+  registration.RegistrationRequest:
+    properties:
+      email:
+        type: string
+      fullname:
+        type: string
+      phone:
+        type: string
+      username:
+        type: string
+    type: object
 info:
-  contact:
-    email: support@swagger.io
-    name: API Support
-    url: http://www.swagger.io/support
-  description: This is a sample server celler server.
-  license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
-  termsOfService: http://swagger.io/terms/
+  contact: {}
+  description: Fetroshop API is a robust and efficient backend solution designed to
+    power the online store app named Fetroshop. Developed using the Go programming
+    language, this API serves as the backbone for managing the Content Management
+    System (CMS) and handling various store-related functionalities.
   title: Fetroshop Web API
   version: "1.0"
 paths:
-  /accounts/{id}:
-    get:
+  /api/web/register:
+    post:
       consumes:
       - application/json
-      description: get string by ID
       parameters:
-      - description: Account ID
-        in: path
-        name: id
+      - description: Registration Request
+        in: body
+        name: body
         required: true
-        type: integer
+        schema:
+          $ref: '#/definitions/registration.RegistrationRequest'
       produces:
       - application/json
       responses:
@@ -54,44 +59,13 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/model.Response'
-      summary: Show an account
+      summary: Register new user
       tags:
-      - accounts
+      - Authentication
 securityDefinitions:
   ApiKeyAuth:
-    description: Description for what is this security definition being used
+    description: Use format 'Bearer YOUR_TOKEN'
     in: header
     name: Authorization
     type: apiKey
-  BasicAuth:
-    type: basic
-  OAuth2AccessCode:
-    authorizationUrl: https://example.com/oauth/authorize
-    flow: accessCode
-    scopes:
-      admin: "\t\t\t\t\t\t\tGrants read and write access to administrative information"
-    tokenUrl: https://example.com/oauth/token
-    type: oauth2
-  OAuth2Application:
-    flow: application
-    scopes:
-      admin: "\t\t\t\t\t\t\tGrants read and write access to administrative information"
-      write: "\t\t\t\t\t\t\tGrants write access"
-    tokenUrl: https://example.com/oauth/token
-    type: oauth2
-  OAuth2Implicit:
-    authorizationUrl: https://example.com/oauth/authorize
-    flow: implicit
-    scopes:
-      admin: "\t\t\t\t\t\t\tGrants read and write access to administrative information"
-      write: "\t\t\t\t\t\t\tGrants write access"
-    type: oauth2
-  OAuth2Password:
-    flow: password
-    scopes:
-      admin: "\t\t\t\t\t\t\tGrants read and write access to administrative information"
-      read: "\t\t\t\t\t\t\t\tGrants read access"
-      write: "\t\t\t\t\t\t\tGrants write access"
-    tokenUrl: https://example.com/oauth/token
-    type: oauth2
 swagger: "2.0"

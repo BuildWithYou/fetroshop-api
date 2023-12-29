@@ -9,7 +9,9 @@ type RegistrationController interface {
 	Register(ctx *fiber.Ctx) (err error)
 }
 
-type RegistrationControllerImpl struct{}
+type RegistrationControllerImpl struct {
+	RegistrationService service.RegistrationService
+}
 
 func New(registrationService service.RegistrationService) RegistrationController {
 	return &RegistrationControllerImpl{}

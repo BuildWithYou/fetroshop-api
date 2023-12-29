@@ -13,7 +13,7 @@ func PanicIfError(err error) {
 
 func Error500(ctx *fiber.Ctx, err error) error {
 	ctx.Status(fiber.StatusInternalServerError)
-	return ctx.JSON(model.Response{
+	return ctx.JSON(model.GeneralResponse{
 		Code:    fiber.ErrInternalServerError.Code,
 		Status:  fiber.ErrInternalServerError.Message,
 		Message: err.Error(),
