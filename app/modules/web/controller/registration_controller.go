@@ -26,7 +26,7 @@ func New(registrationService registration.RegistrationService) RegistrationContr
 // @Tags         Authentication
 // @Accept       json
 // @Produce      json
-// @Param        body  body      registration.RegistrationRequest  true  "Registration Request"
+// @Param        body  body     registration.RegistrationRequest  true  "Registration Request"
 // @Success      200  {object}  model.Response
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response
@@ -35,13 +35,17 @@ func New(registrationService registration.RegistrationService) RegistrationContr
 func (r *RegistrationControllerImpl) Register(ctx *fiber.Ctx) (err error) {
 	payload := new(model.RegistrationRequest)
 	err = ctx.BodyParser(payload)
-	helper.PanicIfError(err)
+	if helper.ErrorIsNotNil(err) {
+		return err
+	}
 	registerResponse, err := r.RegistrationService.Register(&model.RegistrationRequest{
 		Username: payload.Username,
 		Phone:    payload.Phone,
 		Email:    payload.Email,
 		FullName: payload.FullName,
 	})
-	helper.PanicIfError(err)
+	if helper.ErrorIsNotNil(err) {
+		return err
+	}
 	return ctx.JSON(registerResponse)
 }

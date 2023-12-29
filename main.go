@@ -26,7 +26,7 @@ func main() {
 		WriteTimeout: time.Second * time.Duration(config.GetInt("fiber.writeTimeout")),
 		ReadTimeout:  time.Second * time.Duration(config.GetInt("fiber.readTimeout")),
 		Prefork:      config.GetBool("fiber.prefork"),
-		ErrorHandler: helper.Error500,
+		ErrorHandler: helper.ErrorCustom,
 	})
 
 	// Postgres
