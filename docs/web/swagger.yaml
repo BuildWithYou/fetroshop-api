@@ -1,0 +1,97 @@
+basePath: /api/v1
+definitions:
+  model.Response:
+    properties:
+      code:
+        type: integer
+      data: {}
+      message:
+        type: string
+      status:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server celler server.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Fetroshop Web API
+  version: "1.0"
+paths:
+  /accounts/{id}:
+    get:
+      consumes:
+      - application/json
+      description: get string by ID
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Response'
+      summary: Show an account
+      tags:
+      - accounts
+securityDefinitions:
+  ApiKeyAuth:
+    description: Description for what is this security definition being used
+    in: header
+    name: Authorization
+    type: apiKey
+  BasicAuth:
+    type: basic
+  OAuth2AccessCode:
+    authorizationUrl: https://example.com/oauth/authorize
+    flow: accessCode
+    scopes:
+      admin: "\t\t\t\t\t\t\tGrants read and write access to administrative information"
+    tokenUrl: https://example.com/oauth/token
+    type: oauth2
+  OAuth2Application:
+    flow: application
+    scopes:
+      admin: "\t\t\t\t\t\t\tGrants read and write access to administrative information"
+      write: "\t\t\t\t\t\t\tGrants write access"
+    tokenUrl: https://example.com/oauth/token
+    type: oauth2
+  OAuth2Implicit:
+    authorizationUrl: https://example.com/oauth/authorize
+    flow: implicit
+    scopes:
+      admin: "\t\t\t\t\t\t\tGrants read and write access to administrative information"
+      write: "\t\t\t\t\t\t\tGrants write access"
+    type: oauth2
+  OAuth2Password:
+    flow: password
+    scopes:
+      admin: "\t\t\t\t\t\t\tGrants read and write access to administrative information"
+      read: "\t\t\t\t\t\t\t\tGrants read access"
+      write: "\t\t\t\t\t\t\tGrants write access"
+    tokenUrl: https://example.com/oauth/token
+    type: oauth2
+swagger: "2.0"

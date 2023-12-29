@@ -21,8 +21,8 @@ func (app *App) Start() error {
 
 	app.Router.Init(app.FiberApp)
 
-	// Swagger
-	app.FiberApp.Static("/swagger", "docs/OpenAPI3", fiber.Static{Index: "index.html"})
+	// Swagger static files
+	app.FiberApp.Static("/swagger", "docs")
 
 	// Middleware
 	middleware.NotFoundMiddleware(app.FiberApp) // 404 Handler
