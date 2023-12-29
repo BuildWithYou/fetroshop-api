@@ -1,27 +1,18 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Backend API",
+    "title": "Fetroshop API",
     "description": "API usually works as expected. But sometimes its not true.",
-    "termsOfService": "http://someurl.oxox",
     "contact": {
-      "name": "Parvez",
-      "email": "abce@email.com"
-    },
-    "license": {
-      "name": "MIT",
-      "url": "https://en.wikipedia.org/wiki/MIT_License"
+      "name": "Eko Teguh Wicaksono",
+      "email": "ekoteguhwicaksono@gmail.com"
     },
     "version": "1.0.0"
   },
   "servers": [
     {
-      "url": "http://www.fake.com",
-      "description": " Server-1"
-    },
-    {
-      "url": "http://www.fake2.com",
-      "description": " Server-2"
+      "url": "/",
+      "description": "Default Server URL"
     }
   ],
   "paths": {},

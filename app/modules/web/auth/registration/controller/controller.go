@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/BuildWithYou/fetroshop-api/app/modules/auth/registration/service"
+	"github.com/BuildWithYou/fetroshop-api/app/modules/web/auth/registration/service"
 	"github.com/gofiber/fiber/v2"
 )
 
