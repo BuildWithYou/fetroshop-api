@@ -12,22 +12,22 @@ type Docs struct {
 	Config *viper.Viper
 }
 
-func (d *Docs) SwaggerWeb() func(*fiber.Ctx) error {
-	url := d.Config.GetString("app.url")
+func (d *Docs) createSwagger(jsonUrl string) func(*fiber.Ctx) error {
 	return swagger.New(swagger.Config{ // custom
-		URL:         fmt.Sprintf("%s/swagger/web/swagger.json", url),
-		DeepLinking: false,
-		// Expand ("list") or Collapse ("none") tag groups by default
+		URL:          jsonUrl,
+		DeepLinking:  false,
 		DocExpansion: "none",
 	})
 }
 
+func (d *Docs) SwaggerWeb() func(*fiber.Ctx) error {
+	url := d.Config.GetString("app.url")
+	jsonUrl := fmt.Sprintf("%s/swagger/web/swagger.json", url)
+	return d.createSwagger(jsonUrl)
+}
+
 func (d *Docs) SwaggerCms() func(*fiber.Ctx) error {
 	url := d.Config.GetString("app.url")
-	return swagger.New(swagger.Config{ // custom
-		URL:         fmt.Sprintf("%s/swagger/cms/swagger.json", url),
-		DeepLinking: false,
-		// Expand ("list") or Collapse ("none") tag groups by default
-		DocExpansion: "none",
-	})
+	jsonUrl := fmt.Sprintf("%s/swagger/cms/swagger.json", url)
+	return d.createSwagger(jsonUrl)
 }
