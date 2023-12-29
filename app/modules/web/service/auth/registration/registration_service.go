@@ -7,7 +7,7 @@ import (
 )
 
 type RegistrationService interface {
-	Register(*webModel.RegistrationRequest) (*model.Response, error)
+	Register(request *webModel.RegistrationRequest) (*model.Response, error)
 }
 
 type RegistrationServiceImpl struct {

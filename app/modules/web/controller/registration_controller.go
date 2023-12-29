@@ -33,11 +33,14 @@ func New(registrationService registration.RegistrationService) RegistrationContr
 // @Failure      500  {object}  model.Response
 // @Router       /api/web/register [post]
 func (r *RegistrationControllerImpl) Register(ctx *fiber.Ctx) (err error) {
+	payload := new(model.RegistrationRequest)
+	err = ctx.BodyParser(payload)
+	helper.PanicIfError(err)
 	registerResponse, err := r.RegistrationService.Register(&model.RegistrationRequest{
-		Username: `ctx.FormValue("username")`,
-		Phone:    `ctx.FormValue("phone")`,
-		Email:    `ctx.FormValue("email")`,
-		FullName: `ctx.FormValue("fullname")`,
+		Username: payload.Username,
+		Phone:    payload.Phone,
+		Email:    payload.Email,
+		FullName: payload.FullName,
 	})
 	helper.PanicIfError(err)
 	return ctx.JSON(registerResponse)

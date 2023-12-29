@@ -7,11 +7,12 @@ import (
 	"github.com/gofiber/utils"
 )
 
-func (rg *RegistrationServiceImpl) Register(*webModel.RegistrationRequest) (*model.Response, error) {
+func (rg *RegistrationServiceImpl) Register(request *webModel.RegistrationRequest) (*model.Response, error) {
 	// TODO - Implement Register
 	return &model.Response{
 		Code:    fiber.StatusCreated,
 		Status:  utils.StatusMessage(fiber.StatusCreated),
 		Message: "Not Implemented",
+		Data:    request,
 	}, nil
 }
