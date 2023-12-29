@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Fetroshop API",
-    "description": "API usually works as expected. But sometimes its not true.",
+    "description": "Fetroshop API is a robust and efficient backend solution designed to power the online store app named Fetroshop. Developed using the Go programming language, this API serves as the backbone for managing the Content Management System (CMS) and handling various store-related functionalities.",
     "contact": {
       "name": "Eko Teguh Wicaksono",
       "email": "ekoteguhwicaksono@gmail.com"
@@ -19,9 +19,7 @@
   "components": {
     "securitySchemes": {
       "AuthorizationHeader": {
-        "type": "http",
-        "description": "Input your token",
-        "scheme": "bearer"
+        "type": "APIKey"
       }
     }
   },

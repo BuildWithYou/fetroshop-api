@@ -16,11 +16,11 @@ import (
 
 // @Version 1.0.0
 // @Title Fetroshop API
-// @Description API usually works as expected. But sometimes its not true.
+// @Description Fetroshop API is a robust and efficient backend solution designed to power the online store app named Fetroshop. Developed using the Go programming language, this API serves as the backbone for managing the Content Management System (CMS) and handling various store-related functionalities.
 // @ContactName Eko Teguh Wicaksono
 // @ContactEmail ekoteguhwicaksono@gmail.com
 // @Security AuthorizationHeader read write
-// @SecurityScheme AuthorizationHeader http bearer Input your token
+// @SecurityScheme AuthorizationHeader apiKey header X-MyCustomHeader
 func main() {
 	// Config
 	config := viper.New()
