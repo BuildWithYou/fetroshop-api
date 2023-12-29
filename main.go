@@ -22,10 +22,10 @@ func main() {
 
 	// Fiber app initialization
 	fiberApp := fiber.New(fiber.Config{
-		IdleTimeout:  time.Second * 30,
-		WriteTimeout: time.Second * 30,
-		ReadTimeout:  time.Second * 30,
-		Prefork:      true,
+		IdleTimeout:  time.Second * time.Duration(config.GetInt("fiber.idleTimeout")),
+		WriteTimeout: time.Second * time.Duration(config.GetInt("fiber.writeTimeout")),
+		ReadTimeout:  time.Second * time.Duration(config.GetInt("fiber.readTimeout")),
+		Prefork:      config.GetBool("fiber.prefork"),
 		ErrorHandler: helper.Error500,
 	})
 
