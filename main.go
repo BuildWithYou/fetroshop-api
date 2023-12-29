@@ -6,8 +6,8 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/users/postgres"
 	"github.com/BuildWithYou/fetroshop-api/app/helper"
-	"github.com/BuildWithYou/fetroshop-api/app/modules/web/auth/registration/controller"
-	"github.com/BuildWithYou/fetroshop-api/app/modules/web/auth/registration/service"
+	"github.com/BuildWithYou/fetroshop-api/app/modules/web/controller"
+	"github.com/BuildWithYou/fetroshop-api/app/modules/web/service/auth/registration"
 	"github.com/BuildWithYou/fetroshop-api/docs"
 	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/viper"
@@ -33,7 +33,7 @@ func main() {
 	users := postgres.New()
 
 	// Service
-	registrationService := service.New(users)
+	registrationService := registration.New(users)
 
 	// Controller
 	registrationController := controller.New(registrationService)

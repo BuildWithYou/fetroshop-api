@@ -1,4 +1,4 @@
-package registration
+package model
 
 type RegistrationRequest struct {
 	Username string `json:"username"`

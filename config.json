@@ -6,7 +6,7 @@
       "port": 3000,
       "env": "development",
       "url": "http://localhost:3000",
-      "recovery": false
+      "recovery": true
    },
    "database": {
       "dialect": "postgres"

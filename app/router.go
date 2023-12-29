@@ -2,7 +2,7 @@ package app
 
 import (
 	"github.com/BuildWithYou/fetroshop-api/app/modules"
-	"github.com/BuildWithYou/fetroshop-api/app/modules/web/auth/registration/controller"
+	"github.com/BuildWithYou/fetroshop-api/app/modules/web/controller"
 	"github.com/BuildWithYou/fetroshop-api/docs"
 	"github.com/gofiber/fiber/v2"
 )

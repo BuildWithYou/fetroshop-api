@@ -1,13 +1,13 @@
-package service
+package registration
 
 import (
 	"github.com/BuildWithYou/fetroshop-api/app/domain/users"
 	"github.com/BuildWithYou/fetroshop-api/app/model"
-	"github.com/BuildWithYou/fetroshop-api/app/modules/web/auth/registration"
+	webModel "github.com/BuildWithYou/fetroshop-api/app/modules/web/model"
 )
 
 type RegistrationService interface {
-	Register(*registration.RegistrationRequest) (*model.GeneralResponse, error)
+	Register(*webModel.RegistrationRequest) (*model.Response, error)
 }
 
 type RegistrationServiceImpl struct {

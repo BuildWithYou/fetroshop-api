@@ -1,15 +1,15 @@
-package service
+package registration
 
 import (
 	"github.com/BuildWithYou/fetroshop-api/app/model"
-	"github.com/BuildWithYou/fetroshop-api/app/modules/web/auth/registration"
+	webModel "github.com/BuildWithYou/fetroshop-api/app/modules/web/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/utils"
 )
 
-func (rg *RegistrationServiceImpl) Register(*registration.RegistrationRequest) (*model.GeneralResponse, error) {
+func (rg *RegistrationServiceImpl) Register(*webModel.RegistrationRequest) (*model.Response, error) {
 	// TODO - Implement Register
-	return &model.GeneralResponse{
+	return &model.Response{
 		Code:    fiber.StatusCreated,
 		Status:  utils.StatusMessage(fiber.StatusCreated),
 		Message: "Not Implemented",
