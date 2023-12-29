@@ -17,9 +17,9 @@ type App struct {
 
 func (app *App) Start() error {
 
-	if app.Config.GetBool("app.recovery") {
+	if app.Config.GetBool("fiber.recovery") {
 		app.FiberApp.Use(recover.New(recover.Config{
-			EnableStackTrace: true,
+			EnableStackTrace: app.Config.GetBool("fiber.enableStackTrace"),
 		})) // Panic Handler
 	}
 

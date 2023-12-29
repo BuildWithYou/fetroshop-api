@@ -6,24 +6,41 @@ app:
    port: 3000
    env: development
    url: http://localhost:3000
-   recovery: true
 fiber:
-   idleTimeout: time.Second * 30
    # The maximum amount of time (second) to wait for the next request when keep-alive is enabled. If IdleTimeout is zero, the value of ReadTimeout is used.
+   #
    #Default: unlimited
-   writeTimeout: time.Second * 30
+   idleTimeout: 30
+
    # The maximum duration (second) before timing out writes of the response. It is reset after the request handler has returned.
+   #
    # Default: unlimited
-   readTimeout: time.Second * 30
+   writeTimeout: 30
+
    # The amount of time allowed to read the full request including body. It is reset after the request handler has returned. The connection's read deadline is reset when the connection opens.
+   #
    # Default: unlimited
-   prefork: true
+   readTimeout: 30
+
    # When set to true, this will spawn multiple Go processes listening on the same port.
+   #
    # Default: false
+   prefork: true
+
+   # When set to true, it will prevent app to panic
+   #
+   #Default: false
+   recovery: true
+
+   # EnableStackTrace enables handling stack trace
+   #
+   # Optional. Default: false
+   enableStackTrace: true
 database:
    dialect: postgres
 swagger:
-   deepLinking: false
    # If set to true, enables deep linking for tags and operations. default: true
-   docExpansion: none
+   deepLinking: false
+
    # Controls the default expansion setting for the operations and tags. 'list' (default, expands only the tags), 'full' (expands the tags and operations), 'none' (expands nothing)
+   docExpansion: none
