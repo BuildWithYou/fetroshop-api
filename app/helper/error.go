@@ -5,6 +5,7 @@ import (
 
 	"github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/utils"
 )
 
 func PanicIfError(err error) {
@@ -34,19 +35,18 @@ func ErrorCustom(ctx *fiber.Ctx, err error) error {
 	// Status code defaults to 500
 	code := fiber.StatusInternalServerError
 	status := fiber.ErrInternalServerError.Message
-	message := err.Error()
 
 	// Retrieve the custom status code if it's a *fiber.Error
 	var e *fiber.Error
 	if errors.As(err, &e) {
 		code = e.Code
-		status = e.Message
+		status = utils.StatusMessage(e.Code)
 	}
 
 	ctx.Status(fiber.StatusInternalServerError)
 	return ctx.JSON(model.Response{
 		Code:    code,
 		Status:  status,
-		Message: message,
+		Message: err.Error(),
 	})
 }
