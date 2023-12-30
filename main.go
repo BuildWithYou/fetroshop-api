@@ -9,6 +9,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/controller"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/service/auth/registration"
 	"github.com/BuildWithYou/fetroshop-api/docs"
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/viper"
 )
@@ -19,6 +20,9 @@ func main() {
 	config.SetConfigFile("config.yaml")
 	err := config.ReadInConfig()
 	helper.PanicIfError(err)
+
+	// Validation
+	validate := validator.New()
 
 	// Fiber app initialization
 	fiberApp := fiber.New(fiber.Config{
@@ -49,9 +53,10 @@ func main() {
 
 	// Initialize Fetroshop App
 	fetroshopApp := app.App{
-		Config:   config,
-		FiberApp: fiberApp,
-		Router:   router,
+		Config:     config,
+		FiberApp:   fiberApp,
+		Router:     router,
+		Validation: validate,
 	}
 	err = fetroshopApp.Start()
 	helper.PanicIfError(err)

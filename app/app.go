@@ -4,15 +4,17 @@ import (
 	"fmt"
 
 	"github.com/BuildWithYou/fetroshop-api/app/middleware"
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/spf13/viper"
 )
 
 type App struct {
-	Config   *viper.Viper
-	FiberApp *fiber.App
-	Router   *Router
+	Config     *viper.Viper
+	FiberApp   *fiber.App
+	Router     *Router
+	Validation *validator.Validate
 }
 
 func (app *App) Start() error {
@@ -24,6 +26,8 @@ func (app *App) Start() error {
 	}
 
 	app.Router.Init(app.FiberApp)
+	app.Router.WebRouter.Init(app.FiberApp)
+	app.Router.CmsRouter.Init(app.FiberApp)
 
 	// Swagger static files
 	app.FiberApp.Static("/swagger", "docs")
