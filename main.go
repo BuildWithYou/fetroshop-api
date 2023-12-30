@@ -8,6 +8,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/controller"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/service/auth/registration"
+	"github.com/BuildWithYou/fetroshop-api/app/router"
 	"github.com/BuildWithYou/fetroshop-api/docs"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -43,11 +44,12 @@ func main() {
 	registrationController := controller.New(registrationService)
 
 	// Routing
-	router := &app.Router{
-		WebRouter: &app.WebRouter{
+	router := &router.Router{
+		WebRouter: &router.WebRouter{
+			Validation:   validate,
 			Registration: registrationController,
 		},
-		CmsRouter: &app.CmsRouter{},
+		CmsRouter: &router.CmsRouter{Validation: validate},
 		Docs:      &docs.Docs{Config: config},
 	}
 

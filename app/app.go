@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/BuildWithYou/fetroshop-api/app/middleware"
+	"github.com/BuildWithYou/fetroshop-api/app/router"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/recover"
@@ -13,7 +14,7 @@ import (
 type App struct {
 	Config     *viper.Viper
 	FiberApp   *fiber.App
-	Router     *Router
+	Router     *router.Router
 	Validation *validator.Validate
 }
 
