@@ -14,6 +14,7 @@ type Docs struct {
 
 type swaggerConfig struct {
 	jsonUrl string
+	title   string
 }
 
 func (d *Docs) createSwagger(sc *swaggerConfig) func(*fiber.Ctx) error {
@@ -21,6 +22,7 @@ func (d *Docs) createSwagger(sc *swaggerConfig) func(*fiber.Ctx) error {
 		URL:          sc.jsonUrl,
 		DeepLinking:  d.Config.GetBool("swagger.deepLinking"),
 		DocExpansion: d.Config.GetString("swagger.docExpansion"),
+		Title:        sc.title,
 	})
 }
 
@@ -29,6 +31,7 @@ func (d *Docs) SwaggerWeb() func(*fiber.Ctx) error {
 	jsonUrl := fmt.Sprintf("%s/swagger/web/swagger.json", url)
 	return d.createSwagger(&swaggerConfig{
 		jsonUrl: jsonUrl,
+		title:   "Fetroshop Web API",
 	})
 }
 
@@ -37,5 +40,6 @@ func (d *Docs) SwaggerCms() func(*fiber.Ctx) error {
 	jsonUrl := fmt.Sprintf("%s/swagger/cms/swagger.json", url)
 	return d.createSwagger(&swaggerConfig{
 		jsonUrl: jsonUrl,
+		title:   "Fetroshop CMS API",
 	})
 }
