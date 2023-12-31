@@ -23,8 +23,7 @@ func ErrorIsNotNil(err error) bool {
 }
 
 func Error500(ctx *fiber.Ctx, err error) error {
-	ctx.Status(fiber.StatusInternalServerError)
-	return ctx.JSON(model.Response{
+	return ctx.Status(fiber.StatusInternalServerError).JSON(model.Response{
 		Code:    fiber.ErrInternalServerError.Code,
 		Status:  fiber.ErrInternalServerError.Message,
 		Message: err.Error(),
@@ -43,8 +42,7 @@ func ErrorCustom(ctx *fiber.Ctx, err error) error {
 		status = utils.StatusMessage(e.Code)
 	}
 
-	ctx.Status(fiber.StatusInternalServerError)
-	return ctx.JSON(model.Response{
+	return ctx.Status(code).JSON(model.Response{
 		Code:    code,
 		Status:  status,
 		Message: err.Error(),
