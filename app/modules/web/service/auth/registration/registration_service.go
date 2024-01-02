@@ -4,7 +4,6 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/domain/users"
 	"github.com/BuildWithYou/fetroshop-api/app/model"
 	webModel "github.com/BuildWithYou/fetroshop-api/app/modules/web/model"
-	"github.com/go-playground/validator/v10"
 )
 
 type RegistrationService interface {
@@ -12,12 +11,10 @@ type RegistrationService interface {
 }
 
 type RegistrationServiceTransport struct {
-	Validation     *validator.Validate
 	UserRepository users.UserRepository
 }
 
 type RegistrationServiceV1 struct {
-	Validation     *validator.Validate
 	UserRepository users.UserRepository
 }
 

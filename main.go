@@ -39,7 +39,6 @@ func main() {
 
 	// Service
 	registrationService := registration.New(&registration.RegistrationServiceTransport{
-		Validation:     validate,
 		UserRepository: users,
 	})
 
