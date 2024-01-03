@@ -7,54 +7,17 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper"
 	"github.com/BuildWithYou/fetroshop-api/app/middleware"
 	"github.com/BuildWithYou/fetroshop-api/app/router"
-	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/spf13/viper"
 )
-
-type App struct {
-	Config     *viper.Viper
-	FiberApp   *fiber.App
-	Router     router.Router
-	Validation *validator.Validate
-}
-
-func (app *App) Start() error {
-
-	if app.Config.GetBool("fiber.recovery") {
-		app.FiberApp.Use(recover.New(recover.Config{
-			EnableStackTrace: app.Config.GetBool("fiber.enableStackTrace"),
-		})) // Panic Handler
-	}
-
-	app.Router.Init(app.FiberApp)
-
-	// Swagger static files
-	app.FiberApp.Static("/swagger", "docs")
-
-	// Middleware
-	middleware.NotFoundMiddleware(app.FiberApp) // 404 Handler
-
-	host := app.Config.GetString("app.web.host")
-	port := app.Config.GetInt("app.web.port")
-	return app.FiberApp.Listen(fmt.Sprintf("%s:%d", host, port))
-}
 
 type ServerConfig struct {
 	Config *viper.Viper
 	Host   string
 	Port   int
 	Router router.Router
-}
-
-func GetConfig() *viper.Viper {
-	// Config
-	config := viper.New()
-	config.SetConfigFile("config.yaml")
-	err := config.ReadInConfig()
-	helper.PanicIfError(err)
-	return config
+	Static map[string]string
 }
 
 func CreateFiber(serverConfig *ServerConfig) (fiberApp *fiber.App) {
@@ -80,20 +43,17 @@ func StartFiber(
 
 	serverConfig.Router.Init(fiberApp)
 
+	// Static files
+	if serverConfig.Static != nil {
+		for key, value := range serverConfig.Static {
+			fiberApp.Static(key, value)
+		}
+	}
+
 	// Middleware
 	middleware.NotFoundMiddleware(fiberApp) // 404 Handler
 
 	host := serverConfig.Host
 	port := serverConfig.Port
 	return fiberApp.Listen(fmt.Sprintf("%s:%d", host, port))
-}
-
-func DocsServerConfigProvider(webRouter router.Router) *ServerConfig {
-	config := GetConfig()
-	return &ServerConfig{
-		Config: config,
-		Host:   config.GetString("app.docs.host"),
-		Port:   config.GetInt("app.docs.port"),
-		Router: webRouter,
-	}
 }

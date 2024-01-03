@@ -1,11 +1,26 @@
 ---
 app:
-   name: Fetroshop API
-   version: 1.0.0
-   host: localhost
-   port: 3000
-   env: development
-   url: http://localhost:3000
+   web:
+      name: Fetroshop CMS API
+      version: 1.0.0
+      host: localhost
+      port: 3000
+      env: development
+      url: http://localhost:3000
+   cms:
+      name: Fetroshop Web API
+      version: 1.0.0
+      host: localhost
+      port: 3001
+      env: development
+      url: http://localhost:3001
+   docs:
+      name: Fetroshop Web API
+      version: 1.0.0
+      host: localhost
+      port: 3002
+      env: development
+      url: http://localhost:3002
 fiber:
    # The maximum amount of time (second) to wait for the next request when keep-alive is enabled. If IdleTimeout is zero, the value of ReadTimeout is used.
    #
@@ -25,7 +40,7 @@ fiber:
    # When set to true, this will spawn multiple Go processes listening on the same port.
    #
    # Default: false
-   prefork: true
+   prefork: false
 
    # When set to true, it will prevent app to panic
    #

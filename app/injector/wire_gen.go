@@ -10,6 +10,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/users/postgres"
 	"github.com/BuildWithYou/fetroshop-api/app/helper"
+	"github.com/BuildWithYou/fetroshop-api/app/modules/docs"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/controller"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/service/auth/registration"
@@ -32,9 +33,9 @@ func InitializeWebServer() error {
 }
 
 func InitializeDocsServer() error {
-	viper := app.GetConfig()
+	viper := helper.GetConfig()
 	routerRouter := router.DocsRouterProvider(viper)
-	serverConfig := app.DocsServerConfigProvider(routerRouter)
+	serverConfig := docs.DocsServerConfigProvider(routerRouter)
 	fiberApp := app.CreateFiber(serverConfig)
 	error2 := app.StartFiber(fiberApp, serverConfig)
 	return error2

@@ -2,6 +2,7 @@ package web
 
 import (
 	"github.com/BuildWithYou/fetroshop-api/app"
+	"github.com/BuildWithYou/fetroshop-api/app/helper"
 	"github.com/BuildWithYou/fetroshop-api/app/router"
 )
 
@@ -15,7 +16,7 @@ import (
 //	@description				Use format 'Bearer YOUR_TOKEN'
 
 func WebServerConfigProvider(webRouter router.Router) *app.ServerConfig {
-	config := app.GetConfig()
+	config := helper.GetConfig()
 	return &app.ServerConfig{
 		Config: config,
 		Host:   config.GetString("app.web.host"),

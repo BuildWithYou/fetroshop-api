@@ -45,7 +45,7 @@ func (d *DocsRouter) createSwagger(sc *swaggerConfig) func(*fiber.Ctx) error {
 }
 
 func (d *DocsRouter) SwaggerWeb() func(*fiber.Ctx) error {
-	url := d.Config.GetString("app.url")
+	url := d.Config.GetString("app.docs.url")
 	jsonUrl := fmt.Sprintf("%s/swagger/web/swagger.json", url)
 	return d.createSwagger(&swaggerConfig{
 		jsonUrl: jsonUrl,
@@ -54,7 +54,7 @@ func (d *DocsRouter) SwaggerWeb() func(*fiber.Ctx) error {
 }
 
 func (d *DocsRouter) SwaggerCms() func(*fiber.Ctx) error {
-	url := d.Config.GetString("app.url")
+	url := d.Config.GetString("app.docs.url")
 	jsonUrl := fmt.Sprintf("%s/swagger/cms/swagger.json", url)
 	return d.createSwagger(&swaggerConfig{
 		jsonUrl: jsonUrl,
