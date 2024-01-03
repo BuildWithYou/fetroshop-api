@@ -22,10 +22,10 @@ type RegistrationControllerV1 struct {
 	RegistrationService registration.RegistrationService
 }
 
-func New(o *RegistrationControllerTransport) RegistrationController {
+func NewRegistrationController(vld *validator.Validate, regSvc registration.RegistrationService) RegistrationController {
 	return &RegistrationControllerV1{
-		Validate:            o.Validate,
-		RegistrationService: o.RegistrationService,
+		Validate:            vld,
+		RegistrationService: regSvc,
 	}
 }
 

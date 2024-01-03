@@ -2,7 +2,9 @@ package app
 
 import (
 	"fmt"
+	"time"
 
+	"github.com/BuildWithYou/fetroshop-api/app/helper"
 	"github.com/BuildWithYou/fetroshop-api/app/middleware"
 	"github.com/BuildWithYou/fetroshop-api/app/router"
 	"github.com/go-playground/validator/v10"
@@ -14,7 +16,7 @@ import (
 type App struct {
 	Config     *viper.Viper
 	FiberApp   *fiber.App
-	Router     *router.Router
+	Router     router.Router
 	Validation *validator.Validate
 }
 
@@ -27,8 +29,6 @@ func (app *App) Start() error {
 	}
 
 	app.Router.Init(app.FiberApp)
-	app.Router.WebRouter.Init(app.FiberApp)
-	app.Router.CmsRouter.Init(app.FiberApp)
 
 	// Swagger static files
 	app.FiberApp.Static("/swagger", "docs")
@@ -36,7 +36,60 @@ func (app *App) Start() error {
 	// Middleware
 	middleware.NotFoundMiddleware(app.FiberApp) // 404 Handler
 
-	host := app.Config.GetString("app.host")
-	port := app.Config.GetInt("app.port")
+	host := app.Config.GetString("app.web.host")
+	port := app.Config.GetInt("app.web.port")
 	return app.FiberApp.Listen(fmt.Sprintf("%s:%d", host, port))
+}
+
+type ServerConfig struct {
+	Config *viper.Viper
+	Host   string
+	Port   string
+	Router router.Router
+	Static *map[string]string
+}
+
+func GetConfig() *viper.Viper {
+	// Config
+	config := viper.New()
+	config.SetConfigFile("config.yaml")
+	err := config.ReadInConfig()
+	helper.PanicIfError(err)
+	return config
+}
+
+func CreateFiber(serverConfig *ServerConfig) (fiberApp *fiber.App) {
+	// Fiber app initialization
+	return fiber.New(fiber.Config{
+		IdleTimeout:  time.Second * time.Duration(serverConfig.Config.GetInt("fiber.idleTimeout")),
+		WriteTimeout: time.Second * time.Duration(serverConfig.Config.GetInt("fiber.writeTimeout")),
+		ReadTimeout:  time.Second * time.Duration(serverConfig.Config.GetInt("fiber.readTimeout")),
+		Prefork:      serverConfig.Config.GetBool("fiber.prefork"),
+		ErrorHandler: helper.ErrorCustom,
+	})
+}
+
+func StartFiber(
+	fiberApp *fiber.App,
+	serverConfig *ServerConfig) error {
+
+	if serverConfig.Config.GetBool("fiber.recovery") {
+		fiberApp.Use(recover.New(recover.Config{
+			EnableStackTrace: serverConfig.Config.GetBool("fiber.enableStackTrace"),
+		})) // Panic Handler
+	}
+
+	serverConfig.Router.Init(fiberApp)
+
+	// Static files
+	for key, value := range *serverConfig.Static {
+		fiberApp.Static(key, value)
+	}
+
+	// Middleware
+	middleware.NotFoundMiddleware(fiberApp) // 404 Handler
+
+	host := serverConfig.Host
+	port := serverConfig.Port
+	return fiberApp.Listen(fmt.Sprintf("%s:%d", host, port))
 }

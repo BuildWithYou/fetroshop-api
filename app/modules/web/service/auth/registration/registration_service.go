@@ -10,16 +10,12 @@ type RegistrationService interface {
 	Register(request *webModel.RegistrationRequest) (*model.Response, error)
 }
 
-type RegistrationServiceTransport struct {
+type RegistrationServiceImpl struct {
 	UserRepository users.UserRepository
 }
 
-type RegistrationServiceV1 struct {
-	UserRepository users.UserRepository
-}
-
-func New(o *RegistrationServiceTransport) RegistrationService {
-	return &RegistrationServiceV1{
-		UserRepository: o.UserRepository,
+func NewRegistrationService(userRepository users.UserRepository) RegistrationService {
+	return &RegistrationServiceImpl{
+		UserRepository: userRepository,
 	}
 }

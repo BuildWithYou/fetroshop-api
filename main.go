@@ -35,21 +35,16 @@ func main() {
 	})
 
 	// Postgres
-	users := postgres.New()
+	userRepository := postgres.NewUserRepository()
 
 	// Service
-	registrationService := registration.New(&registration.RegistrationServiceTransport{
-		UserRepository: users,
-	})
+	registrationService := registration.NewRegistrationService(userRepository)
 
 	// Controller
-	registrationController := controller.New(&controller.RegistrationControllerTransport{
-		Validate:            validate,
-		RegistrationService: registrationService,
-	})
+	registrationController := controller.NewRegistrationController(validate, registrationService)
 
 	// Routing
-	router := &router.Router{
+	router := &router.RouterImpl{
 		WebRouter: &router.WebRouter{
 			Registration: registrationController,
 		},
