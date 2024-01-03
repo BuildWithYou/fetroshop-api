@@ -46,7 +46,6 @@ type ServerConfig struct {
 	Host   string
 	Port   int
 	Router router.Router
-	Static map[string]string
 }
 
 func GetConfig() *viper.Viper {
@@ -81,13 +80,6 @@ func StartFiber(
 
 	serverConfig.Router.Init(fiberApp)
 
-	// Static files
-	if serverConfig.Static != nil {
-		for key, value := range serverConfig.Static {
-			fiberApp.Static(key, value)
-		}
-	}
-
 	// Middleware
 	middleware.NotFoundMiddleware(fiberApp) // 404 Handler
 
@@ -103,8 +95,5 @@ func DocsServerConfigProvider(webRouter router.Router) *ServerConfig {
 		Host:   config.GetString("app.docs.host"),
 		Port:   config.GetInt("app.docs.port"),
 		Router: webRouter,
-		Static: map[string]string{
-			"/swagger": "docs",
-		},
 	}
 }

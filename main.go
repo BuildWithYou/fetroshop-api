@@ -7,11 +7,13 @@ import (
 
 func main() {
 
+	// Run docs server
 	go func() {
 		err := injector.InitializeDocsServer()
 		helper.PanicIfError(err)
 	}()
 
+	// Run web server
 	err := injector.InitializeWebServer()
 	helper.PanicIfError(err)
 }
