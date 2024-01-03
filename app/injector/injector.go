@@ -24,6 +24,8 @@ var userSet = wire.NewSet(
 
 func InitializeWebServer() error {
 	wire.Build(
+		helper.GetConfig,
+		docs.NewDocs,
 		helper.GetValidator,
 		userSet,
 		router.WebRouterProvider,
@@ -36,19 +38,10 @@ func InitializeWebServer() error {
 
 func InitializeCmsServer() error {
 	wire.Build(
+		docs.NewDocs,
+		helper.GetConfig,
 		router.CmsRouterProvider,
 		cms.CmsServerConfigProvider,
-		app.CreateFiber,
-		app.StartFiber,
-	)
-	return nil
-}
-
-func InitializeDocsServer() error {
-	wire.Build(
-		helper.GetConfig,
-		router.DocsRouterProvider,
-		docs.DocsServerConfigProvider,
 		app.CreateFiber,
 		app.StartFiber,
 	)

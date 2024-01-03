@@ -22,5 +22,8 @@ func CmsServerConfigProvider(webRouter router.Router) *app.ServerConfig {
 		Host:   config.GetString("app.cms.host"),
 		Port:   config.GetInt("app.cms.port"),
 		Router: webRouter,
+		Static: map[string]string{
+			"/swagger": "docs",
+		},
 	}
 }

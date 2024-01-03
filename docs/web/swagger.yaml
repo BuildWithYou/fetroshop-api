@@ -25,7 +25,6 @@ definitions:
       status:
         type: string
     type: object
-host: localhost:8081
 info:
   contact: {}
   description: Fetroshop API is a robust and efficient backend solution designed to

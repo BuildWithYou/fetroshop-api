@@ -7,12 +7,6 @@ import (
 
 func main() {
 
-	// Run docs server
-	go func() {
-		err := injector.InitializeDocsServer()
-		helper.PanicIfError(err)
-	}()
-
 	// Run cms server
 	go func() {
 		err := injector.InitializeCmsServer()

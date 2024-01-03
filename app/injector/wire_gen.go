@@ -22,11 +22,13 @@ import (
 // Injectors from injector.go:
 
 func InitializeWebServer() error {
+	viper := helper.GetConfig()
+	docsDocs := docs.NewDocs(viper)
 	validate := helper.GetValidator()
 	userRepository := postgres.NewUserRepository()
 	registrationService := registration.NewRegistrationService(userRepository)
 	registrationController := controller.NewRegistrationController(validate, registrationService)
-	routerRouter := router.WebRouterProvider(registrationController)
+	routerRouter := router.WebRouterProvider(docsDocs, registrationController)
 	serverConfig := web.WebServerConfigProvider(routerRouter)
 	fiberApp := app.CreateFiber(serverConfig)
 	error2 := app.StartFiber(fiberApp, serverConfig)
@@ -34,17 +36,10 @@ func InitializeWebServer() error {
 }
 
 func InitializeCmsServer() error {
-	routerRouter := router.CmsRouterProvider()
-	serverConfig := cms.CmsServerConfigProvider(routerRouter)
-	fiberApp := app.CreateFiber(serverConfig)
-	error2 := app.StartFiber(fiberApp, serverConfig)
-	return error2
-}
-
-func InitializeDocsServer() error {
 	viper := helper.GetConfig()
-	routerRouter := router.DocsRouterProvider(viper)
-	serverConfig := docs.DocsServerConfigProvider(routerRouter)
+	docsDocs := docs.NewDocs(viper)
+	routerRouter := router.CmsRouterProvider(docsDocs)
+	serverConfig := cms.CmsServerConfigProvider(routerRouter)
 	fiberApp := app.CreateFiber(serverConfig)
 	error2 := app.StartFiber(fiberApp, serverConfig)
 	return error2
