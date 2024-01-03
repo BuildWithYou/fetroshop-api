@@ -2,41 +2,60 @@ package app
 
 import (
 	"fmt"
+	"time"
 
+	"github.com/BuildWithYou/fetroshop-api/app/helper"
 	"github.com/BuildWithYou/fetroshop-api/app/middleware"
 	"github.com/BuildWithYou/fetroshop-api/app/router"
-	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/spf13/viper"
 )
 
-type App struct {
-	Config     *viper.Viper
-	FiberApp   *fiber.App
-	Router     *router.Router
-	Validation *validator.Validate
+type ServerConfig struct {
+	Config *viper.Viper
+	Host   string
+	Port   int
+	Router router.Router
+	Static map[string]string
 }
 
-func (app *App) Start() error {
+func CreateFiber(serverConfig *ServerConfig) (fiberApp *fiber.App) {
+	// Fiber app initialization
+	return fiber.New(fiber.Config{
+		IdleTimeout:  time.Second * time.Duration(serverConfig.Config.GetInt("fiber.idleTimeout")),
+		WriteTimeout: time.Second * time.Duration(serverConfig.Config.GetInt("fiber.writeTimeout")),
+		ReadTimeout:  time.Second * time.Duration(serverConfig.Config.GetInt("fiber.readTimeout")),
+		Prefork:      serverConfig.Config.GetBool("fiber.prefork"),
+		ErrorHandler: helper.ErrorCustom,
+	})
+}
 
-	if app.Config.GetBool("fiber.recovery") {
-		app.FiberApp.Use(recover.New(recover.Config{
-			EnableStackTrace: app.Config.GetBool("fiber.enableStackTrace"),
+func StartFiber(
+	fiberApp *fiber.App,
+	serverConfig *ServerConfig) error {
+
+	middleware.CorsMiddleware(fiberApp, serverConfig.Config)
+
+	if serverConfig.Config.GetBool("fiber.recovery") {
+		fiberApp.Use(recover.New(recover.Config{
+			EnableStackTrace: serverConfig.Config.GetBool("fiber.enableStackTrace"),
 		})) // Panic Handler
 	}
 
-	app.Router.Init(app.FiberApp)
-	app.Router.WebRouter.Init(app.FiberApp)
-	app.Router.CmsRouter.Init(app.FiberApp)
+	serverConfig.Router.Init(fiberApp)
 
-	// Swagger static files
-	app.FiberApp.Static("/swagger", "docs")
+	// Static files
+	if serverConfig.Static != nil {
+		for key, value := range serverConfig.Static {
+			fiberApp.Static(key, value)
+		}
+	}
 
 	// Middleware
-	middleware.NotFoundMiddleware(app.FiberApp) // 404 Handler
+	middleware.NotFoundMiddleware(fiberApp) // 404 Handler
 
-	host := app.Config.GetString("app.host")
-	port := app.Config.GetInt("app.port")
-	return app.FiberApp.Listen(fmt.Sprintf("%s:%d", host, port))
+	host := serverConfig.Host
+	port := serverConfig.Port
+	return fiberApp.Listen(fmt.Sprintf("%s:%d", host, port))
 }
