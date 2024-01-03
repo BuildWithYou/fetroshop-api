@@ -17,6 +17,12 @@ type swaggerConfig struct {
 	title   string
 }
 
+func NewDocs(config *viper.Viper) *Docs {
+	return &Docs{
+		Config: config,
+	}
+}
+
 func (d *Docs) createSwagger(sc *swaggerConfig) func(*fiber.Ctx) error {
 	return swagger.New(swagger.Config{ // custom
 		URL:          sc.jsonUrl,

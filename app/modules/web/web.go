@@ -18,11 +18,11 @@ func WebServerConfigProvider(webRouter router.Router) *app.ServerConfig {
 	config := app.GetConfig()
 	return &app.ServerConfig{
 		Config: config,
-		Host:   config.GetString("app.host"),
-		Port:   config.GetString("app.port"),
+		Host:   config.GetString("app.web.host"),
+		Port:   config.GetInt("app.web.port"),
 		Router: webRouter,
-		Static: &map[string]string{
-			"/swagger": "docs",
-		},
+		// Static: &map[string]string{
+		// 	"/swagger": "docs",
+		// },
 	}
 }

@@ -6,11 +6,12 @@ package injector
 import (
 	"github.com/BuildWithYou/fetroshop-api/app"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/users/postgres"
+	"github.com/BuildWithYou/fetroshop-api/app/helper"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/controller"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/service/auth/registration"
 	"github.com/BuildWithYou/fetroshop-api/app/router"
-	"github.com/go-playground/validator/v10"
+	"github.com/BuildWithYou/fetroshop-api/docs"
 	"github.com/google/wire"
 )
 
@@ -22,10 +23,22 @@ var userSet = wire.NewSet(
 
 func InitializeWebServer() error {
 	wire.Build(
-		validator.New,
+		helper.GetValidator,
 		userSet,
 		router.WebRouterProvider,
 		web.WebServerConfigProvider,
+		app.CreateFiber,
+		app.StartFiber,
+	)
+	return nil
+}
+
+func InitializeDocsServer() error {
+	wire.Build(
+		app.GetConfig,
+		docs.NewDocs,
+		router.DocsRouterProvider,
+		app.DocsServerConfigProvider,
 		app.CreateFiber,
 		app.StartFiber,
 	)

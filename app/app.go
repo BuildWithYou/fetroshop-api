@@ -44,9 +44,9 @@ func (app *App) Start() error {
 type ServerConfig struct {
 	Config *viper.Viper
 	Host   string
-	Port   string
+	Port   int
 	Router router.Router
-	Static *map[string]string
+	Static map[string]string
 }
 
 func GetConfig() *viper.Viper {
@@ -82,8 +82,10 @@ func StartFiber(
 	serverConfig.Router.Init(fiberApp)
 
 	// Static files
-	for key, value := range *serverConfig.Static {
-		fiberApp.Static(key, value)
+	if serverConfig.Static != nil {
+		for key, value := range serverConfig.Static {
+			fiberApp.Static(key, value)
+		}
 	}
 
 	// Middleware
@@ -92,4 +94,17 @@ func StartFiber(
 	host := serverConfig.Host
 	port := serverConfig.Port
 	return fiberApp.Listen(fmt.Sprintf("%s:%d", host, port))
+}
+
+func DocsServerConfigProvider(webRouter router.Router) *ServerConfig {
+	config := GetConfig()
+	return &ServerConfig{
+		Config: config,
+		Host:   config.GetString("app.docs.host"),
+		Port:   config.GetInt("app.docs.port"),
+		Router: webRouter,
+		Static: map[string]string{
+			"/swagger": "docs",
+		},
+	}
 }

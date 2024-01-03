@@ -11,15 +11,25 @@ type RouterImpl struct {
 	Docs      *docs.Docs
 }
 
-func (router *RouterImpl) Init(app *fiber.App) {
-	// root
-	app.Get("/", welcome)
-
-	// docs
-	app.Get("/docs/web/*", router.Docs.SwaggerWeb())
-	app.Get("/docs/cms/*", router.Docs.SwaggerCms())
+type DocsRouter struct {
+	Docs *docs.Docs
 }
 
-func welcome(ctx *fiber.Ctx) error {
-	return ctx.SendString("Welcome to fetroshop-api!")
+func DocsRouterProvider(d *docs.Docs) Router {
+	return &DocsRouter{
+		Docs: d,
+	}
+}
+
+func (d *DocsRouter) Init(app *fiber.App) {
+	// root
+	app.Get("/", d.welcome)
+
+	// docs
+	app.Get("/web/*", d.Docs.SwaggerWeb())
+	app.Get("/cms/*", d.Docs.SwaggerCms())
+}
+
+func (d *DocsRouter) welcome(ctx *fiber.Ctx) error {
+	return ctx.SendString("Welcome to fetroshop-api docs!")
 }
