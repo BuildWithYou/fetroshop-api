@@ -13,6 +13,12 @@ func main() {
 		helper.PanicIfError(err)
 	}()
 
+	// Run cms server
+	go func() {
+		err := injector.InitializeCmsServer()
+		helper.PanicIfError(err)
+	}()
+
 	// Run web server
 	err := injector.InitializeWebServer()
 	helper.PanicIfError(err)

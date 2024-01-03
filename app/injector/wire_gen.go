@@ -10,6 +10,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/users/postgres"
 	"github.com/BuildWithYou/fetroshop-api/app/helper"
+	"github.com/BuildWithYou/fetroshop-api/app/modules/cms"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/docs"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/controller"
@@ -27,6 +28,14 @@ func InitializeWebServer() error {
 	registrationController := controller.NewRegistrationController(validate, registrationService)
 	routerRouter := router.WebRouterProvider(registrationController)
 	serverConfig := web.WebServerConfigProvider(routerRouter)
+	fiberApp := app.CreateFiber(serverConfig)
+	error2 := app.StartFiber(fiberApp, serverConfig)
+	return error2
+}
+
+func InitializeCmsServer() error {
+	routerRouter := router.CmsRouterProvider()
+	serverConfig := cms.CmsServerConfigProvider(routerRouter)
 	fiberApp := app.CreateFiber(serverConfig)
 	error2 := app.StartFiber(fiberApp, serverConfig)
 	return error2

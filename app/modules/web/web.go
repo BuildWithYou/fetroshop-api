@@ -22,8 +22,5 @@ func WebServerConfigProvider(webRouter router.Router) *app.ServerConfig {
 		Host:   config.GetString("app.web.host"),
 		Port:   config.GetInt("app.web.port"),
 		Router: webRouter,
-		// Static: &map[string]string{
-		// 	"/swagger": "docs",
-		// },
 	}
 }

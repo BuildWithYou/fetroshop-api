@@ -1,4 +1,5 @@
 ---
+environment: development
 app:
    web:
       name: Fetroshop CMS API
@@ -15,7 +16,7 @@ app:
       env: development
       url: http://localhost:3001
    docs:
-      name: Fetroshop Web API
+      name: Fetroshop Documentation API
       version: 1.0.0
       host: localhost
       port: 3002
@@ -53,6 +54,17 @@ fiber:
    enableStackTrace: true
 database:
    dialect: postgres
+security:
+   cors:
+      # AllowOrigin defines a list of origins that may access the resource.
+      #
+      # Optional. Default value "*"
+      allowOrigins: "http://127.0.0.1:3002"
+
+      # AllowHeaders defines a list of request headers that can be used when making the actual request. This is in response to a preflight request.
+      #
+      # Optional. Default value "".
+      allowHeaders: "Origin, Content-Type, Accept"
 swagger:
    # If set to true, enables deep linking for tags and operations. default: true
    deepLinking: false
