@@ -14,7 +14,7 @@ func (router *WebRouter) Init(app *fiber.App) {
 	app.Get("/", router.welcome)
 
 	// registration
-	app.Post("/api/web/register", router.Registration.Register)
+	app.Post("/api/auth/register", router.Registration.Register)
 }
 
 func WebRouterProvider(ctr controller.RegistrationController) Router {

@@ -29,12 +29,12 @@ func NewRegistrationController(vld *validator.Validate, regSvc registration.Regi
 // @Tags         Authentication
 // @Accept       json
 // @Produce      json
-// @Param        body  body     registration.RegistrationRequest  true  "Registration Request"
+// @Param        body  body     model.RegistrationRequest  true  "Registration Request"
 // @Success      200  {object}  model.Response
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response
 // @Failure      500  {object}  model.Response
-// @Router       /api/web/register [post]
+// @Router       /api/auth/register [post]
 func (r *RegistrationControllerImpl) Register(ctx *fiber.Ctx) (err error) {
 	payload := new(model.RegistrationRequest)
 

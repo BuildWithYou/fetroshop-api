@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/web/register": {
+        "/api/auth/register": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -34,7 +34,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/registration.RegistrationRequest"
+                            "$ref": "#/definitions/model.RegistrationRequest"
                         }
                     }
                 ],
@@ -68,23 +68,14 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "model.Response": {
+        "model.RegistrationRequest": {
             "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer"
-                },
-                "data": {},
-                "message": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "string"
-                }
-            }
-        },
-        "registration.RegistrationRequest": {
-            "type": "object",
+            "required": [
+                "email",
+                "fullname",
+                "phone",
+                "username"
+            ],
             "properties": {
                 "email": {
                     "type": "string"
@@ -96,6 +87,21 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Response": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {},
+                "message": {
+                    "type": "string"
+                },
+                "status": {
                     "type": "string"
                 }
             }
@@ -114,7 +120,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "",
+	Host:             "localhost:8081",
 	BasePath:         "",
 	Schemes:          []string{},
 	Title:            "Fetroshop Web API",

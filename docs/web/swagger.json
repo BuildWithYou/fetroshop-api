@@ -6,8 +6,9 @@
         "contact": {},
         "version": "1.0"
     },
+    "host": "localhost:8081",
     "paths": {
-        "/api/web/register": {
+        "/api/auth/register": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -26,7 +27,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/registration.RegistrationRequest"
+                            "$ref": "#/definitions/model.RegistrationRequest"
                         }
                     }
                 ],
@@ -60,23 +61,14 @@
         }
     },
     "definitions": {
-        "model.Response": {
+        "model.RegistrationRequest": {
             "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer"
-                },
-                "data": {},
-                "message": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "string"
-                }
-            }
-        },
-        "registration.RegistrationRequest": {
-            "type": "object",
+            "required": [
+                "email",
+                "fullname",
+                "phone",
+                "username"
+            ],
             "properties": {
                 "email": {
                     "type": "string"
@@ -88,6 +80,21 @@
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Response": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {},
+                "message": {
+                    "type": "string"
+                },
+                "status": {
                     "type": "string"
                 }
             }
