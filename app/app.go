@@ -35,6 +35,8 @@ func StartFiber(
 	fiberApp *fiber.App,
 	serverConfig *ServerConfig) error {
 
+	middleware.CorsMiddleware(fiberApp, serverConfig.Config)
+
 	if serverConfig.Config.GetBool("fiber.recovery") {
 		fiberApp.Use(recover.New(recover.Config{
 			EnableStackTrace: serverConfig.Config.GetBool("fiber.enableStackTrace"),
