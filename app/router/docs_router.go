@@ -1,24 +1,15 @@
 package router
 
 import (
-	"github.com/BuildWithYou/fetroshop-api/docs"
+	"fmt"
+
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/swagger"
+	"github.com/spf13/viper"
 )
 
-type RouterImpl struct {
-	WebRouter *WebRouter
-	CmsRouter *CmsRouter
-	Docs      *docs.Docs
-}
-
 type DocsRouter struct {
-	Docs *docs.Docs
-}
-
-func DocsRouterProvider(d *docs.Docs) Router {
-	return &DocsRouter{
-		Docs: d,
-	}
+	Config *viper.Viper
 }
 
 func (d *DocsRouter) Init(app *fiber.App) {
@@ -26,10 +17,47 @@ func (d *DocsRouter) Init(app *fiber.App) {
 	app.Get("/", d.welcome)
 
 	// docs
-	app.Get("/web/*", d.Docs.SwaggerWeb())
-	app.Get("/cms/*", d.Docs.SwaggerCms())
+	app.Get("/web/*", d.SwaggerWeb())
+	app.Get("/cms/*", d.SwaggerCms())
+}
+func DocsRouterProvider(cfg *viper.Viper) Router {
+	return &DocsRouter{
+		Config: cfg,
+	}
 }
 
 func (d *DocsRouter) welcome(ctx *fiber.Ctx) error {
 	return ctx.SendString("Welcome to fetroshop-api docs!")
+}
+
+type swaggerConfig struct {
+	jsonUrl string
+	title   string
+}
+
+func (d *DocsRouter) createSwagger(sc *swaggerConfig) func(*fiber.Ctx) error {
+	return swagger.New(swagger.Config{ // custom
+		URL:          sc.jsonUrl,
+		DeepLinking:  d.Config.GetBool("swagger.deepLinking"),
+		DocExpansion: d.Config.GetString("swagger.docExpansion"),
+		Title:        sc.title,
+	})
+}
+
+func (d *DocsRouter) SwaggerWeb() func(*fiber.Ctx) error {
+	url := d.Config.GetString("app.url")
+	jsonUrl := fmt.Sprintf("%s/swagger/web/swagger.json", url)
+	return d.createSwagger(&swaggerConfig{
+		jsonUrl: jsonUrl,
+		title:   "Fetroshop Web API",
+	})
+}
+
+func (d *DocsRouter) SwaggerCms() func(*fiber.Ctx) error {
+	url := d.Config.GetString("app.url")
+	jsonUrl := fmt.Sprintf("%s/swagger/cms/swagger.json", url)
+	return d.createSwagger(&swaggerConfig{
+		jsonUrl: jsonUrl,
+		title:   "Fetroshop CMS API",
+	})
 }

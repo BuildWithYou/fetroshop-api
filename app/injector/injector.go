@@ -11,7 +11,6 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/controller"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/service/auth/registration"
 	"github.com/BuildWithYou/fetroshop-api/app/router"
-	"github.com/BuildWithYou/fetroshop-api/docs"
 	"github.com/google/wire"
 )
 
@@ -36,7 +35,6 @@ func InitializeWebServer() error {
 func InitializeDocsServer() error {
 	wire.Build(
 		app.GetConfig,
-		docs.NewDocs,
 		router.DocsRouterProvider,
 		app.DocsServerConfigProvider,
 		app.CreateFiber,

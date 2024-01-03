@@ -12,18 +12,13 @@ type RegistrationController interface {
 	Register(ctx *fiber.Ctx) (err error)
 }
 
-type RegistrationControllerTransport struct {
-	Validate            *validator.Validate
-	RegistrationService registration.RegistrationService
-}
-
-type RegistrationControllerV1 struct {
+type RegistrationControllerImpl struct {
 	Validate            *validator.Validate
 	RegistrationService registration.RegistrationService
 }
 
 func NewRegistrationController(vld *validator.Validate, regSvc registration.RegistrationService) RegistrationController {
-	return &RegistrationControllerV1{
+	return &RegistrationControllerImpl{
 		Validate:            vld,
 		RegistrationService: regSvc,
 	}
@@ -40,7 +35,7 @@ func NewRegistrationController(vld *validator.Validate, regSvc registration.Regi
 // @Failure      404  {object}  model.Response
 // @Failure      500  {object}  model.Response
 // @Router       /api/web/register [post]
-func (r *RegistrationControllerV1) Register(ctx *fiber.Ctx) (err error) {
+func (r *RegistrationControllerImpl) Register(ctx *fiber.Ctx) (err error) {
 	payload := new(model.RegistrationRequest)
 
 	err = ctx.BodyParser(payload)
