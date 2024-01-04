@@ -7,9 +7,9 @@ import (
 
 func main() {
 
-	// Run docs server
+	// Run cms server
 	go func() {
-		err := injector.InitializeDocsServer()
+		err := injector.InitializeCmsServer()
 		helper.PanicIfError(err)
 	}()
 

@@ -1,4 +1,5 @@
 ---
+environment: development
 app:
    web:
       name: Fetroshop CMS API
@@ -14,13 +15,6 @@ app:
       port: 3001
       env: development
       url: http://localhost:3001
-   docs:
-      name: Fetroshop Web API
-      version: 1.0.0
-      host: localhost
-      port: 3002
-      env: development
-      url: http://localhost:3002
 fiber:
    # The maximum amount of time (second) to wait for the next request when keep-alive is enabled. If IdleTimeout is zero, the value of ReadTimeout is used.
    #
@@ -52,7 +46,50 @@ fiber:
    # Optional. Default: false
    enableStackTrace: true
 database:
-   dialect: postgres
+   # MIGRATION COMMAND TEMPLATE:
+   # migrate create -ext sql -dir db/migrations migration_file_name
+   # migrate -database "postgresql://{username}:{password}@{host}:{port}/{database}" -path db/migrations up
+   # migrate -database "postgresql://{username}:{password}@{host}:{port}/{database}" -path db/migrations down
+
+   dbName: fetroshop
+   dbUsername: postgres
+   dbPassword: postgres
+   dbHost: localhost
+   dbPort: 5432
+   dbUrl: postgresql://{username}:{password}@{host}:{port}/{database}
+
+   # (int) Maximum number of open connections to the database.
+   dbMaxOpenConns: 100
+
+   # (int) Maximum number of iddle connections to the database.
+   dbMaxIdleConns: 10
+
+   # (int) Maximum time (Minutes) of connections lifetime to the database.
+   dbConnMaxLifetime: 30
+
+   # (int) Maximum time (Minutes) of connections iddle time to the database.
+   dbConnMaxIdleTime: 5
+
+   # Database log mode
+   # Options: silent, error, warn, info
+   # Default: silent
+   logLevel: info
+security:
+   cors:
+      # AllowOrigin defines a list of origins that may access the resource.
+      #
+      # Optional. Default value "*"
+      allowOrigins: "*"
+
+      # AllowHeaders defines a list of request headers that can be used when making the actual request. This is in response to a preflight request.
+      #
+      # Optional. Default value "".
+      allowHeaders: "Origin, Content-Type, Accept, Authorization"
+
+      # AllowMethods defines a list methods allowed when accessing the resource. This is used in response to a preflight request.
+      #
+      # Optional. Default value "GET,POST,HEAD,PUT,DELETE,PATCH"
+      allowMethods: "GET, POST, DELETE, PUT, PATCH, OPTIONS"
 swagger:
    # If set to true, enables deep linking for tags and operations. default: true
    deepLinking: false

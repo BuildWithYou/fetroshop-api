@@ -1,4 +1,23 @@
 definitions:
+  model.RegistrationRequest:
+    properties:
+      email:
+        type: string
+      fullName:
+        type: string
+      password:
+        type: string
+      phone:
+        type: string
+      username:
+        type: string
+    required:
+    - email
+    - fullName
+    - password
+    - phone
+    - username
+    type: object
   model.Response:
     properties:
       code:
@@ -7,17 +26,6 @@ definitions:
       message:
         type: string
       status:
-        type: string
-    type: object
-  registration.RegistrationRequest:
-    properties:
-      email:
-        type: string
-      fullname:
-        type: string
-      phone:
-        type: string
-      username:
         type: string
     type: object
 info:
@@ -29,7 +37,7 @@ info:
   title: Fetroshop Web API
   version: "1.0"
 paths:
-  /api/web/register:
+  /api/auth/register:
     post:
       consumes:
       - application/json
@@ -39,7 +47,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/registration.RegistrationRequest'
+          $ref: '#/definitions/model.RegistrationRequest'
       produces:
       - application/json
       responses:

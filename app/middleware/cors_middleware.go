@@ -10,5 +10,6 @@ func CorsMiddleware(app *fiber.App, config *viper.Viper) {
 	app.Use(cors.New(cors.Config{
 		AllowOrigins: config.GetString("security.cors.allowOrigins"),
 		AllowHeaders: config.GetString("security.cors.allowHeaders"),
+		AllowMethods: config.GetString("security.cors.allowMethods"),
 	}))
 }
