@@ -51,11 +51,24 @@ database:
    # migrate -database "postgresql://{username}:{password}@{host}:{port}/{database}" -path db/migrations up
    # migrate -database "postgresql://{username}:{password}@{host}:{port}/{database}" -path db/migrations down
 
-   db_name: fetroshop
-   db_username: postgres
-   db_password: postgres
-   db_host: localhost
-   db_port: 5432
+   dbName: fetroshop
+   dbUsername: postgres
+   dbPassword: postgres
+   dbHost: localhost
+   dbPort: 5432
+   dbUrl: postgresql://{username}:{password}@{host}:{port}/{database}
+
+   # (int) Maximum number of open connections to the database.
+   dbMaxOpenConns: 100
+
+   # (int) Maximum number of iddle connections to the database.
+   dbMaxIdleConns: 10
+
+   # (int) Maximum time (Minutes) of connections lifetime to the database.
+   dbConnMaxLifetime: 30
+
+   # (int) Maximum time (Minutes) of connections iddle time to the database.
+   dbConnMaxIdleTime: 5
 security:
    cors:
       # AllowOrigin defines a list of origins that may access the resource.
