@@ -8,7 +8,8 @@ import (
 )
 
 func (rg *RegistrationServiceImpl) Register(request *webModel.RegistrationRequest) (*model.Response, error) {
-	// TODO - Implement Register
+	// TODO - check if user already exists
+	// TODO - insert user into database
 	return &model.Response{
 		Code:    fiber.StatusCreated,
 		Status:  utils.StatusMessage(fiber.StatusCreated),

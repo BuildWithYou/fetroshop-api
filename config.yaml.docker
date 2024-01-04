@@ -15,13 +15,6 @@ app:
       port: 3001
       env: development
       url: http://localhost:3001
-   docs:
-      name: Fetroshop Documentation API
-      version: 1.0.0
-      host: localhost
-      port: 3002
-      env: development
-      url: http://localhost:3002
 fiber:
    # The maximum amount of time (second) to wait for the next request when keep-alive is enabled. If IdleTimeout is zero, the value of ReadTimeout is used.
    #
@@ -53,18 +46,32 @@ fiber:
    # Optional. Default: false
    enableStackTrace: true
 database:
-   dialect: postgres
+   # MIGRATION COMMAND TEMPLATE:
+   # migrate create -ext sql -dir db/migrations migration_file_name
+   # migrate -database "postgresql://{username}:{password}@{host}:{port}/{database}" -path db/migrations up
+   # migrate -database "postgresql://{username}:{password}@{host}:{port}/{database}" -path db/migrations down
+
+   db_name: fetroshop
+   db_username: postgres
+   db_password: postgres
+   db_host: localhost
+   db_port: 5432
 security:
    cors:
       # AllowOrigin defines a list of origins that may access the resource.
       #
       # Optional. Default value "*"
-      allowOrigins: "http://127.0.0.1:3002"
+      allowOrigins: "*"
 
       # AllowHeaders defines a list of request headers that can be used when making the actual request. This is in response to a preflight request.
       #
       # Optional. Default value "".
-      allowHeaders: "Origin, Content-Type, Accept"
+      allowHeaders: "Origin, Content-Type, Accept, Authorization"
+
+      # AllowMethods defines a list methods allowed when accessing the resource. This is used in response to a preflight request.
+      #
+      # Optional. Default value "GET,POST,HEAD,PUT,DELETE,PATCH"
+      allowMethods: "GET, POST, DELETE, PUT, PATCH, OPTIONS"
 swagger:
    # If set to true, enables deep linking for tags and operations. default: true
    deepLinking: false
