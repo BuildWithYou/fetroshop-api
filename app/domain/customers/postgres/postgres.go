@@ -2,10 +2,15 @@ package postgres
 
 import (
 	"github.com/BuildWithYou/fetroshop-api/app/domain/customers"
+	"gorm.io/gorm"
 )
 
-type PostgreSQL struct{}
+type PostgreSQL struct {
+	DB *gorm.DB
+}
 
-func NewCustomerRepository() customers.CustomerRepository {
-	return &PostgreSQL{}
+func NewCustomerRepository(db *gorm.DB) customers.CustomerRepository {
+	return &PostgreSQL{
+		DB: db,
+	}
 }

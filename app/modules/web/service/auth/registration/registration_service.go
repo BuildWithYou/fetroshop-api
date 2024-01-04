@@ -1,9 +1,10 @@
 package registration
 
 import (
-	"github.com/BuildWithYou/fetroshop-api/app/domain/users"
+	"github.com/BuildWithYou/fetroshop-api/app/domain/customers"
 	"github.com/BuildWithYou/fetroshop-api/app/model"
 	webModel "github.com/BuildWithYou/fetroshop-api/app/modules/web/model"
+	"gorm.io/gorm"
 )
 
 type RegistrationService interface {
@@ -11,11 +12,13 @@ type RegistrationService interface {
 }
 
 type RegistrationServiceImpl struct {
-	UserRepository users.UserRepository
+	DB                 *gorm.DB
+	CustomerRepository customers.CustomerRepository
 }
 
-func NewRegistrationService(userRepository users.UserRepository) RegistrationService {
+func NewRegistrationService(db *gorm.DB, customerRepository customers.CustomerRepository) RegistrationService {
 	return &RegistrationServiceImpl{
-		UserRepository: userRepository,
+		DB:                 db,
+		CustomerRepository: customerRepository,
 	}
 }

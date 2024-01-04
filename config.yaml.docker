@@ -69,6 +69,11 @@ database:
 
    # (int) Maximum time (Minutes) of connections iddle time to the database.
    dbConnMaxIdleTime: 5
+
+   # Database log mode
+   # Options: silent, error, warn, info
+   # Default: silent
+   logLevel: info
 security:
    cors:
       # AllowOrigin defines a list of origins that may access the resource.

@@ -14,14 +14,6 @@ func PanicIfError(err error) {
 	}
 }
 
-func ErrorIsNil(err error) bool {
-	return err == nil
-}
-
-func ErrorIsNotNil(err error) bool {
-	return err != nil
-}
-
 func Error500(ctx *fiber.Ctx, err error) error {
 	return ctx.Status(fiber.StatusInternalServerError).JSON(model.Response{
 		Code:    fiber.ErrInternalServerError.Code,

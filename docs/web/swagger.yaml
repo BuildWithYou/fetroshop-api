@@ -3,7 +3,9 @@ definitions:
     properties:
       email:
         type: string
-      fullname:
+      fullName:
+        type: string
+      password:
         type: string
       phone:
         type: string
@@ -11,7 +13,8 @@ definitions:
         type: string
     required:
     - email
-    - fullname
+    - fullName
+    - password
     - phone
     - username
     type: object

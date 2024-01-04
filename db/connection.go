@@ -10,9 +10,22 @@ import (
 )
 
 func OpenConnection(config *viper.Viper) *gorm.DB {
+	var gormLogger logger.Interface
 	dialect := postgres.Open(config.GetString("database.dbUrl"))
+
+	switch config.GetString("database.logLevel") {
+	case "error":
+		gormLogger = logger.Default.LogMode(logger.Error)
+	case "warn":
+		gormLogger = logger.Default.LogMode(logger.Warn)
+	case "info":
+		gormLogger = logger.Default.LogMode(logger.Info)
+	default:
+		gormLogger = logger.Default.LogMode(logger.Silent)
+	}
+
 	db, err := gorm.Open(dialect, &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
+		Logger: gormLogger,
 	})
 	if err != nil {
 		panic(err)

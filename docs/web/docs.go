@@ -72,7 +72,8 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "email",
-                "fullname",
+                "fullName",
+                "password",
                 "phone",
                 "username"
             ],
@@ -80,7 +81,10 @@ const docTemplate = `{
                 "email": {
                     "type": "string"
                 },
-                "fullname": {
+                "fullName": {
+                    "type": "string"
+                },
+                "password": {
                     "type": "string"
                 },
                 "phone": {
