@@ -16,7 +16,7 @@ type RegistrationServiceImpl struct {
 	CustomerRepository customers.CustomerRepository
 }
 
-func NewRegistrationService(db *gorm.DB, customerRepository customers.CustomerRepository) RegistrationService {
+func RegistrationServiceProvider(db *gorm.DB, customerRepository customers.CustomerRepository) RegistrationService {
 	return &RegistrationServiceImpl{
 		DB:                 db,
 		CustomerRepository: customerRepository,

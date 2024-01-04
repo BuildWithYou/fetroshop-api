@@ -9,7 +9,7 @@ type PostgreSQL struct {
 	DB *gorm.DB
 }
 
-func NewCustomerRepository(db *gorm.DB) customers.CustomerRepository {
+func CustomerRepositoryProvider(db *gorm.DB) customers.CustomerRepository {
 	return &PostgreSQL{
 		DB: db,
 	}

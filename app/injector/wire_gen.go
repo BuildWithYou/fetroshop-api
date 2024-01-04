@@ -25,12 +25,12 @@ import (
 
 func InitializeWebServer() error {
 	viper := helper.GetConfig()
-	docsDocs := docs.NewDocs(viper)
+	docsDocs := docs.DocsProvider(viper)
 	validate := helper.GetValidator()
 	gormDB := db.OpenConnection(viper)
-	customerRepository := postgres.NewCustomerRepository(gormDB)
-	registrationService := registration.NewRegistrationService(gormDB, customerRepository)
-	registrationController := controller.NewRegistrationController(validate, registrationService)
+	customerRepository := postgres.CustomerRepositoryProvider(gormDB)
+	registrationService := registration.RegistrationServiceProvider(gormDB, customerRepository)
+	registrationController := controller.RegistrationControllerProvider(validate, registrationService)
 	routerRouter := router.WebRouterProvider(docsDocs, registrationController)
 	serverConfig := web.WebServerConfigProvider(routerRouter)
 	fiberApp := app.CreateFiber(serverConfig)
@@ -40,7 +40,7 @@ func InitializeWebServer() error {
 
 func InitializeCmsServer() error {
 	viper := helper.GetConfig()
-	docsDocs := docs.NewDocs(viper)
+	docsDocs := docs.DocsProvider(viper)
 	routerRouter := router.CmsRouterProvider(docsDocs)
 	serverConfig := cms.CmsServerConfigProvider(routerRouter)
 	fiberApp := app.CreateFiber(serverConfig)
@@ -50,6 +50,6 @@ func InitializeCmsServer() error {
 
 // injector.go:
 
-var userSet = wire.NewSet(postgres2.NewUserRepository, registration.NewRegistrationService, controller.NewRegistrationController)
+var userSet = wire.NewSet(postgres2.UserRepositoryProvider, registration.RegistrationServiceProvider, controller.RegistrationControllerProvider)
 
-var customerSet = wire.NewSet(postgres.NewCustomerRepository, registration.NewRegistrationService, controller.NewRegistrationController)
+var customerSet = wire.NewSet(postgres.CustomerRepositoryProvider, registration.RegistrationServiceProvider, controller.RegistrationControllerProvider)

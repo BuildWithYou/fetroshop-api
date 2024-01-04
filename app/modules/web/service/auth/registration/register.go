@@ -17,6 +17,7 @@ func (rg *RegistrationServiceImpl) Register(request *webModel.RegistrationReques
 		Username: request.Username,
 	})
 	if existingUsername.ID != 0 {
+		// TODO: validation error should be move to helper
 		return nil, fiber.NewError(fiber.StatusBadRequest, "Username already used") // #marked: message
 	}
 

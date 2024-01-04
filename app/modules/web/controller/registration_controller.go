@@ -17,7 +17,7 @@ type RegistrationControllerImpl struct {
 	RegistrationService registration.RegistrationService
 }
 
-func NewRegistrationController(vld *validator.Validate, regSvc registration.RegistrationService) RegistrationController {
+func RegistrationControllerProvider(vld *validator.Validate, regSvc registration.RegistrationService) RegistrationController {
 	return &RegistrationControllerImpl{
 		Validate:            vld,
 		RegistrationService: regSvc,
@@ -36,6 +36,7 @@ func NewRegistrationController(vld *validator.Validate, regSvc registration.Regi
 // @Failure      500  {object}  model.Response
 // @Router       /api/auth/register [post]
 func (r *RegistrationControllerImpl) Register(ctx *fiber.Ctx) (err error) {
+	// TODO: validation need to be move to helper
 	payload := new(model.RegistrationRequest)
 
 	err = ctx.BodyParser(payload)

@@ -19,22 +19,22 @@ import (
 )
 
 var userSet = wire.NewSet(
-	userRepo.NewUserRepository,
-	webRegistrationService.NewRegistrationService,
-	webController.NewRegistrationController,
+	userRepo.UserRepositoryProvider,
+	webRegistrationService.RegistrationServiceProvider,
+	webController.RegistrationControllerProvider,
 )
 
 var customerSet = wire.NewSet(
-	customerRepo.NewCustomerRepository,
-	webRegistrationService.NewRegistrationService,
-	webController.NewRegistrationController,
+	customerRepo.CustomerRepositoryProvider,
+	webRegistrationService.RegistrationServiceProvider,
+	webController.RegistrationControllerProvider,
 )
 
 func InitializeWebServer() error {
 	wire.Build(
 		db.OpenConnection,
 		helper.GetConfig,
-		docs.NewDocs,
+		docs.DocsProvider,
 		helper.GetValidator,
 		customerSet,
 		router.WebRouterProvider,
@@ -47,7 +47,7 @@ func InitializeWebServer() error {
 
 func InitializeCmsServer() error {
 	wire.Build(
-		docs.NewDocs,
+		docs.DocsProvider,
 		helper.GetConfig,
 		router.CmsRouterProvider,
 		// userSet,

@@ -4,6 +4,6 @@ import "github.com/BuildWithYou/fetroshop-api/app/domain/users"
 
 type PostgreSQL struct{}
 
-func NewUserRepository() users.UserRepository {
+func UserRepositoryProvider() users.UserRepository {
 	return &PostgreSQL{}
 }
