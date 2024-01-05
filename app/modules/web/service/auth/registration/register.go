@@ -4,6 +4,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/domain/customers"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/password"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/model"
 	webModel "github.com/BuildWithYou/fetroshop-api/app/modules/web/model"
@@ -24,7 +25,7 @@ func (rg *RegistrationServiceImpl) Register(request *webModel.RegistrationReques
 	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
-	if validatorhelper.IsNotZero64(existingUsername.ID) {
+	if validatorhelper.IsNotZero(existingUsername.ID) {
 		return nil, errorhelper.Error400("Username already used") // #marked: message
 	}
 
@@ -34,7 +35,7 @@ func (rg *RegistrationServiceImpl) Register(request *webModel.RegistrationReques
 	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
-	if validatorhelper.IsNotZero64(existingPhone.ID) {
+	if validatorhelper.IsNotZero(existingPhone.ID) {
 		return nil, errorhelper.Error400("Phone already used") // #marked: message
 	}
 
@@ -44,18 +45,18 @@ func (rg *RegistrationServiceImpl) Register(request *webModel.RegistrationReques
 	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
-	if validatorhelper.IsNotZero64(existingEmail.ID) {
+	if validatorhelper.IsNotZero(existingEmail.ID) {
 		return nil, errorhelper.Error400("Email already used") // #marked: message
 	}
 
-	// TODO: hash password before save
+	hashedPassword := password.Generate(request.Password)
 
 	result = rg.CustomerRepository.Create(&customers.Customer{
 		Username: request.Username,
 		Phone:    request.Phone,
 		Email:    request.Email,
 		FullName: request.FullName,
-		Password: request.Password,
+		Password: hashedPassword,
 	})
 	if validatorhelper.IsNotNil(result.Error) {
 		return nil, result.Error

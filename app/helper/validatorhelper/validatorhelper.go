@@ -17,12 +17,12 @@ func IsNotNil(value any) bool {
 	return value != nil
 }
 
-func IsZero64(value int64) bool {
-	return value == 0
+func IsZero(value int64) bool {
+	return value == int64(0)
 }
 
-func IsNotZero64(value int64) bool {
-	return value != 0
+func IsNotZero(value int64) bool {
+	return value != int64(0)
 }
 
 func ValidatePayload(ctx *fiber.Ctx, vld *validator.Validate, payload any) (err error) {
