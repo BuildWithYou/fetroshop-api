@@ -3,6 +3,7 @@ package registration
 import (
 	"github.com/BuildWithYou/fetroshop-api/app/domain/customers"
 	"github.com/BuildWithYou/fetroshop-api/app/helper"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/model"
 	webModel "github.com/BuildWithYou/fetroshop-api/app/modules/web/model"
 	"github.com/gofiber/fiber/v2"
@@ -11,42 +12,54 @@ import (
 
 func (rg *RegistrationServiceImpl) Register(request *webModel.RegistrationRequest) (*model.Response, error) {
 
-	var message string
+	var (
+		message                                        string
+		existingUsername, existingPhone, existingEmail customers.Customer
+	)
 
-	existingUsername := rg.CustomerRepository.Find(&customers.Customer{
+	result := rg.CustomerRepository.Find(&existingUsername, &customers.Customer{
 		Username: request.Username,
 	})
-	if existingUsername.ID != 0 {
-		// TODO: validation error should be move to helper
-		return nil, fiber.NewError(fiber.StatusBadRequest, "Username already used") // #marked: message
+	if helper.IsNotNil(result.Error) && !gormhelper.IsNotFound(result.Error) {
+		return nil, result.Error
 	}
 
-	existingPhone := rg.CustomerRepository.Find(&customers.Customer{
+	if helper.IsNotZero64(existingUsername.ID) {
+		// TODO: validation error should be move to helper
+		return nil, helper.Error400("Username already used") // #marked: message
+	}
+
+	result = rg.CustomerRepository.Find(&existingPhone, &customers.Customer{
 		Phone: request.Phone,
 	})
-	if existingPhone.ID != 0 {
-		return nil, fiber.NewError(fiber.StatusBadRequest, "Phone already used") // #marked: message
+	if helper.IsNotNil(result.Error) && !gormhelper.IsNotFound(result.Error) {
+		return nil, result.Error
+	}
+	if helper.IsNotZero64(existingPhone.ID) {
+		return nil, helper.Error400("Phone already used") // #marked: message
 	}
 
-	existingEmail := rg.CustomerRepository.Find(&customers.Customer{
+	result = rg.CustomerRepository.Find(&existingEmail, &customers.Customer{
 		Email: request.Email,
 	})
-	if existingEmail.ID != 0 {
-		return nil, fiber.NewError(fiber.StatusBadRequest, "Email already used") // #marked: message
+	if helper.IsNotNil(result.Error) && !gormhelper.IsNotFound(result.Error) {
+		return nil, result.Error
+	}
+	if helper.IsNotZero64(existingEmail.ID) {
+		return nil, helper.Error400("Email already used") // #marked: message
 	}
 
 	// TODO: hash password before save
 
-	result := rg.CustomerRepository.Create(&customers.Customer{
+	result = rg.CustomerRepository.Create(&customers.Customer{
 		Username: request.Username,
 		Phone:    request.Phone,
 		Email:    request.Email,
 		FullName: request.FullName,
 		Password: request.Password,
 	})
-	err := result.Error
-	if helper.IsNotNil(err) {
-		return nil, err
+	if helper.IsNotNil(result.Error) {
+		return nil, result.Error
 	}
 
 	if result.RowsAffected > 0 {
