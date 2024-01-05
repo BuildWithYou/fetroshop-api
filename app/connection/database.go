@@ -1,4 +1,4 @@
-package db
+package connection
 
 import (
 	"time"
@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-func OpenConnection(config *viper.Viper) *gorm.DB {
+func OpenDBConnection(config *viper.Viper) *gorm.DB {
 	var gormLogger logger.Interface
 	dialect := postgres.Open(config.GetString("database.dbUrl"))
 

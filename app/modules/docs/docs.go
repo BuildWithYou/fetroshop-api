@@ -17,7 +17,7 @@ type swaggerConfig struct {
 	title   string
 }
 
-func NewDocs(config *viper.Viper) *Docs {
+func DocsProvider(config *viper.Viper) *Docs {
 	return &Docs{
 		Config: config,
 	}

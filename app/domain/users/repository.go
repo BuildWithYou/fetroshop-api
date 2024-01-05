@@ -1,5 +1,7 @@
 package users
 
+import "gorm.io/gorm"
+
 type UserRepository interface {
-	Create(user *User) error
+	Create(user *User) *gorm.DB
 }

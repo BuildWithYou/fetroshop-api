@@ -1,5 +1,5 @@
 package controller
 
 type WebController struct {
-	Registration RegistrationController
+	Registration AuthController
 }

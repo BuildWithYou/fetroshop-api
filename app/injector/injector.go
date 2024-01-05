@@ -5,55 +5,59 @@ package injector
 
 import (
 	"github.com/BuildWithYou/fetroshop-api/app"
+	"github.com/BuildWithYou/fetroshop-api/app/connection"
 	customerRepo "github.com/BuildWithYou/fetroshop-api/app/domain/customers/postgres"
 	userRepo "github.com/BuildWithYou/fetroshop-api/app/domain/users/postgres"
-	"github.com/BuildWithYou/fetroshop-api/app/helper"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
+	"github.com/BuildWithYou/fetroshop-api/app/middleware"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/cms"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/docs"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web"
 	webController "github.com/BuildWithYou/fetroshop-api/app/modules/web/controller"
-	webRegistrationService "github.com/BuildWithYou/fetroshop-api/app/modules/web/service/auth/registration"
+	webAuthService "github.com/BuildWithYou/fetroshop-api/app/modules/web/service/auth"
 	"github.com/BuildWithYou/fetroshop-api/app/router"
-	"github.com/BuildWithYou/fetroshop-api/db"
 	"github.com/google/wire"
 )
 
+var serverSet = wire.NewSet(
+	confighelper.GetConfig,
+	docs.DocsProvider,
+	middleware.JwtMiddlewareProvider,
+	app.CreateFiber,
+	app.StartFiber,
+)
+
 var userSet = wire.NewSet(
-	userRepo.NewUserRepository,
-	webRegistrationService.NewRegistrationService,
-	webController.NewRegistrationController,
+	userRepo.UserRepositoryProvider,
+	webAuthService.AuthServiceProvider,
+	webController.AuthControllerProvider,
 )
 
 var customerSet = wire.NewSet(
-	customerRepo.NewCustomerRepository,
-	webRegistrationService.NewRegistrationService,
-	webController.NewRegistrationController,
+	customerRepo.CustomerRepositoryProvider,
+	webAuthService.AuthServiceProvider,
+	webController.AuthControllerProvider,
 )
 
 func InitializeWebServer() error {
 	wire.Build(
-		db.OpenConnection,
-		helper.GetConfig,
-		docs.NewDocs,
-		helper.GetValidator,
+		serverSet,
+		connection.OpenDBConnection,
+		validatorhelper.GetValidator,
 		customerSet,
 		router.WebRouterProvider,
 		web.WebServerConfigProvider,
-		app.CreateFiber,
-		app.StartFiber,
 	)
 	return nil
 }
 
 func InitializeCmsServer() error {
 	wire.Build(
-		docs.NewDocs,
-		helper.GetConfig,
+		serverSet,
 		router.CmsRouterProvider,
 		// userSet,
 		cms.CmsServerConfigProvider,
-		app.CreateFiber,
-		app.StartFiber,
 	)
 	return nil
 }
