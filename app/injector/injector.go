@@ -45,6 +45,7 @@ func InitializeWebServer() error {
 		serverSet,
 		connection.OpenDBConnection,
 		validatorhelper.GetValidator,
+		webController.WebControllerProvider,
 		customerSet,
 		router.WebRouterProvider,
 		web.WebServerConfigProvider,

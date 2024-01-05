@@ -1,5 +1,13 @@
 package controller
 
 type WebController struct {
-	Registration AuthController
+	Auth AuthController
+}
+
+func WebControllerProvider(
+	authController AuthController,
+) *WebController {
+	return &WebController{
+		Auth: authController,
+	}
 }
