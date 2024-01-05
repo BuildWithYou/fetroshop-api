@@ -21,7 +21,7 @@ func (rg *RegistrationServiceImpl) Register(request *webModel.RegistrationReques
 	result := rg.CustomerRepository.Find(&existingUsername, &customers.Customer{
 		Username: request.Username,
 	})
-	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsNotFound(result.Error) {
+	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
 	if validatorhelper.IsNotZero64(existingUsername.ID) {
@@ -31,7 +31,7 @@ func (rg *RegistrationServiceImpl) Register(request *webModel.RegistrationReques
 	result = rg.CustomerRepository.Find(&existingPhone, &customers.Customer{
 		Phone: request.Phone,
 	})
-	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsNotFound(result.Error) {
+	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
 	if validatorhelper.IsNotZero64(existingPhone.ID) {
@@ -41,7 +41,7 @@ func (rg *RegistrationServiceImpl) Register(request *webModel.RegistrationReques
 	result = rg.CustomerRepository.Find(&existingEmail, &customers.Customer{
 		Email: request.Email,
 	})
-	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsNotFound(result.Error) {
+	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
 	if validatorhelper.IsNotZero64(existingEmail.ID) {
