@@ -21,8 +21,9 @@ func (router *WebRouter) Init(app *fiber.App) {
 	app.Get("/documentation/*", router.Docs.SwaggerWeb())
 
 	// Authentication
-	app.Post("/api/auth/register", router.Authentication.Register)
-	app.Post("/api/auth/login", router.Authentication.Login)
+	authentication := app.Group("/api/auth")
+	authentication.Post("/register", router.Authentication.Register)
+	authentication.Post("/login", router.Authentication.Login)
 
 }
 
