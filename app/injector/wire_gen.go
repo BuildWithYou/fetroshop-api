@@ -8,6 +8,7 @@ package injector
 
 import (
 	"github.com/BuildWithYou/fetroshop-api/app"
+	"github.com/BuildWithYou/fetroshop-api/app/connection"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/customers/postgres"
 	postgres2 "github.com/BuildWithYou/fetroshop-api/app/domain/users/postgres"
 	"github.com/BuildWithYou/fetroshop-api/app/helper"
@@ -17,7 +18,6 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/controller"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/service/auth/registration"
 	"github.com/BuildWithYou/fetroshop-api/app/router"
-	"github.com/BuildWithYou/fetroshop-api/db"
 	"github.com/google/wire"
 )
 
@@ -27,9 +27,9 @@ func InitializeWebServer() error {
 	viper := helper.GetConfig()
 	docsDocs := docs.DocsProvider(viper)
 	validate := helper.GetValidator()
-	gormDB := db.OpenConnection(viper)
-	customerRepository := postgres.CustomerRepositoryProvider(gormDB)
-	registrationService := registration.RegistrationServiceProvider(gormDB, customerRepository)
+	db := connection.OpenDBConnection(viper)
+	customerRepository := postgres.CustomerRepositoryProvider(db)
+	registrationService := registration.RegistrationServiceProvider(db, customerRepository)
 	registrationController := controller.RegistrationControllerProvider(validate, registrationService)
 	routerRouter := router.WebRouterProvider(docsDocs, registrationController)
 	serverConfig := web.WebServerConfigProvider(routerRouter)

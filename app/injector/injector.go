@@ -5,6 +5,7 @@ package injector
 
 import (
 	"github.com/BuildWithYou/fetroshop-api/app"
+	"github.com/BuildWithYou/fetroshop-api/app/connection"
 	customerRepo "github.com/BuildWithYou/fetroshop-api/app/domain/customers/postgres"
 	userRepo "github.com/BuildWithYou/fetroshop-api/app/domain/users/postgres"
 	"github.com/BuildWithYou/fetroshop-api/app/helper"
@@ -14,7 +15,6 @@ import (
 	webController "github.com/BuildWithYou/fetroshop-api/app/modules/web/controller"
 	webRegistrationService "github.com/BuildWithYou/fetroshop-api/app/modules/web/service/auth/registration"
 	"github.com/BuildWithYou/fetroshop-api/app/router"
-	"github.com/BuildWithYou/fetroshop-api/db"
 	"github.com/google/wire"
 )
 
@@ -32,7 +32,7 @@ var customerSet = wire.NewSet(
 
 func InitializeWebServer() error {
 	wire.Build(
-		db.OpenConnection,
+		connection.OpenDBConnection,
 		helper.GetConfig,
 		docs.DocsProvider,
 		helper.GetValidator,
