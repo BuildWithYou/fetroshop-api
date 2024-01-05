@@ -8,7 +8,8 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/connection"
 	customerRepo "github.com/BuildWithYou/fetroshop-api/app/domain/customers/postgres"
 	userRepo "github.com/BuildWithYou/fetroshop-api/app/domain/users/postgres"
-	"github.com/BuildWithYou/fetroshop-api/app/helper"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/cms"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/docs"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web"
@@ -33,9 +34,9 @@ var customerSet = wire.NewSet(
 func InitializeWebServer() error {
 	wire.Build(
 		connection.OpenDBConnection,
-		helper.GetConfig,
+		confighelper.GetConfig,
 		docs.DocsProvider,
-		helper.GetValidator,
+		validatorhelper.GetValidator,
 		customerSet,
 		router.WebRouterProvider,
 		web.WebServerConfigProvider,
@@ -48,7 +49,7 @@ func InitializeWebServer() error {
 func InitializeCmsServer() error {
 	wire.Build(
 		docs.DocsProvider,
-		helper.GetConfig,
+		confighelper.GetConfig,
 		router.CmsRouterProvider,
 		// userSet,
 		cms.CmsServerConfigProvider,

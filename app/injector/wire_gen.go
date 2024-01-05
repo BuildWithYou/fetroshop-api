@@ -11,7 +11,8 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/connection"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/customers/postgres"
 	postgres2 "github.com/BuildWithYou/fetroshop-api/app/domain/users/postgres"
-	"github.com/BuildWithYou/fetroshop-api/app/helper"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/cms"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/docs"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web"
@@ -24,9 +25,9 @@ import (
 // Injectors from injector.go:
 
 func InitializeWebServer() error {
-	viper := helper.GetConfig()
+	viper := confighelper.GetConfig()
 	docsDocs := docs.DocsProvider(viper)
-	validate := helper.GetValidator()
+	validate := validatorhelper.GetValidator()
 	db := connection.OpenDBConnection(viper)
 	customerRepository := postgres.CustomerRepositoryProvider(db)
 	registrationService := registration.RegistrationServiceProvider(db, customerRepository)
@@ -39,7 +40,7 @@ func InitializeWebServer() error {
 }
 
 func InitializeCmsServer() error {
-	viper := helper.GetConfig()
+	viper := confighelper.GetConfig()
 	docsDocs := docs.DocsProvider(viper)
 	routerRouter := router.CmsRouterProvider(docsDocs)
 	serverConfig := cms.CmsServerConfigProvider(routerRouter)

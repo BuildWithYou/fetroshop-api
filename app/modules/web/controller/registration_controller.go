@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/BuildWithYou/fetroshop-api/app/helper"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/model"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/service/auth/registration"
 	"github.com/go-playground/validator/v10"
@@ -40,12 +40,12 @@ func (r *RegistrationControllerImpl) Register(ctx *fiber.Ctx) (err error) {
 	payload := new(model.RegistrationRequest)
 
 	err = ctx.BodyParser(payload)
-	if helper.IsNotNil(err) {
+	if validatorhelper.IsNotNil(err) {
 		return err
 	}
 
 	err = r.Validate.Struct(payload)
-	if helper.IsNotNil(err) {
+	if validatorhelper.IsNotNil(err) {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
@@ -56,7 +56,7 @@ func (r *RegistrationControllerImpl) Register(ctx *fiber.Ctx) (err error) {
 		FullName: payload.FullName,
 		Password: payload.Password,
 	})
-	if helper.IsNotNil(err) {
+	if validatorhelper.IsNotNil(err) {
 		return err
 	}
 	return ctx.JSON(registerResponse)

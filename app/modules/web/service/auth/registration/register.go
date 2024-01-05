@@ -2,8 +2,9 @@ package registration
 
 import (
 	"github.com/BuildWithYou/fetroshop-api/app/domain/customers"
-	"github.com/BuildWithYou/fetroshop-api/app/helper"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/model"
 	webModel "github.com/BuildWithYou/fetroshop-api/app/modules/web/model"
 	"github.com/gofiber/fiber/v2"
@@ -20,33 +21,31 @@ func (rg *RegistrationServiceImpl) Register(request *webModel.RegistrationReques
 	result := rg.CustomerRepository.Find(&existingUsername, &customers.Customer{
 		Username: request.Username,
 	})
-	if helper.IsNotNil(result.Error) && !gormhelper.IsNotFound(result.Error) {
+	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsNotFound(result.Error) {
 		return nil, result.Error
 	}
-
-	if helper.IsNotZero64(existingUsername.ID) {
-		// TODO: validation error should be move to helper
-		return nil, helper.Error400("Username already used") // #marked: message
+	if validatorhelper.IsNotZero64(existingUsername.ID) {
+		return nil, errorhelper.Error400("Username already used") // #marked: message
 	}
 
 	result = rg.CustomerRepository.Find(&existingPhone, &customers.Customer{
 		Phone: request.Phone,
 	})
-	if helper.IsNotNil(result.Error) && !gormhelper.IsNotFound(result.Error) {
+	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsNotFound(result.Error) {
 		return nil, result.Error
 	}
-	if helper.IsNotZero64(existingPhone.ID) {
-		return nil, helper.Error400("Phone already used") // #marked: message
+	if validatorhelper.IsNotZero64(existingPhone.ID) {
+		return nil, errorhelper.Error400("Phone already used") // #marked: message
 	}
 
 	result = rg.CustomerRepository.Find(&existingEmail, &customers.Customer{
 		Email: request.Email,
 	})
-	if helper.IsNotNil(result.Error) && !gormhelper.IsNotFound(result.Error) {
+	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsNotFound(result.Error) {
 		return nil, result.Error
 	}
-	if helper.IsNotZero64(existingEmail.ID) {
-		return nil, helper.Error400("Email already used") // #marked: message
+	if validatorhelper.IsNotZero64(existingEmail.ID) {
+		return nil, errorhelper.Error400("Email already used") // #marked: message
 	}
 
 	// TODO: hash password before save
@@ -58,7 +57,7 @@ func (rg *RegistrationServiceImpl) Register(request *webModel.RegistrationReques
 		FullName: request.FullName,
 		Password: request.Password,
 	})
-	if helper.IsNotNil(result.Error) {
+	if validatorhelper.IsNotNil(result.Error) {
 		return nil, result.Error
 	}
 
