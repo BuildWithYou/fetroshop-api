@@ -18,8 +18,9 @@ func (router *WebRouter) Init(app *fiber.App) {
 	// documentation
 	app.Get("/documentation/*", router.Docs.SwaggerWeb())
 
-	// registration
+	// Authentication
 	app.Post("/api/auth/register", router.Registration.Register)
+	app.Post("/api/auth/login", router.Registration.Register)
 }
 
 func WebRouterProvider(docs *docs.Docs, ctr controller.RegistrationController) Router {

@@ -51,3 +51,28 @@ func (r *RegistrationControllerImpl) Register(ctx *fiber.Ctx) (err error) {
 	}
 	return ctx.JSON(registerResponse)
 }
+
+// @Summary      Login for customers
+// @Description
+// @Tags         Authentication
+// @Accept       json
+// @Produce      json
+// @Param        body  body     model.LoginRequest  true  "Login Request"
+// @Success      200  {object}  model.Response
+// @Failure      400  {object}  model.Response
+// @Failure      404  {object}  model.Response
+// @Failure      500  {object}  model.Response
+// @Router       /api/auth/login [post]
+func (r *RegistrationControllerImpl) Login(ctx *fiber.Ctx) (err error) {
+	payload := new(model.LoginRequest)
+	validatorhelper.ValidatePayload(ctx, r.Validate, payload)
+
+	registerResponse, err := r.RegistrationService.Login(&model.LoginRequest{
+		Username: payload.Username,
+		Password: payload.Password,
+	})
+	if validatorhelper.IsNotNil(err) {
+		return err
+	}
+	return ctx.JSON(registerResponse)
+}

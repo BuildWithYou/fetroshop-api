@@ -9,6 +9,7 @@ import (
 
 type RegistrationService interface {
 	Register(request *webModel.RegistrationRequest) (*model.Response, error)
+	Login(request *webModel.LoginRequest) (*model.Response, error)
 }
 
 type RegistrationServiceImpl struct {

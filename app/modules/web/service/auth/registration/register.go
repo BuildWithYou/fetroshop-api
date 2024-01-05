@@ -25,7 +25,7 @@ func (rg *RegistrationServiceImpl) Register(request *webModel.RegistrationReques
 	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
-	if validatorhelper.IsNotZero(existingUsername.ID) {
+	if !gormhelper.IsRecordNotFound(result.Error) {
 		return nil, errorhelper.Error400("Username already used") // #marked: message
 	}
 
@@ -35,7 +35,7 @@ func (rg *RegistrationServiceImpl) Register(request *webModel.RegistrationReques
 	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
-	if validatorhelper.IsNotZero(existingPhone.ID) {
+	if !gormhelper.IsRecordNotFound(result.Error) {
 		return nil, errorhelper.Error400("Phone already used") // #marked: message
 	}
 
@@ -45,7 +45,7 @@ func (rg *RegistrationServiceImpl) Register(request *webModel.RegistrationReques
 	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
-	if validatorhelper.IsNotZero(existingEmail.ID) {
+	if !gormhelper.IsRecordNotFound(result.Error) {
 		return nil, errorhelper.Error400("Email already used") // #marked: message
 	}
 
