@@ -3,24 +3,25 @@ package controller
 import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/model"
-	"github.com/BuildWithYou/fetroshop-api/app/modules/web/service/auth/registration"
+	"github.com/BuildWithYou/fetroshop-api/app/modules/web/service/auth"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )
 
-type RegistrationController interface {
+type AuthController interface {
 	Register(ctx *fiber.Ctx) (err error)
+	Login(ctx *fiber.Ctx) (err error)
 }
 
-type RegistrationControllerImpl struct {
-	Validate            *validator.Validate
-	RegistrationService registration.RegistrationService
+type AuthControllerImpl struct {
+	Validate    *validator.Validate
+	AuthService auth.AuthService
 }
 
-func RegistrationControllerProvider(vld *validator.Validate, regSvc registration.RegistrationService) RegistrationController {
-	return &RegistrationControllerImpl{
-		Validate:            vld,
-		RegistrationService: regSvc,
+func AuthControllerProvider(vld *validator.Validate, regSvc auth.AuthService) AuthController {
+	return &AuthControllerImpl{
+		Validate:    vld,
+		AuthService: regSvc,
 	}
 }
 
@@ -35,11 +36,11 @@ func RegistrationControllerProvider(vld *validator.Validate, regSvc registration
 // @Failure      404  {object}  model.Response
 // @Failure      500  {object}  model.Response
 // @Router       /api/auth/register [post]
-func (r *RegistrationControllerImpl) Register(ctx *fiber.Ctx) (err error) {
+func (r *AuthControllerImpl) Register(ctx *fiber.Ctx) (err error) {
 	payload := new(model.RegistrationRequest)
 	validatorhelper.ValidatePayload(ctx, r.Validate, payload)
 
-	registerResponse, err := r.RegistrationService.Register(&model.RegistrationRequest{
+	registerResponse, err := r.AuthService.Register(&model.RegistrationRequest{
 		Username: payload.Username,
 		Phone:    payload.Phone,
 		Email:    payload.Email,
@@ -63,11 +64,11 @@ func (r *RegistrationControllerImpl) Register(ctx *fiber.Ctx) (err error) {
 // @Failure      404  {object}  model.Response
 // @Failure      500  {object}  model.Response
 // @Router       /api/auth/login [post]
-func (r *RegistrationControllerImpl) Login(ctx *fiber.Ctx) (err error) {
+func (r *AuthControllerImpl) Login(ctx *fiber.Ctx) (err error) {
 	payload := new(model.LoginRequest)
 	validatorhelper.ValidatePayload(ctx, r.Validate, payload)
 
-	registerResponse, err := r.RegistrationService.Login(&model.LoginRequest{
+	registerResponse, err := r.AuthService.Login(&model.LoginRequest{
 		Username: payload.Username,
 		Password: payload.Password,
 	})

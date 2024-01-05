@@ -1,4 +1,4 @@
-package registration
+package auth
 
 import (
 	"github.com/BuildWithYou/fetroshop-api/app/domain/customers"
@@ -12,7 +12,7 @@ import (
 	"github.com/gofiber/utils"
 )
 
-func (rg *RegistrationServiceImpl) Register(request *webModel.RegistrationRequest) (*model.Response, error) {
+func (rg *AuthServiceImpl) Register(request *webModel.RegistrationRequest) (*model.Response, error) {
 
 	var (
 		message                                        string

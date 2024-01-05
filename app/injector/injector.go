@@ -14,21 +14,21 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/modules/docs"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web"
 	webController "github.com/BuildWithYou/fetroshop-api/app/modules/web/controller"
-	webRegistrationService "github.com/BuildWithYou/fetroshop-api/app/modules/web/service/auth/registration"
+	webAuthService "github.com/BuildWithYou/fetroshop-api/app/modules/web/service/auth"
 	"github.com/BuildWithYou/fetroshop-api/app/router"
 	"github.com/google/wire"
 )
 
 var userSet = wire.NewSet(
 	userRepo.UserRepositoryProvider,
-	webRegistrationService.RegistrationServiceProvider,
-	webController.RegistrationControllerProvider,
+	webAuthService.AuthServiceProvider,
+	webController.AuthControllerProvider,
 )
 
 var customerSet = wire.NewSet(
 	customerRepo.CustomerRepositoryProvider,
-	webRegistrationService.RegistrationServiceProvider,
-	webController.RegistrationControllerProvider,
+	webAuthService.AuthServiceProvider,
+	webController.AuthControllerProvider,
 )
 
 func InitializeWebServer() error {

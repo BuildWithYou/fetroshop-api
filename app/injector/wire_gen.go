@@ -17,7 +17,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/modules/docs"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/controller"
-	"github.com/BuildWithYou/fetroshop-api/app/modules/web/service/auth/registration"
+	"github.com/BuildWithYou/fetroshop-api/app/modules/web/service/auth"
 	"github.com/BuildWithYou/fetroshop-api/app/router"
 	"github.com/google/wire"
 )
@@ -30,9 +30,9 @@ func InitializeWebServer() error {
 	validate := validatorhelper.GetValidator()
 	db := connection.OpenDBConnection(viper)
 	customerRepository := postgres.CustomerRepositoryProvider(db)
-	registrationService := registration.RegistrationServiceProvider(db, customerRepository)
-	registrationController := controller.RegistrationControllerProvider(validate, registrationService)
-	routerRouter := router.WebRouterProvider(docsDocs, registrationController)
+	authService := auth.AuthServiceProvider(db, viper, customerRepository)
+	authController := controller.AuthControllerProvider(validate, authService)
+	routerRouter := router.WebRouterProvider(docsDocs, authController)
 	serverConfig := web.WebServerConfigProvider(routerRouter)
 	fiberApp := app.CreateFiber(serverConfig)
 	error2 := app.StartFiber(fiberApp, serverConfig)
@@ -51,6 +51,6 @@ func InitializeCmsServer() error {
 
 // injector.go:
 
-var userSet = wire.NewSet(postgres2.UserRepositoryProvider, registration.RegistrationServiceProvider, controller.RegistrationControllerProvider)
+var userSet = wire.NewSet(postgres2.UserRepositoryProvider, auth.AuthServiceProvider, controller.AuthControllerProvider)
 
-var customerSet = wire.NewSet(postgres.CustomerRepositoryProvider, registration.RegistrationServiceProvider, controller.RegistrationControllerProvider)
+var customerSet = wire.NewSet(postgres.CustomerRepositoryProvider, auth.AuthServiceProvider, controller.AuthControllerProvider)
