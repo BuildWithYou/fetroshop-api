@@ -1,6 +1,9 @@
 package validatorhelper
 
-import "github.com/go-playground/validator/v10"
+import (
+	"github.com/go-playground/validator/v10"
+	"github.com/gofiber/fiber/v2"
+)
 
 func GetValidator() *validator.Validate {
 	return validator.New()
@@ -20,4 +23,18 @@ func IsZero64(value int64) bool {
 
 func IsNotZero64(value int64) bool {
 	return value != 0
+}
+
+func ValidatePayload(ctx *fiber.Ctx, vld *validator.Validate, payload any) (err error) {
+	err = ctx.BodyParser(payload)
+	if IsNotNil(err) {
+		return err
+	}
+
+	err = vld.Struct(payload)
+	if IsNotNil(err) {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+
+	return err
 }

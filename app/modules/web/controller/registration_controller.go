@@ -36,18 +36,8 @@ func RegistrationControllerProvider(vld *validator.Validate, regSvc registration
 // @Failure      500  {object}  model.Response
 // @Router       /api/auth/register [post]
 func (r *RegistrationControllerImpl) Register(ctx *fiber.Ctx) (err error) {
-	// TODO: validation need to be move to helper
 	payload := new(model.RegistrationRequest)
-
-	err = ctx.BodyParser(payload)
-	if validatorhelper.IsNotNil(err) {
-		return err
-	}
-
-	err = r.Validate.Struct(payload)
-	if validatorhelper.IsNotNil(err) {
-		return fiber.NewError(fiber.StatusBadRequest, err.Error())
-	}
+	validatorhelper.ValidatePayload(ctx, r.Validate, payload)
 
 	registerResponse, err := r.RegistrationService.Register(&model.RegistrationRequest{
 		Username: payload.Username,
