@@ -10,6 +10,7 @@ import (
 	userRepo "github.com/BuildWithYou/fetroshop-api/app/domain/users/postgres"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
+	"github.com/BuildWithYou/fetroshop-api/app/middleware"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/cms"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/docs"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web"
@@ -17,6 +18,14 @@ import (
 	webAuthService "github.com/BuildWithYou/fetroshop-api/app/modules/web/service/auth"
 	"github.com/BuildWithYou/fetroshop-api/app/router"
 	"github.com/google/wire"
+)
+
+var serverSet = wire.NewSet(
+	confighelper.GetConfig,
+	docs.DocsProvider,
+	middleware.JwtMiddlewareProvider,
+	app.CreateFiber,
+	app.StartFiber,
 )
 
 var userSet = wire.NewSet(
@@ -33,28 +42,22 @@ var customerSet = wire.NewSet(
 
 func InitializeWebServer() error {
 	wire.Build(
+		serverSet,
 		connection.OpenDBConnection,
-		confighelper.GetConfig,
-		docs.DocsProvider,
 		validatorhelper.GetValidator,
 		customerSet,
 		router.WebRouterProvider,
 		web.WebServerConfigProvider,
-		app.CreateFiber,
-		app.StartFiber,
 	)
 	return nil
 }
 
 func InitializeCmsServer() error {
 	wire.Build(
-		docs.DocsProvider,
-		confighelper.GetConfig,
+		serverSet,
 		router.CmsRouterProvider,
 		// userSet,
 		cms.CmsServerConfigProvider,
-		app.CreateFiber,
-		app.StartFiber,
 	)
 	return nil
 }

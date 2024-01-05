@@ -1,6 +1,7 @@
 package router
 
 import (
+	"github.com/BuildWithYou/fetroshop-api/app/middleware"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/docs"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/controller"
 	"github.com/gofiber/fiber/v2"
@@ -8,6 +9,7 @@ import (
 
 type WebRouter struct {
 	Docs           *docs.Docs
+	JwtMiddleware  *middleware.JwtMiddleware
 	Authentication controller.AuthController
 }
 
@@ -21,12 +23,18 @@ func (router *WebRouter) Init(app *fiber.App) {
 	// Authentication
 	app.Post("/api/auth/register", router.Authentication.Register)
 	app.Post("/api/auth/login", router.Authentication.Login)
+
 }
 
-func WebRouterProvider(docs *docs.Docs, ctr controller.AuthController) Router {
+func WebRouterProvider(
+	docs *docs.Docs,
+	ctr controller.AuthController,
+	jwtMiddleware *middleware.JwtMiddleware,
+) Router {
 	return &WebRouter{
 		Docs:           docs,
 		Authentication: ctr,
+		JwtMiddleware:  jwtMiddleware,
 	}
 }
 

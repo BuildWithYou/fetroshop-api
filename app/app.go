@@ -22,6 +22,13 @@ type ServerConfig struct {
 	Static map[string]string
 }
 
+// CreateFiber initializes a Fiber app with the given server configuration.
+//
+// Parameters:
+// - serverConfig: a pointer to a ServerConfig object containing the server configuration.
+//
+// Returns:
+// - fiberApp: a pointer to a fiber.App object representing the initialized Fiber app.
 func CreateFiber(serverConfig *ServerConfig) (fiberApp *fiber.App) {
 	// Fiber app initialization
 	return fiber.New(fiber.Config{
@@ -50,6 +57,11 @@ func CreateFiber(serverConfig *ServerConfig) (fiberApp *fiber.App) {
 	})
 }
 
+// StartFiber initializes and starts a Fiber application.
+//
+// fiberApp: A pointer to the Fiber application instance.
+// serverConfig: A pointer to the server configuration.
+// Returns an error if there is an issue starting the Fiber application.
 func StartFiber(
 	fiberApp *fiber.App,
 	serverConfig *ServerConfig) error {

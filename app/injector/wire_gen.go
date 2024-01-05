@@ -13,6 +13,7 @@ import (
 	postgres2 "github.com/BuildWithYou/fetroshop-api/app/domain/users/postgres"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
+	"github.com/BuildWithYou/fetroshop-api/app/middleware"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/cms"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/docs"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web"
@@ -32,7 +33,8 @@ func InitializeWebServer() error {
 	customerRepository := postgres.CustomerRepositoryProvider(db)
 	authService := auth.AuthServiceProvider(db, viper, customerRepository)
 	authController := controller.AuthControllerProvider(validate, authService)
-	routerRouter := router.WebRouterProvider(docsDocs, authController)
+	jwtMiddleware := middleware.JwtMiddlewareProvider(viper)
+	routerRouter := router.WebRouterProvider(docsDocs, authController, jwtMiddleware)
 	serverConfig := web.WebServerConfigProvider(routerRouter)
 	fiberApp := app.CreateFiber(serverConfig)
 	error2 := app.StartFiber(fiberApp, serverConfig)
@@ -42,7 +44,8 @@ func InitializeWebServer() error {
 func InitializeCmsServer() error {
 	viper := confighelper.GetConfig()
 	docsDocs := docs.DocsProvider(viper)
-	routerRouter := router.CmsRouterProvider(docsDocs)
+	jwtMiddleware := middleware.JwtMiddlewareProvider(viper)
+	routerRouter := router.CmsRouterProvider(docsDocs, jwtMiddleware)
 	serverConfig := cms.CmsServerConfigProvider(routerRouter)
 	fiberApp := app.CreateFiber(serverConfig)
 	error2 := app.StartFiber(fiberApp, serverConfig)
@@ -50,6 +53,8 @@ func InitializeCmsServer() error {
 }
 
 // injector.go:
+
+var serverSet = wire.NewSet(confighelper.GetConfig, docs.DocsProvider, middleware.JwtMiddlewareProvider, app.CreateFiber, app.StartFiber)
 
 var userSet = wire.NewSet(postgres2.UserRepositoryProvider, auth.AuthServiceProvider, controller.AuthControllerProvider)
 
