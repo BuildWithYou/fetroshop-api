@@ -6,7 +6,9 @@ package injector
 import (
 	"github.com/BuildWithYou/fetroshop-api/app"
 	"github.com/BuildWithYou/fetroshop-api/app/connection"
+	customerAccessRepo "github.com/BuildWithYou/fetroshop-api/app/domain/customer_accesses/postgres"
 	customerRepo "github.com/BuildWithYou/fetroshop-api/app/domain/customers/postgres"
+	userAccessRepo "github.com/BuildWithYou/fetroshop-api/app/domain/user_accesses/postgres"
 	userRepo "github.com/BuildWithYou/fetroshop-api/app/domain/users/postgres"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
@@ -28,6 +30,8 @@ var serverSet = wire.NewSet(
 	docs.DocsProvider,
 	middleware.JwtMiddlewareProvider,
 	validatorhelper.GetValidator,
+	userAccessRepo.UserAccessRepositoryProvider,
+	customerAccessRepo.CustomerAccessRepositoryProvider,
 	app.CreateFiber,
 	app.StartFiber,
 )

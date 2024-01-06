@@ -3,6 +3,8 @@ package middleware
 import (
 	"strings"
 
+	"github.com/BuildWithYou/fetroshop-api/app/domain/customer_accesses"
+	"github.com/BuildWithYou/fetroshop-api/app/domain/user_accesses"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/jwt"
 	"github.com/gofiber/fiber/v2"
@@ -10,15 +12,23 @@ import (
 )
 
 type JwtMiddleware struct {
-	Config *viper.Viper
+	Config                   *viper.Viper
+	UserAccessRepository     user_accesses.UserAccessRepository
+	CustomerAccessRepository customer_accesses.CustomerAccessRepository
 }
 
 // NewJwtMiddleware creates a new JwtMiddleware instance.
 //
 // It takes a pointer to a viper.Viper object as the parameter config and returns a pointer to a JwtMiddleware object.
-func JwtMiddlewareProvider(config *viper.Viper) *JwtMiddleware {
+func JwtMiddlewareProvider(
+	config *viper.Viper,
+	userAccessRepository user_accesses.UserAccessRepository,
+	customerAccessRepository customer_accesses.CustomerAccessRepository,
+) *JwtMiddleware {
 	return &JwtMiddleware{
-		Config: config,
+		Config:                   config,
+		UserAccessRepository:     userAccessRepository,
+		CustomerAccessRepository: customerAccessRepository,
 	}
 }
 

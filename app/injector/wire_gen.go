@@ -9,8 +9,10 @@ package injector
 import (
 	"github.com/BuildWithYou/fetroshop-api/app"
 	"github.com/BuildWithYou/fetroshop-api/app/connection"
+	postgres3 "github.com/BuildWithYou/fetroshop-api/app/domain/customer_accesses/postgres"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/customers/postgres"
-	postgres2 "github.com/BuildWithYou/fetroshop-api/app/domain/users/postgres"
+	postgres2 "github.com/BuildWithYou/fetroshop-api/app/domain/user_accesses/postgres"
+	postgres4 "github.com/BuildWithYou/fetroshop-api/app/domain/users/postgres"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/middleware"
@@ -36,7 +38,9 @@ func InitializeWebServer() error {
 	authService := auth.AuthServiceProvider(db, viper, validate, customerRepository)
 	authController := controller.AuthControllerProvider(validate, authService)
 	controllerController := controller.WebControllerProvider(authController)
-	jwtMiddleware := middleware.JwtMiddlewareProvider(viper)
+	userAccessRepository := postgres2.UserAccessRepositoryProvider(db)
+	customerAccessRepository := postgres3.CustomerAccessRepositoryProvider(db)
+	jwtMiddleware := middleware.JwtMiddlewareProvider(viper, userAccessRepository, customerAccessRepository)
 	routerRouter := router.WebRouterProvider(docsDocs, controllerController, jwtMiddleware)
 	serverConfig := web.WebServerConfigProvider(routerRouter)
 	fiberApp := app.CreateFiber(serverConfig)
@@ -47,10 +51,12 @@ func InitializeWebServer() error {
 func InitializeCmsServer() error {
 	viper := confighelper.GetConfig()
 	docsDocs := docs.DocsProvider(viper)
-	jwtMiddleware := middleware.JwtMiddlewareProvider(viper)
 	db := connection.OpenDBConnection(viper)
+	userAccessRepository := postgres2.UserAccessRepositoryProvider(db)
+	customerAccessRepository := postgres3.CustomerAccessRepositoryProvider(db)
+	jwtMiddleware := middleware.JwtMiddlewareProvider(viper, userAccessRepository, customerAccessRepository)
 	validate := validatorhelper.GetValidator()
-	userRepository := postgres2.UserRepositoryProvider(db)
+	userRepository := postgres4.UserRepositoryProvider(db)
 	authService := auth2.AuthServiceProvider(db, viper, validate, userRepository)
 	authController := controller2.AuthControllerProvider(authService)
 	controllerController := controller2.CmsControllerProvider(authController)
@@ -63,7 +69,7 @@ func InitializeCmsServer() error {
 
 // injector.go:
 
-var serverSet = wire.NewSet(confighelper.GetConfig, connection.OpenDBConnection, docs.DocsProvider, middleware.JwtMiddlewareProvider, validatorhelper.GetValidator, app.CreateFiber, app.StartFiber)
+var serverSet = wire.NewSet(confighelper.GetConfig, connection.OpenDBConnection, docs.DocsProvider, middleware.JwtMiddlewareProvider, validatorhelper.GetValidator, postgres2.UserAccessRepositoryProvider, postgres3.CustomerAccessRepositoryProvider, app.CreateFiber, app.StartFiber)
 
 // web dependencies
 var webRepoSet = wire.NewSet(postgres.CustomerRepositoryProvider)
@@ -73,7 +79,7 @@ var webControllerSet = wire.NewSet(controller.WebControllerProvider, controller.
 var webServiceSet = wire.NewSet(auth.AuthServiceProvider)
 
 // cms dependencies
-var cmsRepoSet = wire.NewSet(postgres2.UserRepositoryProvider)
+var cmsRepoSet = wire.NewSet(postgres4.UserRepositoryProvider)
 
 var cmsControllerSet = wire.NewSet(controller2.CmsControllerProvider, controller2.AuthControllerProvider)
 
