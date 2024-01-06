@@ -10,16 +10,16 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/jwt"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/password"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
-	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
-	"github.com/BuildWithYou/fetroshop-api/app/modules/cms/model"
+	"github.com/BuildWithYou/fetroshop-api/app/model"
+	cmsModel "github.com/BuildWithYou/fetroshop-api/app/modules/cms/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/utils"
 )
 
-func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*appModel.Response, error) {
+func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*model.Response, error) {
 	var user users.User
 
-	payload := new(model.LoginRequest)
+	payload := new(cmsModel.LoginRequest)
 	validatorhelper.ValidatePayload(ctx, svc.Validate, payload)
 
 	result := svc.UserRepository.Find(&user, &users.User{
@@ -40,7 +40,7 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*appModel.Response, error) {
 
 	fmt.Println("expiration : ", expiration)
 
-	return &appModel.Response{
+	return &model.Response{
 		Code:    fiber.StatusCreated,
 		Status:  utils.StatusMessage(fiber.StatusOK),
 		Message: "Login success", // #marked: message

@@ -33,7 +33,7 @@ func InitializeWebServer() error {
 	validate := validatorhelper.GetValidator()
 	db := connection.OpenDBConnection(viper)
 	customerRepository := postgres.CustomerRepositoryProvider(db)
-	authService := auth.AuthServiceProvider(db, viper, customerRepository)
+	authService := auth.AuthServiceProvider(db, viper, validate, customerRepository)
 	authController := controller.AuthControllerProvider(validate, authService)
 	controllerController := controller.WebControllerProvider(authController)
 	jwtMiddleware := middleware.JwtMiddlewareProvider(viper)
