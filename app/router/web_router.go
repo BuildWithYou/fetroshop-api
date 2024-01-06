@@ -10,7 +10,7 @@ import (
 type WebRouter struct {
 	Docs          *docs.Docs
 	JwtMiddleware *middleware.JwtMiddleware
-	WebController *controller.WebController
+	Controller    *controller.Controller
 }
 
 func (router *WebRouter) Init(app *fiber.App) {
@@ -22,19 +22,19 @@ func (router *WebRouter) Init(app *fiber.App) {
 
 	// Authentication
 	authentication := app.Group("/api/auth")
-	authentication.Post("/register", router.WebController.Auth.Register)
-	authentication.Post("/login", router.WebController.Auth.Login)
+	authentication.Post("/register", router.Controller.Auth.Register)
+	authentication.Post("/login", router.Controller.Auth.Login)
 
 }
 
 func WebRouterProvider(
 	docs *docs.Docs,
-	ctr *controller.WebController,
+	ctr *controller.Controller,
 	jwtMiddleware *middleware.JwtMiddleware,
 ) Router {
 	return &WebRouter{
 		Docs:          docs,
-		WebController: ctr,
+		Controller:    ctr,
 		JwtMiddleware: jwtMiddleware,
 	}
 }

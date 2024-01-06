@@ -12,6 +12,8 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/middleware"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/cms"
+	cmsController "github.com/BuildWithYou/fetroshop-api/app/modules/cms/controller"
+	cmsAuthService "github.com/BuildWithYou/fetroshop-api/app/modules/cms/service/auth"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/docs"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web"
 	webController "github.com/BuildWithYou/fetroshop-api/app/modules/web/controller"
@@ -22,42 +24,61 @@ import (
 
 var serverSet = wire.NewSet(
 	confighelper.GetConfig,
+	connection.OpenDBConnection,
 	docs.DocsProvider,
 	middleware.JwtMiddlewareProvider,
+	validatorhelper.GetValidator,
 	app.CreateFiber,
 	app.StartFiber,
 )
 
-var userSet = wire.NewSet(
-	userRepo.UserRepositoryProvider,
-	webAuthService.AuthServiceProvider,
+// web dependencies
+var webRepoSet = wire.NewSet(
+	customerRepo.CustomerRepositoryProvider,
+)
+
+var webControllerSet = wire.NewSet(
+	webController.WebControllerProvider,
 	webController.AuthControllerProvider,
 )
 
-var customerSet = wire.NewSet(
-	customerRepo.CustomerRepositoryProvider,
+var webServiceSet = wire.NewSet(
 	webAuthService.AuthServiceProvider,
-	webController.AuthControllerProvider,
 )
 
 func InitializeWebServer() error {
 	wire.Build(
 		serverSet,
-		connection.OpenDBConnection,
-		validatorhelper.GetValidator,
-		webController.WebControllerProvider,
-		customerSet,
+		webRepoSet,
+		webControllerSet,
+		webServiceSet,
 		router.WebRouterProvider,
 		web.WebServerConfigProvider,
 	)
 	return nil
 }
 
+// cms dependencies
+var cmsRepoSet = wire.NewSet(
+	userRepo.UserRepositoryProvider,
+)
+
+var cmsControllerSet = wire.NewSet(
+	cmsController.CmsControllerProvider,
+	cmsController.AuthControllerProvider,
+)
+
+var cmsServiceSet = wire.NewSet(
+	cmsAuthService.AuthServiceProvider,
+)
+
 func InitializeCmsServer() error {
 	wire.Build(
 		serverSet,
+		cmsRepoSet,
+		cmsControllerSet,
+		cmsServiceSet,
 		router.CmsRouterProvider,
-		// userSet,
 		cms.CmsServerConfigProvider,
 	)
 	return nil

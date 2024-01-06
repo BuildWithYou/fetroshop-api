@@ -15,6 +15,8 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/middleware"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/cms"
+	controller2 "github.com/BuildWithYou/fetroshop-api/app/modules/cms/controller"
+	auth2 "github.com/BuildWithYou/fetroshop-api/app/modules/cms/service/auth"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/docs"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/controller"
@@ -33,9 +35,9 @@ func InitializeWebServer() error {
 	customerRepository := postgres.CustomerRepositoryProvider(db)
 	authService := auth.AuthServiceProvider(db, viper, customerRepository)
 	authController := controller.AuthControllerProvider(validate, authService)
-	webController := controller.WebControllerProvider(authController)
+	controllerController := controller.WebControllerProvider(authController)
 	jwtMiddleware := middleware.JwtMiddlewareProvider(viper)
-	routerRouter := router.WebRouterProvider(docsDocs, webController, jwtMiddleware)
+	routerRouter := router.WebRouterProvider(docsDocs, controllerController, jwtMiddleware)
 	serverConfig := web.WebServerConfigProvider(routerRouter)
 	fiberApp := app.CreateFiber(serverConfig)
 	error2 := app.StartFiber(fiberApp, serverConfig)
@@ -46,7 +48,13 @@ func InitializeCmsServer() error {
 	viper := confighelper.GetConfig()
 	docsDocs := docs.DocsProvider(viper)
 	jwtMiddleware := middleware.JwtMiddlewareProvider(viper)
-	routerRouter := router.CmsRouterProvider(docsDocs, jwtMiddleware)
+	validate := validatorhelper.GetValidator()
+	db := connection.OpenDBConnection(viper)
+	userRepository := postgres2.UserRepositoryProvider(db)
+	authService := auth2.AuthServiceProvider(db, viper, userRepository)
+	authController := controller2.AuthControllerProvider(validate, authService)
+	controllerController := controller2.CmsControllerProvider(authController)
+	routerRouter := router.CmsRouterProvider(docsDocs, jwtMiddleware, controllerController)
 	serverConfig := cms.CmsServerConfigProvider(routerRouter)
 	fiberApp := app.CreateFiber(serverConfig)
 	error2 := app.StartFiber(fiberApp, serverConfig)
@@ -55,8 +63,18 @@ func InitializeCmsServer() error {
 
 // injector.go:
 
-var serverSet = wire.NewSet(confighelper.GetConfig, docs.DocsProvider, middleware.JwtMiddlewareProvider, app.CreateFiber, app.StartFiber)
+var serverSet = wire.NewSet(confighelper.GetConfig, connection.OpenDBConnection, docs.DocsProvider, middleware.JwtMiddlewareProvider, validatorhelper.GetValidator, app.CreateFiber, app.StartFiber)
 
-var userSet = wire.NewSet(postgres2.UserRepositoryProvider, auth.AuthServiceProvider, controller.AuthControllerProvider)
+// web dependencies
+var webRepoSet = wire.NewSet(postgres.CustomerRepositoryProvider)
 
-var customerSet = wire.NewSet(postgres.CustomerRepositoryProvider, auth.AuthServiceProvider, controller.AuthControllerProvider)
+var webControllerSet = wire.NewSet(controller.WebControllerProvider, controller.AuthControllerProvider)
+
+var webServiceSet = wire.NewSet(auth.AuthServiceProvider)
+
+// cms dependencies
+var cmsRepoSet = wire.NewSet(postgres2.UserRepositoryProvider)
+
+var cmsControllerSet = wire.NewSet(controller2.CmsControllerProvider, controller2.AuthControllerProvider)
+
+var cmsServiceSet = wire.NewSet(auth2.AuthServiceProvider)
