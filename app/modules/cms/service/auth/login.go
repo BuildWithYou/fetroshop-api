@@ -10,34 +10,37 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/jwt"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/password"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
-	"github.com/BuildWithYou/fetroshop-api/app/model"
-	webModel "github.com/BuildWithYou/fetroshop-api/app/modules/cms/model"
+	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
+	"github.com/BuildWithYou/fetroshop-api/app/modules/cms/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/utils"
 )
 
-func (rg *AuthServiceImpl) Login(request *webModel.LoginRequest) (*model.Response, error) {
+func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*appModel.Response, error) {
 	var user users.User
 
-	result := rg.UserRepository.Find(&user, &users.User{
-		Username: request.Username,
+	payload := new(model.LoginRequest)
+	validatorhelper.ValidatePayload(ctx, svc.Validate, payload)
+
+	result := svc.UserRepository.Find(&user, &users.User{
+		Username: payload.Username,
 	})
 	if gormhelper.IsRecordNotFound(result.Error) {
 		return nil, errorhelper.Error401("Invalid email or password") // #marked: message
 	}
-	if err := password.Verify(user.Password, request.Password); validatorhelper.IsNotNil(err) {
+	if err := password.Verify(user.Password, payload.Password); validatorhelper.IsNotNil(err) {
 		return nil, errorhelper.Error401("Invalid email or password")
 	}
 
 	token, expiration := jwt.Generate(&jwt.TokenPayload{
 		ID:         user.ID,
-		Expiration: rg.Config.GetString("security.jwt.expiration"),
-		TokenKey:   rg.Config.GetString("security.jwt.tokenKey"),
+		Expiration: svc.Config.GetString("security.jwt.expiration"),
+		TokenKey:   svc.Config.GetString("security.jwt.tokenKey"),
 	})
 
 	fmt.Println("expiration : ", expiration)
 
-	return &model.Response{
+	return &appModel.Response{
 		Code:    fiber.StatusCreated,
 		Status:  utils.StatusMessage(fiber.StatusOK),
 		Message: "Login success", // #marked: message

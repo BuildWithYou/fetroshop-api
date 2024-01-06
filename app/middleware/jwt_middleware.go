@@ -3,6 +3,7 @@ package middleware
 import (
 	"strings"
 
+	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/jwt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/viper"
@@ -25,14 +26,24 @@ func JwtMiddlewareProvider(config *viper.Viper) *JwtMiddleware {
 //
 // It takes a *fiber.Ctx object as a parameter and returns an error.
 func (jwtMiddleware *JwtMiddleware) Authenticate(ctx *fiber.Ctx) error {
-	header := ctx.Get("Authorization")
+	var tokenString string
+	authorization := ctx.Get("Authorization")
 
-	if header == "" {
+	if authorization == "" {
 		return fiber.ErrUnauthorized
 	}
 
+	if strings.HasPrefix(authorization, "Bearer ") {
+		tokenString = strings.TrimPrefix(authorization, "Bearer ")
+	}
+
+	if tokenString == "" {
+		// return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "fail", "message": "You are not logged in"})
+		return errorhelper.Error401("You are not logged in") // #amrked: message
+	}
+
 	// Spliting the header
-	chunks := strings.Split(header, " ")
+	chunks := strings.Split(authorization, " ")
 
 	// If header signature is not like `Bearer <token>`, then throw
 	// This is also required, otherwise chunks[1] will throw out of bound error
@@ -47,7 +58,7 @@ func (jwtMiddleware *JwtMiddleware) Authenticate(ctx *fiber.Ctx) error {
 		return fiber.ErrUnauthorized
 	}
 
-	ctx.Locals("USER", user.ID)
+	ctx.Locals("UserID", user.ID)
 
 	return ctx.Next()
 }

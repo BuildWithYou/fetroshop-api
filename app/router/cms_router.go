@@ -20,10 +20,13 @@ func (router *CmsRouter) Init(app *fiber.App) {
 	// documentation
 	app.Get("/documentation/*", router.Docs.SwaggerCms())
 
-	// Authentication
-	authentication := app.Group("/api/auth")
-	authentication.Post("/register", router.Controller.Auth.Register)
-	authentication.Post("/login", router.Controller.Auth.Login)
+	app.Route("/api", func(r fiber.Router) {
+		// Authentication
+		authentication := r.Group("/auth")
+		authentication.Post("/register", router.Controller.Auth.Register)
+		authentication.Post("/login", router.Controller.Auth.Login)
+	})
+
 }
 
 func CmsRouterProvider(docs *docs.Docs, jwtMiddleware *middleware.JwtMiddleware, ctr *controller.Controller) Router {
