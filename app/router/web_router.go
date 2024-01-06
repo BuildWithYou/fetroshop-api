@@ -8,9 +8,9 @@ import (
 )
 
 type WebRouter struct {
-	Docs           *docs.Docs
-	JwtMiddleware  *middleware.JwtMiddleware
-	Authentication controller.AuthController
+	Docs          *docs.Docs
+	JwtMiddleware *middleware.JwtMiddleware
+	Controller    *controller.Controller
 }
 
 func (router *WebRouter) Init(app *fiber.App) {
@@ -21,20 +21,21 @@ func (router *WebRouter) Init(app *fiber.App) {
 	app.Get("/documentation/*", router.Docs.SwaggerWeb())
 
 	// Authentication
-	app.Post("/api/auth/register", router.Authentication.Register)
-	app.Post("/api/auth/login", router.Authentication.Login)
+	authentication := app.Group("/api/auth")
+	authentication.Post("/register", router.Controller.Auth.Register)
+	authentication.Post("/login", router.Controller.Auth.Login)
 
 }
 
 func WebRouterProvider(
 	docs *docs.Docs,
-	ctr controller.AuthController,
+	ctr *controller.Controller,
 	jwtMiddleware *middleware.JwtMiddleware,
 ) Router {
 	return &WebRouter{
-		Docs:           docs,
-		Authentication: ctr,
-		JwtMiddleware:  jwtMiddleware,
+		Docs:          docs,
+		Controller:    ctr,
+		JwtMiddleware: jwtMiddleware,
 	}
 }
 
