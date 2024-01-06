@@ -5,6 +5,6 @@ import (
 	"gorm.io/gorm"
 )
 
-func (p *PostgreSQL) Create(cst *customers.Customer) *gorm.DB {
-	return p.DB.Create(cst)
+func (p *PostgreSQL) Create(data *customers.Customer) *gorm.DB {
+	return p.DB.Create(data)
 }

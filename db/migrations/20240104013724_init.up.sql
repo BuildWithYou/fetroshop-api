@@ -81,7 +81,7 @@ create table user_accesses (
 /*==============================================================*/
 create table customer_accesses (
    token                VARCHAR(255)         not null,
-   user_id              INT4                 not null,
+   customer_id          INT4                 not null,
    platform             VARCHAR(32)          null,
    user_agent           VARCHAR(255)         null,
    created_at           TIMESTAMP            not null,
@@ -96,7 +96,7 @@ alter table user_accesses
       on delete cascade on update cascade;
 
 alter table customer_accesses
-   add constraint FK_CUSTOMER_REFERENCE_CUSTOMER foreign key (user_id)
+   add constraint FK_CUSTOMER_REFERENCE_CUSTOMER foreign key (customer_id)
       references customers (id)
       on delete cascade on update cascade;
 
