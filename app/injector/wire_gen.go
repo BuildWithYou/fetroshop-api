@@ -8,30 +8,36 @@ package injector
 
 import (
 	"github.com/BuildWithYou/fetroshop-api/app"
+	"github.com/BuildWithYou/fetroshop-api/app/connection"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/customers/postgres"
 	postgres2 "github.com/BuildWithYou/fetroshop-api/app/domain/users/postgres"
-	"github.com/BuildWithYou/fetroshop-api/app/helper"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
+	"github.com/BuildWithYou/fetroshop-api/app/middleware"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/cms"
+	controller2 "github.com/BuildWithYou/fetroshop-api/app/modules/cms/controller"
+	auth2 "github.com/BuildWithYou/fetroshop-api/app/modules/cms/service/auth"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/docs"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/controller"
-	"github.com/BuildWithYou/fetroshop-api/app/modules/web/service/auth/registration"
+	"github.com/BuildWithYou/fetroshop-api/app/modules/web/service/auth"
 	"github.com/BuildWithYou/fetroshop-api/app/router"
-	"github.com/BuildWithYou/fetroshop-api/db"
 	"github.com/google/wire"
 )
 
 // Injectors from injector.go:
 
 func InitializeWebServer() error {
-	viper := helper.GetConfig()
-	docsDocs := docs.NewDocs(viper)
-	validate := helper.GetValidator()
-	gormDB := db.OpenConnection(viper)
-	customerRepository := postgres.NewCustomerRepository(gormDB)
-	registrationService := registration.NewRegistrationService(gormDB, customerRepository)
-	registrationController := controller.NewRegistrationController(validate, registrationService)
-	routerRouter := router.WebRouterProvider(docsDocs, registrationController)
+	viper := confighelper.GetConfig()
+	docsDocs := docs.DocsProvider(viper)
+	validate := validatorhelper.GetValidator()
+	db := connection.OpenDBConnection(viper)
+	customerRepository := postgres.CustomerRepositoryProvider(db)
+	authService := auth.AuthServiceProvider(db, viper, customerRepository)
+	authController := controller.AuthControllerProvider(validate, authService)
+	controllerController := controller.WebControllerProvider(authController)
+	jwtMiddleware := middleware.JwtMiddlewareProvider(viper)
+	routerRouter := router.WebRouterProvider(docsDocs, controllerController, jwtMiddleware)
 	serverConfig := web.WebServerConfigProvider(routerRouter)
 	fiberApp := app.CreateFiber(serverConfig)
 	error2 := app.StartFiber(fiberApp, serverConfig)
@@ -39,9 +45,16 @@ func InitializeWebServer() error {
 }
 
 func InitializeCmsServer() error {
-	viper := helper.GetConfig()
-	docsDocs := docs.NewDocs(viper)
-	routerRouter := router.CmsRouterProvider(docsDocs)
+	viper := confighelper.GetConfig()
+	docsDocs := docs.DocsProvider(viper)
+	jwtMiddleware := middleware.JwtMiddlewareProvider(viper)
+	validate := validatorhelper.GetValidator()
+	db := connection.OpenDBConnection(viper)
+	userRepository := postgres2.UserRepositoryProvider(db)
+	authService := auth2.AuthServiceProvider(db, viper, userRepository)
+	authController := controller2.AuthControllerProvider(validate, authService)
+	controllerController := controller2.CmsControllerProvider(authController)
+	routerRouter := router.CmsRouterProvider(docsDocs, jwtMiddleware, controllerController)
 	serverConfig := cms.CmsServerConfigProvider(routerRouter)
 	fiberApp := app.CreateFiber(serverConfig)
 	error2 := app.StartFiber(fiberApp, serverConfig)
@@ -50,6 +63,18 @@ func InitializeCmsServer() error {
 
 // injector.go:
 
-var userSet = wire.NewSet(postgres2.NewUserRepository, registration.NewRegistrationService, controller.NewRegistrationController)
+var serverSet = wire.NewSet(confighelper.GetConfig, connection.OpenDBConnection, docs.DocsProvider, middleware.JwtMiddlewareProvider, validatorhelper.GetValidator, app.CreateFiber, app.StartFiber)
 
-var customerSet = wire.NewSet(postgres.NewCustomerRepository, registration.NewRegistrationService, controller.NewRegistrationController)
+// web dependencies
+var webRepoSet = wire.NewSet(postgres.CustomerRepositoryProvider)
+
+var webControllerSet = wire.NewSet(controller.WebControllerProvider, controller.AuthControllerProvider)
+
+var webServiceSet = wire.NewSet(auth.AuthServiceProvider)
+
+// cms dependencies
+var cmsRepoSet = wire.NewSet(postgres2.UserRepositoryProvider)
+
+var cmsControllerSet = wire.NewSet(controller2.CmsControllerProvider, controller2.AuthControllerProvider)
+
+var cmsServiceSet = wire.NewSet(auth2.AuthServiceProvider)

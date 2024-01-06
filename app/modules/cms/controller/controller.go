@@ -4,7 +4,7 @@ type Controller struct {
 	Auth AuthController
 }
 
-func WebControllerProvider(
+func CmsControllerProvider(
 	authController AuthController,
 ) *Controller {
 	return &Controller{

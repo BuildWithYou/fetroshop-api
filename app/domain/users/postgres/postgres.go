@@ -1,9 +1,16 @@
 package postgres
 
-import "github.com/BuildWithYou/fetroshop-api/app/domain/users"
+import (
+	"github.com/BuildWithYou/fetroshop-api/app/domain/users"
+	"gorm.io/gorm"
+)
 
-type PostgreSQL struct{}
+type PostgreSQL struct {
+	DB *gorm.DB
+}
 
-func NewUserRepository() users.UserRepository {
-	return &PostgreSQL{}
+func UserRepositoryProvider(db *gorm.DB) users.UserRepository {
+	return &PostgreSQL{
+		DB: db,
+	}
 }

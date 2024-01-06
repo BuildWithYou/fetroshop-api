@@ -2,7 +2,7 @@ package cms
 
 import (
 	"github.com/BuildWithYou/fetroshop-api/app"
-	"github.com/BuildWithYou/fetroshop-api/app/helper"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
 	"github.com/BuildWithYou/fetroshop-api/app/router"
 )
 
@@ -16,7 +16,7 @@ import (
 //	@description				Use format 'Bearer YOUR_TOKEN'
 
 func CmsServerConfigProvider(webRouter router.Router) *app.ServerConfig {
-	config := helper.GetConfig()
+	config := confighelper.GetConfig()
 	return &app.ServerConfig{
 		Config: config,
 		Host:   config.GetString("app.cms.host"),
