@@ -9,7 +9,7 @@ type PostgreSQL struct {
 	DB *gorm.DB
 }
 
-func CustomerAccessRepositoryProvider(db *gorm.DB) customer_accesses.CustomerAccessRepository {
+func CustomerAccessRepoProvider(db *gorm.DB) customer_accesses.CustomerAccessRepo {
 	return &PostgreSQL{
 		DB: db,
 	}

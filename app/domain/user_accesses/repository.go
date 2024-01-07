@@ -4,7 +4,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type UserAccessRepository interface {
+type UserAccessRepo interface {
 	Create(data *UserAccess) *gorm.DB
 	Find(destination *UserAccess, condition *UserAccess) *gorm.DB
 }

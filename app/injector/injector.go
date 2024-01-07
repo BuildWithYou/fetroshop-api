@@ -30,15 +30,15 @@ var serverSet = wire.NewSet(
 	docs.DocsProvider,
 	middleware.JwtMiddlewareProvider,
 	validatorhelper.GetValidator,
-	userAccessRepo.UserAccessRepositoryProvider,
-	customerAccessRepo.CustomerAccessRepositoryProvider,
+	userAccessRepo.UserAccessRepoProvider,
+	customerAccessRepo.CustomerAccessRepoProvider,
 	app.CreateFiber,
 	app.StartFiber,
 )
 
 // web dependencies
 var webRepoSet = wire.NewSet(
-	customerRepo.CustomerRepositoryProvider,
+	customerRepo.CustomerRepoProvider,
 )
 
 var webControllerSet = wire.NewSet(
@@ -64,7 +64,7 @@ func InitializeWebServer() error {
 
 // cms dependencies
 var cmsRepoSet = wire.NewSet(
-	userRepo.UserRepositoryProvider,
+	userRepo.UserRepoProvider,
 )
 
 var cmsControllerSet = wire.NewSet(

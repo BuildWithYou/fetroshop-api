@@ -8,43 +8,60 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+const errorMessage = "something went wrong"
+
 // TokenPayload defines the payload for the token
 type TokenPayload struct {
-	Expiration string
+	Token      string
 	TokenKey   string
-	ID         int64
+	Expiration string
+	Type       string
+}
+
+type TokenGenerated struct {
+	Token     string
+	ExpiredAt time.Time
+}
+
+type TokenReversed struct {
+	Token     string
+	Type      string
+	ExpiredAt string
 }
 
 // Generate generates the jwt token based on payload
-func Generate(payload *TokenPayload) (token string, expiration time.Time) {
-	v, err := time.ParseDuration(payload.Expiration)
+func Generate(payload *TokenPayload) *TokenGenerated {
+	additionalDuration, err := time.ParseDuration(payload.Expiration)
 
 	if err != nil {
 		panic("Invalid time duration. Should be time.ParseDuration string")
 	}
 
-	expiration = time.Now().Add(v)
+	expiration := time.Now().Add(additionalDuration)
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"exp":  expiration.Unix(),
-		"ID":   payload.ID,
-		"role": "customer",
+		"exp":   expiration.Unix(),
+		"Token": payload.Token,
+		"type":  payload.Type,
 	})
 
-	token, err = t.SignedString([]byte(payload.TokenKey))
+	token, err := t.SignedString([]byte(payload.TokenKey))
 
 	if err != nil {
 		panic(err)
 	}
 
-	return token, expiration
+	return &TokenGenerated{
+		Token:     token,
+		ExpiredAt: expiration,
+	}
 }
 
-func parse(tokenKey string, token string) (*jwt.Token, error) {
+func parse(tokenKey string, jwtToken string) (*jwt.Token, error) {
 	// Parse takes the token string and a function for looking up the key. The latter is especially
 	// useful if you use multiple keys for your application.  The standard is to use 'kid' in the
 	// head of the token to identify which key to use, but the parsed token (head and claims) is provided
 	// to the callback, providing flexibility.
-	return jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
+	return jwt.Parse(jwtToken, func(t *jwt.Token) (interface{}, error) {
 		// Don't forget to validate the alg is what you expect:
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
@@ -56,8 +73,8 @@ func parse(tokenKey string, token string) (*jwt.Token, error) {
 }
 
 // Verify verifies the jwt token against the secret
-func Verify(tokenKey string, token string) (*TokenPayload, error) {
-	parsed, err := parse(tokenKey, token)
+func Reverse(tokenKey string, jwtToken string) (*TokenReversed, error) {
+	parsed, err := parse(tokenKey, jwtToken)
 
 	if err != nil {
 		return nil, err
@@ -69,13 +86,24 @@ func Verify(tokenKey string, token string) (*TokenPayload, error) {
 		return nil, err
 	}
 
-	// Getting ID, it's an interface{} so I need to cast it to uint
-	id, ok := claims["ID"].(int64)
+	token, ok := claims["Token"].(string)
 	if !ok {
-		return nil, errors.New("something went wrong")
+		return nil, errors.New(errorMessage) // #marked: message
 	}
 
-	return &TokenPayload{
-		ID: id,
+	expiredAt, ok := claims["exp"].(string)
+	if !ok {
+		return nil, errors.New(errorMessage) // #marked: message
+	}
+
+	tokenType, ok := claims["type"].(string)
+	if !ok {
+		return nil, errors.New(errorMessage) // #marked: message
+	}
+
+	return &TokenReversed{
+		Token:     token,
+		ExpiredAt: expiredAt,
+		Type:      tokenType,
 	}, nil
 }

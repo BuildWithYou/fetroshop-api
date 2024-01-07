@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"github.com/BuildWithYou/fetroshop-api/app/domain/customer_accesses"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/customers"
 	"github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/go-playground/validator/v10"
@@ -8,6 +9,8 @@ import (
 	"github.com/spf13/viper"
 	"gorm.io/gorm"
 )
+
+const CUSTOMER_TYPE = "customer"
 
 type AuthService interface {
 	Register(ctx *fiber.Ctx) (*model.Response, error)
@@ -18,18 +21,22 @@ type AuthServiceImpl struct {
 	DB                 *gorm.DB
 	Config             *viper.Viper
 	Validate           *validator.Validate
-	CustomerRepository customers.CustomerRepository
+	CustomerRepo       customers.CustomerRepo
+	CustomerAccessRepo customer_accesses.CustomerAccessRepo
 }
 
 func AuthServiceProvider(
 	db *gorm.DB,
 	config *viper.Viper,
 	validate *validator.Validate,
-	customerRepository customers.CustomerRepository) AuthService {
+	customerRepo customers.CustomerRepo,
+	customerAccessRepo customer_accesses.CustomerAccessRepo,
+) AuthService {
 	return &AuthServiceImpl{
 		DB:                 db,
 		Config:             config,
 		Validate:           validate,
-		CustomerRepository: customerRepository,
+		CustomerRepo:       customerRepo,
+		CustomerAccessRepo: customerAccessRepo,
 	}
 }

@@ -20,7 +20,7 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*model.Response, error) {
 	payload := new(cmsModel.RegistrationRequest)
 	validatorhelper.ValidatePayload(ctx, svc.Validate, payload)
 
-	result := svc.UserRepository.Find(&existingUsername, &users.User{
+	result := svc.UserRepo.Find(&existingUsername, &users.User{
 		Username: payload.Username,
 	})
 	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsRecordNotFound(result.Error) {
@@ -30,7 +30,7 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*model.Response, error) {
 		return nil, errorhelper.Error400("Username already used") // #marked: message
 	}
 
-	result = svc.UserRepository.Find(&existingPhone, &users.User{
+	result = svc.UserRepo.Find(&existingPhone, &users.User{
 		Phone: payload.Phone,
 	})
 	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsRecordNotFound(result.Error) {
@@ -40,7 +40,7 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*model.Response, error) {
 		return nil, errorhelper.Error400("Phone already used") // #marked: message
 	}
 
-	result = svc.UserRepository.Find(&existingEmail, &users.User{
+	result = svc.UserRepo.Find(&existingEmail, &users.User{
 		Email: payload.Email,
 	})
 	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsRecordNotFound(result.Error) {
@@ -52,7 +52,7 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*model.Response, error) {
 
 	hashedPassword := password.Generate(payload.Password)
 
-	result = svc.UserRepository.Create(&users.User{
+	result = svc.UserRepo.Create(&users.User{
 		Username: payload.Username,
 		Phone:    payload.Phone,
 		Email:    payload.Email,
@@ -63,7 +63,7 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*model.Response, error) {
 		return nil, result.Error
 	}
 
-	if result.RowsAffected > 0 {
+	if gormhelper.HasAffectedRows(result) {
 		message = "User created successfully" // #marked: message
 	}
 

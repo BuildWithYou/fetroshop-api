@@ -7,7 +7,7 @@ import (
 )
 
 type CustomerAccess struct {
-	Token      string         `gorm:"column:token;primaryKey;<-:create" json:"token"`
+	Token      string         `gorm:"column:token;primaryKey;" json:"token"`
 	CustomerID int64          `gorm:"column:customer_id" json:"customerId"`
 	Platform   string         `gorm:"column:platform" json:"platform"`
 	UserAgent  string         `gorm:"column:user_agent" json:"userAgent"`

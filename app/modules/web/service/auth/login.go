@@ -2,8 +2,10 @@ package auth
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 
+	"github.com/BuildWithYou/fetroshop-api/app/domain/customer_accesses"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/customers"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
@@ -22,7 +24,7 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*model.Response, error) {
 	payload := new(webModel.LoginRequest)
 	validatorhelper.ValidatePayload(ctx, svc.Validate, payload)
 
-	result := svc.CustomerRepository.Find(&customer, &customers.Customer{
+	result := svc.CustomerRepo.Find(&customer, &customers.Customer{
 		Username: payload.Username,
 	})
 	if gormhelper.IsRecordNotFound(result.Error) {
@@ -32,22 +34,47 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*model.Response, error) {
 		return nil, errorhelper.Error401("Invalid email or password")
 	}
 
-	token, expiration := jwt.Generate(&jwt.TokenPayload{
-		ID:         customer.ID,
-		Expiration: svc.Config.GetString("security.jwt.expiration"),
-		TokenKey:   svc.Config.GetString("security.jwt.tokenKey"),
-	})
+	accessToken := password.Generate(fmt.Sprintf(
+		"%s::%s::%s",
+		strconv.Itoa(int(customer.ID)),
+		svc.Config.GetString("security.jwt.tokenKey"),
+		time.Now().Format("2006-01-02 15:04:05"),
+	))
 
-	fmt.Println("expiration : ", expiration)
+	result = svc.CustomerAccessRepo.UpdateOrCreate(
+		&customer_accesses.CustomerAccess{
+			Token:      accessToken,
+			CustomerID: customer.ID,
+			Platform:   ctx.Get("Sec-Ch-Ua-Platform"),
+			UserAgent:  ctx.Get("User-Agent"),
+		},
+		&customer_accesses.CustomerAccess{
+			CustomerID: customer.ID,
+			Platform:   ctx.Get("Sec-Ch-Ua-Platform"),
+			UserAgent:  ctx.Get("User-Agent"),
+		},
+	)
+	if validatorhelper.IsNotNil(result.Error) && !gormhelper.HasAffectedRows(result) {
+		return nil, result.Error
+	}
+	if !gormhelper.HasAffectedRows(result) {
+		return nil, errorhelper.Error500("Failed to record user access") // #marked: message
+	}
+
+	generatedJwt := jwt.Generate(&jwt.TokenPayload{
+		Token:      accessToken,
+		Expiration: svc.Config.GetString("security.jwt.expiration"),
+		Type:       CUSTOMER_TYPE,
+	})
 
 	return &model.Response{
 		Code:    fiber.StatusCreated,
 		Status:  utils.StatusMessage(fiber.StatusOK),
 		Message: "Login success", // #marked: message
 		Data: map[string]string{
-			"token":     token,
+			"token":     generatedJwt.Token,
 			"createdAt": time.Now().Format("2006-01-02 15:04:05"),
-			"expiredAt": expiration.Format("2006-01-02 15:04:05"),
+			"expiredAt": generatedJwt.ExpiredAt.Format("2006-01-02 15:04:05"),
 		},
 	}, nil
 }

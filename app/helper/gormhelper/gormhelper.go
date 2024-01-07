@@ -3,12 +3,17 @@ package gormhelper
 import (
 	"errors"
 
+	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	"gorm.io/gorm"
 )
 
 // ErrRecordNotFound record not found error
 func IsRecordNotFound(err error) bool {
 	return errors.Is(err, gorm.ErrRecordNotFound)
+}
+
+func IsRecordNotFoundAndNotNil(err error) bool {
+	return validatorhelper.IsNotNil(err) && errors.Is(err, gorm.ErrRecordNotFound)
 }
 
 // ErrInvalidTransaction invalid transaction when you are trying to `Commit` or `Rollback`
@@ -109,4 +114,8 @@ func IsDuplicatedKey(err error) bool {
 // ErrForeignKeyViolated occurs when there is a foreign key constraint violation
 func IsForeignKeyViolated(err error) bool {
 	return errors.Is(err, gorm.ErrForeignKeyViolated)
+}
+
+func HasAffectedRows(result *gorm.DB) bool {
+	return result.RowsAffected > 0
 }

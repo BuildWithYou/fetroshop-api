@@ -2,8 +2,10 @@ package auth
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 
+	"github.com/BuildWithYou/fetroshop-api/app/domain/user_accesses"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/users"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
@@ -22,7 +24,7 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*model.Response, error) {
 	payload := new(cmsModel.LoginRequest)
 	validatorhelper.ValidatePayload(ctx, svc.Validate, payload)
 
-	result := svc.UserRepository.Find(&user, &users.User{
+	result := svc.UserRepo.Find(&user, &users.User{
 		Username: payload.Username,
 	})
 	if gormhelper.IsRecordNotFound(result.Error) {
@@ -32,22 +34,39 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*model.Response, error) {
 		return nil, errorhelper.Error401("Invalid email or password")
 	}
 
-	token, expiration := jwt.Generate(&jwt.TokenPayload{
-		ID:         user.ID,
-		Expiration: svc.Config.GetString("security.jwt.expiration"),
-		TokenKey:   svc.Config.GetString("security.jwt.tokenKey"),
+	accessToken := password.Generate(fmt.Sprintf(
+		"%s::%s::%s",
+		strconv.Itoa(int(user.ID)),
+		svc.Config.GetString("security.jwt.tokenKey"),
+		time.Now().Format("2006-01-02 15:04:05"),
+	))
+
+	result = svc.UserAccessRepo.Create(&user_accesses.UserAccess{
+		Token:     accessToken,
+		UserID:    user.ID,
+		Platform:  ctx.Get("Sec-Ch-Ua-Platform"),
+		UserAgent: ctx.Get("User-Agent"),
 	})
 
-	fmt.Println("expiration : ", expiration)
+	if gormhelper.HasAffectedRows(result) {
+		return nil, errorhelper.Error500("Failed to record user access") // #marked: message
+	}
+
+	generatedJwt := jwt.Generate(&jwt.TokenPayload{
+		Token:      accessToken,
+		Expiration: svc.Config.GetString("security.jwt.expiration"),
+		TokenKey:   svc.Config.GetString("security.jwt.tokenKey"),
+		Type:       USER_TYPE,
+	})
 
 	return &model.Response{
 		Code:    fiber.StatusCreated,
 		Status:  utils.StatusMessage(fiber.StatusOK),
 		Message: "Login success", // #marked: message
 		Data: map[string]string{
-			"token":     token,
+			"token":     generatedJwt.Token,
 			"createdAt": time.Now().Format("2006-01-02 15:04:05"),
-			"expiredAt": expiration.Format("2006-01-02 15:04:05"),
+			"expiredAt": generatedJwt.ExpiredAt.Format("2006-01-02 15:04:05"),
 		},
 	}, nil
 }
