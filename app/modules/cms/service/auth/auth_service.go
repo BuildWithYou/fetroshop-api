@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"github.com/BuildWithYou/fetroshop-api/app/connection"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/user_accesses"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/users"
 	"github.com/BuildWithYou/fetroshop-api/app/model"
@@ -26,14 +27,14 @@ type AuthServiceImpl struct {
 }
 
 func AuthServiceProvider(
-	db *gorm.DB,
+	db *connection.Connection,
 	config *viper.Viper,
 	validate *validator.Validate,
 	userRepo users.UserRepo,
 	userAccessRepo user_accesses.UserAccessRepo,
 ) AuthService {
 	return &AuthServiceImpl{
-		DB:             db,
+		DB:             db.DB,
 		Config:         config,
 		Validate:       validate,
 		UserRepo:       userRepo,

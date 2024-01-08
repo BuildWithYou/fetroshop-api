@@ -4,13 +4,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/BuildWithYou/fetroshop-api/app/connection"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/customer_accesses"
-	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 )
-
-var dbConnection, err = connection.OpenDBConnection(connection.DB_TEST, confighelper.GetConfig())
 
 func TestPostgreSQLUpdateOrCreate(t *testing.T) {
 	type args struct {
@@ -25,7 +21,7 @@ func TestPostgreSQLUpdateOrCreate(t *testing.T) {
 	}{
 		{
 			name: "UpdateOrCreate",
-			p:    &PostgreSQL{DB: dbConnection},
+			p:    &PostgreSQL{DB: conn.DB},
 			args: args{
 				data: &customer_accesses.CustomerAccess{
 					Token:      "test-token2",
@@ -42,8 +38,8 @@ func TestPostgreSQLUpdateOrCreate(t *testing.T) {
 		},
 	}
 
-	if validatorhelper.IsNotNil(err) {
-		t.Errorf("PostgreSQL.UpdateOrCreate() failed. error = %v", err.Error())
+	if validatorhelper.IsNotNil(conn.Err) {
+		t.Errorf("PostgreSQL.UpdateOrCreate() failed. error = %v", conn.Err.Error())
 	}
 
 	for _, tt := range tests {

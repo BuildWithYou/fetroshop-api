@@ -15,7 +15,12 @@ const DB_TEST = "test"
 
 type DBType string
 
-func OpenDBConnection(dbType DBType, config *viper.Viper) (*gorm.DB, error) {
+type Connection struct {
+	DB  *gorm.DB
+	Err error
+}
+
+func OpenDBConnection(dbType DBType, config *viper.Viper) *Connection {
 	var (
 		gormLogger logger.Interface
 		dialect    gorm.Dialector
@@ -31,7 +36,9 @@ func OpenDBConnection(dbType DBType, config *viper.Viper) (*gorm.DB, error) {
 		}
 	default:
 		{
-			return nil, errorhelper.ErrorCustom(500, "Invalid database type")
+			return &Connection{
+				Err: errorhelper.ErrorCustom(500, "Invalid database type"),
+			}
 		}
 	}
 
@@ -50,12 +57,16 @@ func OpenDBConnection(dbType DBType, config *viper.Viper) (*gorm.DB, error) {
 		Logger: gormLogger,
 	})
 	if err != nil {
-		return nil, err
+		return &Connection{
+			Err: err,
+		}
 	}
 
 	sqlDB, err := db.DB()
 	if err != nil {
-		return nil, err
+		return &Connection{
+			Err: err,
+		}
 	}
 
 	sqlDB.SetMaxOpenConns(config.GetInt("database.dbMaxOpenConns"))
@@ -63,5 +74,7 @@ func OpenDBConnection(dbType DBType, config *viper.Viper) (*gorm.DB, error) {
 	sqlDB.SetConnMaxLifetime(time.Duration(config.GetInt("database.dbConnMaxLifetime")) * time.Minute)
 	sqlDB.SetConnMaxIdleTime(time.Duration(config.GetInt("database.dbConnMaxIdleTime")) * time.Minute)
 
-	return db, nil
+	return &Connection{
+		DB: db,
+	}
 }

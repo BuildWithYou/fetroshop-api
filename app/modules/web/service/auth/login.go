@@ -27,6 +27,9 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*model.Response, error) {
 	result := svc.CustomerRepo.Find(&customer, &customers.Customer{
 		Username: payload.Username,
 	})
+	if gormhelper.IsNotNilNotRecordNotFound(result.Error) {
+		return nil, errorhelper.Error500("Something went wrong") // #marked: message
+	}
 	if gormhelper.IsRecordNotFound(result.Error) {
 		return nil, errorhelper.Error401("Invalid email or password") // #marked: message
 	}

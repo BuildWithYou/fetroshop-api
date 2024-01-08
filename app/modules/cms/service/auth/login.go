@@ -27,11 +27,15 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*model.Response, error) {
 	result := svc.UserRepo.Find(&user, &users.User{
 		Username: payload.Username,
 	})
+	if gormhelper.IsNotNilNotRecordNotFound(result.Error) {
+		return nil, errorhelper.Error500("Something went wrong") // #marked: message
+	}
 	if gormhelper.IsRecordNotFound(result.Error) {
 		return nil, errorhelper.Error401("Invalid email or password") // #marked: message
 	}
 	if err := password.Verify(user.Password, payload.Password); validatorhelper.IsNotNil(err) {
-		return nil, errorhelper.Error401("Invalid email or password")
+		fmt.Println(err.Error())
+		return nil, errorhelper.Error401("Invalid email or password") // #marked: message
 	}
 
 	accessToken := password.Generate(fmt.Sprintf(

@@ -33,13 +33,14 @@ func InitializeWebServer() error {
 	viper := confighelper.GetConfig()
 	docsDocs := docs.DocsProvider(viper)
 	validate := validatorhelper.GetValidator()
-	db := connection.OpenDBConnection(viper)
-	customerRepo := postgres.CustomerRepoProvider(db)
-	customerAccessRepo := postgres2.CustomerAccessRepoProvider(db)
-	authService := auth.AuthServiceProvider(db, viper, validate, customerRepo, customerAccessRepo)
+	connectionDBType := _wireDBTypeValue
+	connectionConnection := connection.OpenDBConnection(connectionDBType, viper)
+	customerRepo := postgres.CustomerRepoProvider(connectionConnection)
+	customerAccessRepo := postgres2.CustomerAccessRepoProvider(connectionConnection)
+	authService := auth.AuthServiceProvider(connectionConnection, viper, validate, customerRepo, customerAccessRepo)
 	authController := controller.AuthControllerProvider(validate, authService)
 	controllerController := controller.WebControllerProvider(authController)
-	userAccessRepo := postgres3.UserAccessRepoProvider(db)
+	userAccessRepo := postgres3.UserAccessRepoProvider(connectionConnection)
 	jwtMiddleware := middleware.JwtMiddlewareProvider(viper, userAccessRepo, customerAccessRepo)
 	routerRouter := router.WebRouterProvider(docsDocs, controllerController, jwtMiddleware)
 	serverConfig := web.WebServerConfigProvider(routerRouter)
@@ -48,16 +49,21 @@ func InitializeWebServer() error {
 	return error2
 }
 
+var (
+	_wireDBTypeValue = dbType
+)
+
 func InitializeCmsServer() error {
 	viper := confighelper.GetConfig()
 	docsDocs := docs.DocsProvider(viper)
-	db := connection.OpenDBConnection(viper)
-	userAccessRepo := postgres3.UserAccessRepoProvider(db)
-	customerAccessRepo := postgres2.CustomerAccessRepoProvider(db)
+	connectionDBType := _wireDBTypeValue
+	connectionConnection := connection.OpenDBConnection(connectionDBType, viper)
+	userAccessRepo := postgres3.UserAccessRepoProvider(connectionConnection)
+	customerAccessRepo := postgres2.CustomerAccessRepoProvider(connectionConnection)
 	jwtMiddleware := middleware.JwtMiddlewareProvider(viper, userAccessRepo, customerAccessRepo)
 	validate := validatorhelper.GetValidator()
-	userRepo := postgres4.UserRepoProvider(db)
-	authService := auth2.AuthServiceProvider(db, viper, validate, userRepo, userAccessRepo)
+	userRepo := postgres4.UserRepoProvider(connectionConnection)
+	authService := auth2.AuthServiceProvider(connectionConnection, viper, validate, userRepo, userAccessRepo)
 	authController := controller2.AuthControllerProvider(authService)
 	controllerController := controller2.CmsControllerProvider(authController)
 	routerRouter := router.CmsRouterProvider(docsDocs, jwtMiddleware, controllerController)
@@ -69,7 +75,9 @@ func InitializeCmsServer() error {
 
 // injector.go:
 
-var serverSet = wire.NewSet(confighelper.GetConfig, connection.OpenDBConnection, docs.DocsProvider, middleware.JwtMiddlewareProvider, validatorhelper.GetValidator, postgres3.UserAccessRepoProvider, postgres2.CustomerAccessRepoProvider, app.CreateFiber, app.StartFiber)
+var dbType connection.DBType = connection.DB_MAIN
+
+var serverSet = wire.NewSet(wire.Value(dbType), confighelper.GetConfig, connection.OpenDBConnection, docs.DocsProvider, middleware.JwtMiddlewareProvider, validatorhelper.GetValidator, postgres3.UserAccessRepoProvider, postgres2.CustomerAccessRepoProvider, app.CreateFiber, app.StartFiber)
 
 // web dependencies
 var webRepoSet = wire.NewSet(postgres.CustomerRepoProvider)

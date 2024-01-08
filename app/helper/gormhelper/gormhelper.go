@@ -2,6 +2,7 @@ package gormhelper
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	"gorm.io/gorm"
@@ -12,8 +13,12 @@ func IsRecordNotFound(err error) bool {
 	return errors.Is(err, gorm.ErrRecordNotFound)
 }
 
-func IsRecordNotFoundAndNotNil(err error) bool {
-	return validatorhelper.IsNotNil(err) && errors.Is(err, gorm.ErrRecordNotFound)
+func IsNotNilNotRecordNotFound(err error) bool {
+	isError := validatorhelper.IsNotNil(err) && !errors.Is(err, gorm.ErrRecordNotFound)
+	if isError {
+		fmt.Println("IsNotNilNotRecordNotFound : ", err.Error()) // #marked: logging
+	}
+	return isError
 }
 
 // ErrInvalidTransaction invalid transaction when you are trying to `Commit` or `Rollback`

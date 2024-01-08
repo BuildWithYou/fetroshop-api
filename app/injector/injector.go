@@ -24,7 +24,10 @@ import (
 	"github.com/google/wire"
 )
 
+var dbType connection.DBType = connection.DB_MAIN
+
 var serverSet = wire.NewSet(
+	wire.Value(dbType),
 	confighelper.GetConfig,
 	connection.OpenDBConnection,
 	docs.DocsProvider,
