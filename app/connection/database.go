@@ -3,15 +3,37 @@ package connection
 import (
 	"time"
 
+	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
 	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
 
-func OpenDBConnection(config *viper.Viper) *gorm.DB {
-	var gormLogger logger.Interface
-	dialect := postgres.Open(config.GetString("database.dbUrl"))
+const DB_MAIN = "main"
+const DB_TEST = "test"
+
+type DBType string
+
+func OpenDBConnection(dbType DBType, config *viper.Viper) (*gorm.DB, error) {
+	var (
+		gormLogger logger.Interface
+		dialect    gorm.Dialector
+	)
+	switch dbType {
+	case DB_TEST:
+		{
+			dialect = postgres.Open(config.GetString("database.test.dbUrl"))
+		}
+	case DB_MAIN:
+		{
+			dialect = postgres.Open(config.GetString("database.main.dbUrl"))
+		}
+	default:
+		{
+			return nil, errorhelper.ErrorCustom(500, "Invalid database type")
+		}
+	}
 
 	switch config.GetString("database.logLevel") {
 	case "error":
@@ -28,12 +50,12 @@ func OpenDBConnection(config *viper.Viper) *gorm.DB {
 		Logger: gormLogger,
 	})
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	sqlDB, err := db.DB()
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	sqlDB.SetMaxOpenConns(config.GetInt("database.dbMaxOpenConns"))
@@ -41,5 +63,5 @@ func OpenDBConnection(config *viper.Viper) *gorm.DB {
 	sqlDB.SetConnMaxLifetime(time.Duration(config.GetInt("database.dbConnMaxLifetime")) * time.Minute)
 	sqlDB.SetConnMaxIdleTime(time.Duration(config.GetInt("database.dbConnMaxIdleTime")) * time.Minute)
 
-	return db
+	return db, nil
 }
