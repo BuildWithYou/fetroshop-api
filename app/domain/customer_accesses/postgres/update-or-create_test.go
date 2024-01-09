@@ -8,7 +8,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 )
 
-func TestPostgreSQLUpdateOrCreate(t *testing.T) {
+func TestCustomerAccessUpdateOrCreate(t *testing.T) {
 	type args struct {
 		data      *customer_accesses.CustomerAccess
 		condition *customer_accesses.CustomerAccess

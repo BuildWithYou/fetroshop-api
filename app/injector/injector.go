@@ -36,7 +36,6 @@ var serverSet = wire.NewSet(
 	userAccessRepo.UserAccessRepoProvider,
 	customerAccessRepo.CustomerAccessRepoProvider,
 	app.CreateFiber,
-	app.StartFiber,
 )
 
 // web dependencies
@@ -53,7 +52,7 @@ var webServiceSet = wire.NewSet(
 	webAuthService.AuthServiceProvider,
 )
 
-func InitializeWebServer() error {
+func InitializeWebServer() *app.Fetroshop {
 	wire.Build(
 		serverSet,
 		webRepoSet,
@@ -79,7 +78,7 @@ var cmsServiceSet = wire.NewSet(
 	cmsAuthService.AuthServiceProvider,
 )
 
-func InitializeCmsServer() error {
+func InitializeCmsServer() *app.Fetroshop {
 	wire.Build(
 		serverSet,
 		cmsRepoSet,

@@ -29,7 +29,7 @@ import (
 
 // Injectors from injector.go:
 
-func InitializeWebServer() error {
+func InitializeWebServer() *app.Fetroshop {
 	viper := confighelper.GetConfig()
 	docsDocs := docs.DocsProvider(viper)
 	validate := validatorhelper.GetValidator()
@@ -44,16 +44,15 @@ func InitializeWebServer() error {
 	jwtMiddleware := middleware.JwtMiddlewareProvider(viper, userAccessRepo, customerAccessRepo)
 	routerRouter := router.WebRouterProvider(docsDocs, controllerController, jwtMiddleware)
 	serverConfig := web.WebServerConfigProvider(routerRouter)
-	fiberApp := app.CreateFiber(serverConfig)
-	error2 := app.StartFiber(fiberApp, serverConfig)
-	return error2
+	fetroshop := app.CreateFiber(serverConfig)
+	return fetroshop
 }
 
 var (
 	_wireDBTypeValue = dbType
 )
 
-func InitializeCmsServer() error {
+func InitializeCmsServer() *app.Fetroshop {
 	viper := confighelper.GetConfig()
 	docsDocs := docs.DocsProvider(viper)
 	connectionDBType := _wireDBTypeValue
@@ -68,16 +67,15 @@ func InitializeCmsServer() error {
 	controllerController := controller2.CmsControllerProvider(authController)
 	routerRouter := router.CmsRouterProvider(docsDocs, jwtMiddleware, controllerController)
 	serverConfig := cms.CmsServerConfigProvider(routerRouter)
-	fiberApp := app.CreateFiber(serverConfig)
-	error2 := app.StartFiber(fiberApp, serverConfig)
-	return error2
+	fetroshop := app.CreateFiber(serverConfig)
+	return fetroshop
 }
 
 // injector.go:
 
 var dbType connection.DBType = connection.DB_MAIN
 
-var serverSet = wire.NewSet(wire.Value(dbType), confighelper.GetConfig, connection.OpenDBConnection, docs.DocsProvider, middleware.JwtMiddlewareProvider, validatorhelper.GetValidator, postgres3.UserAccessRepoProvider, postgres2.CustomerAccessRepoProvider, app.CreateFiber, app.StartFiber)
+var serverSet = wire.NewSet(wire.Value(dbType), confighelper.GetConfig, connection.OpenDBConnection, docs.DocsProvider, middleware.JwtMiddlewareProvider, validatorhelper.GetValidator, postgres3.UserAccessRepoProvider, postgres2.CustomerAccessRepoProvider, app.CreateFiber)
 
 // web dependencies
 var webRepoSet = wire.NewSet(postgres.CustomerRepoProvider)
