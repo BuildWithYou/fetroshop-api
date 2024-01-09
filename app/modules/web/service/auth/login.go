@@ -45,6 +45,8 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*model.Response, error) {
 	}
 
 	// check is customer access exist
+	/*This code look weird but it caused by customerAccessRepo has weird behaviour on upsert
+	 */
 	result = svc.CustomerAccessRepo.Find(&customerAccess, &customer_accesses.CustomerAccess{
 		CustomerID: customer.ID,
 	})

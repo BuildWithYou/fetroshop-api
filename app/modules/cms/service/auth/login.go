@@ -45,6 +45,8 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*model.Response, error) {
 	}
 
 	// check is customer access exist
+	/*This code look weird but it caused by userAccessRepo has weird behaviour on upsert
+	 */
 	result = svc.UserAccessRepo.Find(&userAccess, &user_accesses.UserAccess{
 		UserID: user.ID,
 	})
@@ -52,6 +54,12 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*model.Response, error) {
 		return nil, errorhelper.Error500("Something went wrong") // #marked: message
 	}
 	if !gormhelper.IsErrRecordNotFound(result.Error) {
+		// check if customer access is expired
+		if userAccess.ExpiredAt.Before(time.Now()) {
+			svc.UserAccessRepo.Delete(&userAccess)
+			goto generateToken
+		}
+
 		generatedJwt := jwt.Generate(&jwt.TokenPayload{
 			ID:         userAccess.ID,
 			TokenKey:   jwtTokenKey,
@@ -70,6 +78,7 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*model.Response, error) {
 		}, nil
 	}
 
+generateToken:
 	accessToken := password.Generate(fmt.Sprintf(
 		"%s::%s::%s",
 		strconv.Itoa(int(user.ID)),
