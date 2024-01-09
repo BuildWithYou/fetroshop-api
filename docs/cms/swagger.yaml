@@ -114,7 +114,7 @@ paths:
       tags:
       - Authentication
 securityDefinitions:
-  ApiKeyAuth:
+  Bearer:
     description: Use format 'Bearer YOUR_TOKEN'
     in: header
     name: Authorization
