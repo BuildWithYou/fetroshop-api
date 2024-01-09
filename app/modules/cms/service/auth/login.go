@@ -45,14 +45,20 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*model.Response, error) {
 		time.Now().Format("2006-01-02 15:04:05"),
 	))
 
-	result = svc.UserAccessRepo.Create(&user_accesses.UserAccess{
+	result = svc.UserAccessRepo.UpdateOrCreate(&user_accesses.UserAccess{
 		Token:     accessToken,
 		UserID:    user.ID,
 		Platform:  ctx.Get("Sec-Ch-Ua-Platform"),
 		UserAgent: ctx.Get("User-Agent"),
-	})
+	},
+		&user_accesses.UserAccess{
+			UserID:    user.ID,
+			Platform:  ctx.Get("Sec-Ch-Ua-Platform"),
+			UserAgent: ctx.Get("User-Agent"),
+		},
+	)
 
-	if gormhelper.HasAffectedRows(result) {
+	if !gormhelper.HasAffectedRows(result) {
 		return nil, errorhelper.Error500("Failed to record user access") // #marked: message
 	}
 
