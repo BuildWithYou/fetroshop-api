@@ -16,6 +16,7 @@ const USER_TYPE = "user"
 type AuthService interface {
 	Register(ctx *fiber.Ctx) (*model.Response, error)
 	Login(ctx *fiber.Ctx) (*model.Response, error)
+	Logout(ctx *fiber.Ctx) (*model.Response, error)
 }
 
 type AuthServiceImpl struct {

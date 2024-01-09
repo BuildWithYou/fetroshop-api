@@ -14,6 +14,9 @@ type CmsRouter struct {
 }
 
 func (router *CmsRouter) Init(app *fiber.App) {
+	// Middlewares
+	jwtMiddleware := router.JwtMiddleware.Authenticate
+
 	// root
 	app.Get("/", router.welcome)
 
@@ -25,6 +28,7 @@ func (router *CmsRouter) Init(app *fiber.App) {
 		authentication := r.Group("/auth")
 		authentication.Post("/register", router.Controller.Auth.Register)
 		authentication.Post("/login", router.Controller.Auth.Login)
+		authentication.Post("/logout", jwtMiddleware, router.Controller.Auth.Logout)
 	})
 
 }

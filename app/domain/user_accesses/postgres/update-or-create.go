@@ -6,6 +6,10 @@ import (
 	"gorm.io/gorm"
 )
 
+/*
+#marked: buggy
+It failed update because it's id included even it doesn't exist is condition arg
+*/
 func (p *PostgreSQL) UpdateOrCreate(data *user_accesses.UserAccess, condition *user_accesses.UserAccess) *gorm.DB {
 	var result *gorm.DB
 	updateResult := p.DB.Where(condition).Updates(data)
