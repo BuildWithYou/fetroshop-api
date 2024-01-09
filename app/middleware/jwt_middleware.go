@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/BuildWithYou/fetroshop-api/app/domain/customer_accesses"
@@ -55,8 +56,7 @@ func (jwtMid *JwtMiddleware) Authenticate(ctx *fiber.Ctx) error {
 	}
 
 	if tokenString == "" {
-		// return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "fail", "message": "You are not logged in"})
-		return errorhelper.Error401("You are not logged in") // #amrked: message
+		return errorhelper.Error401("You are not logged in") // #marked: message
 	}
 
 	// Spliting the header
@@ -68,17 +68,23 @@ func (jwtMid *JwtMiddleware) Authenticate(ctx *fiber.Ctx) error {
 		return fiber.ErrUnauthorized
 	}
 
+	fmt.Println("chunks[1] : ", chunks[1]) // #marked: debug
+
 	// Verify the token which is in the chunks
 	reversedToken, err := jwt.Reverse(jwtMid.Config.GetString("security.jwt.tokenKey"), chunks[1])
 	if validatorhelper.IsNotNil(err) {
+		fmt.Println("Error on reverse jwt token : ", err.Error()) // #marked: logging
 		return fiber.ErrUnauthorized
 	}
+
+	fmt.Println("reversedToken : ", reversedToken) // #marked: debug
+
 	switch reversedToken.Type {
 	case cmsAuthSvc.USER_TYPE:
 		{
 			userAccess := new(user_accesses.UserAccess)
 			result := jwtMid.UserAccessRepo.Find(userAccess, &user_accesses.UserAccess{
-				Token: reversedToken.Token,
+				ID: reversedToken.Token,
 			})
 			if gormhelper.IsErrRecordNotFound(result.Error) {
 				return fiber.ErrUnauthorized
@@ -89,7 +95,7 @@ func (jwtMid *JwtMiddleware) Authenticate(ctx *fiber.Ctx) error {
 		{
 			customerAccess := new(customer_accesses.CustomerAccess)
 			result := jwtMid.CustomerAccessRepo.Find(customerAccess, &customer_accesses.CustomerAccess{
-				Token: reversedToken.Token,
+				ID: reversedToken.Token,
 			})
 			if gormhelper.IsErrRecordNotFound(result.Error) {
 				return fiber.ErrUnauthorized

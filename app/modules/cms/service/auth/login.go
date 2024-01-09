@@ -46,7 +46,7 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*model.Response, error) {
 	))
 
 	result = svc.UserAccessRepo.UpdateOrCreate(&user_accesses.UserAccess{
-		Token:     accessToken,
+		ID:        accessToken,
 		UserID:    user.ID,
 		Platform:  ctx.Get("Sec-Ch-Ua-Platform"),
 		UserAgent: ctx.Get("User-Agent"),

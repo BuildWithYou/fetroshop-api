@@ -66,28 +66,28 @@ create table users (
 /* Table: user_accesses                                     */
 /*==============================================================*/
 create table user_accesses (
-   token                VARCHAR(255)         not null,
+   id                VARCHAR(255)         not null,
    user_id              INT4                 not null,
    platform             VARCHAR(32)          null,
    user_agent           VARCHAR(255)         null,
    created_at           TIMESTAMP            not null,
    updated_at           TIMESTAMP            not null,
    deleted_at           TIMESTAMP            null,
-   constraint PK_USER_ACCESSES primary key (token)
+   constraint PK_USER_ACCESSES primary key (id)
 );
 
 /*==============================================================*/
 /* Table: customer_accesses                                     */
 /*==============================================================*/
 create table customer_accesses (
-   token                VARCHAR(255)         not null,
+   id                VARCHAR(255)         not null,
    customer_id          INT4                 not null,
    platform             VARCHAR(32)          null,
    user_agent           VARCHAR(255)         null,
    created_at           TIMESTAMP            not null,
    updated_at           TIMESTAMP            not null,
    deleted_at           TIMESTAMP            null,
-   constraint PK_CUSTOMER_ACCESSES primary key (token)
+   constraint PK_CUSTOMER_ACCESSES primary key (id)
 );
 
 alter table user_accesses

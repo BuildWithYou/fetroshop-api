@@ -16,22 +16,34 @@ func TestGetConfig(t *testing.T) {
 
 func TestPrintConfig(t *testing.T) {
 	tests := []struct {
-		name string
-		key  string
+		name     string
+		key      string
+		typeData string
 	}{
 		{
-			name: "Print environment",
-			key:  "environment",
+			name:     "Print environment",
+			key:      "environment",
+			typeData: "string",
 		},
 		{
-			name: "Print database.logLevel",
-			key:  "database.logLevel",
+			name:     "Print database.logLevel",
+			key:      "database.logLevel",
+			typeData: "string",
+		},
+		{
+			name:     "Print security.jwt.tokenKey",
+			key:      "security.jwt.tokenKey",
+			typeData: "string",
 		},
 	}
+
+	config := GetConfig()
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			config := GetConfig()
-			fmt.Println(config.GetString(tt.key))
+			switch tt.typeData {
+			case "string":
+				fmt.Println(config.GetString(tt.key))
+			}
 		})
 	}
 }

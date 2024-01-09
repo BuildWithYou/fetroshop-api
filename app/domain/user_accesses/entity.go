@@ -7,7 +7,7 @@ import (
 )
 
 type UserAccess struct {
-	Token     string         `gorm:"column:token;" json:"token"`
+	ID        string         `gorm:"column:id;" json:"id"`
 	UserID    int64          `gorm:"column:user_id" json:"userId"`
 	Platform  string         `gorm:"column:platform" json:"platform"`
 	UserAgent string         `gorm:"column:user_agent" json:"userAgent"`

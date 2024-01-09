@@ -77,12 +77,14 @@ func Reverse(tokenKey string, jwtToken string) (*TokenReversed, error) {
 	parsed, err := parse(tokenKey, jwtToken)
 
 	if err != nil {
+		fmt.Println("Error from jwt.parse : ", err.Error()) // #marked: debug
 		return nil, err
 	}
 
 	// Parsing token claims
 	claims, ok := parsed.Claims.(jwt.MapClaims)
 	if !ok {
+		fmt.Println("Error from parsed.Claims : ", err.Error()) // #marked: debug
 		return nil, err
 	}
 
