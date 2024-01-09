@@ -12,9 +12,9 @@ import (
 
 func (svc *AuthServiceImpl) Logout(ctx *fiber.Ctx) (*model.Response, error) {
 	userID := jwt.GetUserID(ctx)
-	userAccessID := jwt.GetIdentifierID(ctx)
+	identifier := jwt.GetAccessIdentifier(ctx)
 	result := svc.UserAccessRepo.Delete(&user_accesses.UserAccess{
-		Key:    userAccessID,
+		Key:    identifier,
 		UserID: userID})
 	if !gormhelper.HasAffectedRows(result) {
 		return nil, errorhelper.Error500("Failed to logout") // #marked: message

@@ -122,6 +122,6 @@ func GetUserID(ctx *fiber.Ctx) int64 {
 	return ctx.Locals(CMS_IDENTIFIER).(int64)
 }
 
-func GetIdentifierID(ctx *fiber.Ctx) string {
+func GetAccessIdentifier(ctx *fiber.Ctx) string {
 	return ctx.Locals(ACCESS_IDENTIFIER).(string)
 }
