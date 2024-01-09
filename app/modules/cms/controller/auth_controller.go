@@ -11,6 +11,7 @@ type AuthController interface {
 	execute(ctx *fiber.Ctx, handler func(ctx *fiber.Ctx) (*model.Response, error)) (err error)
 	Register(ctx *fiber.Ctx) (err error)
 	Login(ctx *fiber.Ctx) (err error)
+	Logout(ctx *fiber.Ctx) (err error)
 }
 
 type AuthControllerImpl struct {
@@ -59,4 +60,18 @@ func (ctr *AuthControllerImpl) Register(ctx *fiber.Ctx) (err error) {
 // @Router       /api/auth/login [post]
 func (ctr *AuthControllerImpl) Login(ctx *fiber.Ctx) (err error) {
 	return ctr.execute(ctx, ctr.AuthService.Login)
+}
+
+// @Summary      Logout for users
+// @Description
+// @Tags         Authentication
+// @Produce      json
+// @Success      200  {object}  model.Response
+// @Failure      400  {object}  model.Response
+// @Failure      404  {object}  model.Response
+// @Failure      500  {object}  model.Response
+// @Router       /api/auth/logout [post]
+// @Security Bearer
+func (ctr *AuthControllerImpl) Logout(ctx *fiber.Ctx) (err error) {
+	return ctr.execute(ctx, ctr.AuthService.Logout)
 }
