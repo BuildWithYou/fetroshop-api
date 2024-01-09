@@ -19,10 +19,7 @@ import (
 )
 
 func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*model.Response, error) {
-	var (
-		user       users.User
-		userAccess user_accesses.UserAccess
-	)
+	var user users.User
 
 	payload := new(cmsModel.LoginRequest)
 	jwtTokenKey := svc.Config.GetString("security.jwt.tokenKey")
@@ -44,41 +41,6 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*model.Response, error) {
 		return nil, errorhelper.Error401("Invalid email or password") // #marked: message
 	}
 
-	// check is customer access exist
-	/*This code look weird but it caused by userAccessRepo has weird behaviour on upsert
-	 */
-	result = svc.UserAccessRepo.Find(&userAccess, &user_accesses.UserAccess{
-		UserID: user.ID,
-	})
-	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
-		return nil, errorhelper.Error500("Something went wrong") // #marked: message
-	}
-	if !gormhelper.IsErrRecordNotFound(result.Error) {
-		// check if customer access is expired
-		if userAccess.ExpiredAt.Before(time.Now()) {
-			svc.UserAccessRepo.Delete(&userAccess)
-			goto generateToken
-		}
-
-		generatedJwt := jwt.Generate(&jwt.TokenPayload{
-			ID:         userAccess.ID,
-			TokenKey:   jwtTokenKey,
-			Expiration: user.CreatedAt,
-			Type:       USER_TYPE,
-		})
-		return &model.Response{
-			Code:    fiber.StatusCreated,
-			Status:  utils.StatusMessage(fiber.StatusOK),
-			Message: "Login success", // #marked: message
-			Data: map[string]string{
-				"token":     generatedJwt.Token,
-				"createdAt": user.CreatedAt.Format("2006-01-02 15:04:05"),
-				"expiredAt": generatedJwt.ExpiredAt.Format("2006-01-02 15:04:05"),
-			},
-		}, nil
-	}
-
-generateToken:
 	accessToken := password.Generate(fmt.Sprintf(
 		"%s::%s::%s",
 		strconv.Itoa(int(user.ID)),
@@ -93,7 +55,7 @@ generateToken:
 	expiredAt := time.Now().Add(additionalDuration)
 
 	result = svc.UserAccessRepo.UpdateOrCreate(&user_accesses.UserAccess{
-		ID:        accessToken,
+		Key:       accessToken,
 		UserID:    user.ID,
 		Platform:  ctx.Get("Sec-Ch-Ua-Platform"),
 		UserAgent: ctx.Get("User-Agent"),
@@ -113,7 +75,7 @@ generateToken:
 	}
 
 	generatedJwt := jwt.Generate(&jwt.TokenPayload{
-		ID:         accessToken,
+		AccessKey:  accessToken,
 		TokenKey:   jwtTokenKey,
 		Expiration: expiredAt,
 		Type:       USER_TYPE,

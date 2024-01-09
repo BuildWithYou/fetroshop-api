@@ -28,6 +28,7 @@ func (router *WebRouter) Init(app *fiber.App) {
 	authentication.Post("/register", router.Controller.Auth.Register)
 	authentication.Post("/login", router.Controller.Auth.Login)
 	authentication.Post("/logout", jwtMiddleware, router.Controller.Auth.Logout)
+	authentication.Post("/refresh", jwtMiddleware, router.Controller.Auth.Refresh)
 
 }
 

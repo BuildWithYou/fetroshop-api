@@ -7,8 +7,9 @@ import (
 )
 
 type UserAccess struct {
-	ID        string         `gorm:"column:id;" json:"id"`
+	ID        int64          `gorm:"column:id;primaryKey;autoIncrement;" json:"id"`
 	UserID    int64          `gorm:"column:user_id" json:"userId"`
+	Key       string         `gorm:"column:key" json:"key"`
 	Platform  string         `gorm:"column:platform" json:"platform"`
 	UserAgent string         `gorm:"column:user_agent" json:"userAgent"`
 	ExpiredAt time.Time      `gorm:"column:expired_at;" json:"expiredAt"`
