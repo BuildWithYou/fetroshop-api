@@ -13,6 +13,7 @@ type AuthController interface {
 	Register(ctx *fiber.Ctx) (err error)
 	Login(ctx *fiber.Ctx) (err error)
 	Logout(ctx *fiber.Ctx) (err error)
+	Refresh(ctx *fiber.Ctx) (err error)
 }
 
 type AuthControllerImpl struct {
@@ -76,4 +77,18 @@ func (ctr *AuthControllerImpl) Login(ctx *fiber.Ctx) (err error) {
 // @Security Bearer
 func (ctr *AuthControllerImpl) Logout(ctx *fiber.Ctx) (err error) {
 	return ctr.execute(ctx, ctr.AuthService.Logout)
+}
+
+// @Summary      Refresh for customers
+// @Description
+// @Tags         Authentication
+// @Produce      json
+// @Success      200  {object}  model.Response
+// @Failure      400  {object}  model.Response
+// @Failure      404  {object}  model.Response
+// @Failure      500  {object}  model.Response
+// @Router       /api/auth/refresh [post]
+// @Security Bearer
+func (ctr *AuthControllerImpl) Refresh(ctx *fiber.Ctx) (err error) {
+	return ctr.execute(ctx, ctr.AuthService.Refresh)
 }
