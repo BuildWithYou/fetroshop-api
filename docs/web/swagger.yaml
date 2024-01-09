@@ -80,6 +80,58 @@ paths:
       summary: Login for customers
       tags:
       - Authentication
+  /api/auth/logout:
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Response'
+      security:
+      - Bearer: []
+      summary: Logout for customers
+      tags:
+      - Authentication
+  /api/auth/refresh:
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Response'
+      security:
+      - Bearer: []
+      summary: Refresh for customers
+      tags:
+      - Authentication
   /api/auth/register:
     post:
       consumes:
@@ -114,7 +166,7 @@ paths:
       tags:
       - Authentication
 securityDefinitions:
-  ApiKeyAuth:
+  Bearer:
     description: Use format 'Bearer YOUR_TOKEN'
     in: header
     name: Authorization

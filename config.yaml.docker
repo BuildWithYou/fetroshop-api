@@ -1,4 +1,5 @@
 ---
+# options: development, production
 environment: development
 app:
    web:
@@ -48,15 +49,25 @@ fiber:
 database:
    # MIGRATION COMMAND TEMPLATE:
    # migrate create -ext sql -dir db/migrations migration_file_name
-   # migrate -database "postgresql://{username}:{password}@{host}:{port}/{database}" -path db/migrations up
-   # migrate -database "postgresql://{username}:{password}@{host}:{port}/{database}" -path db/migrations down
+   # migrate -database "postgresql://{dbUsername}:{dbPassword}@{dbHost}:{dbPort}/{dbName}" -path db/migrations up
+   # migrate -database "postgresql://{dbUsername}:{dbPassword}@{dbHost}:{dbPort}/{dbName}" -path db/migrations down
 
-   dbName: fetroshop
-   dbUsername: postgres
-   dbPassword: postgres
-   dbHost: localhost
-   dbPort: 5432
-   dbUrl: postgresql://{username}:{password}@{host}:{port}/{database}
+   main:
+      dbName: fetroshop
+      dbUsername: postgres
+      dbPassword: postgres
+      dbHost: localhost
+      dbPort: 5432
+      dbUrl: postgresql://{main.dbUsername}:{main.dbPassword}@{main.dbHost}:{main.dbPort}/{main.dbName}
+
+   test:
+      dbName: fetroshop_test
+      dbUsername: postgres
+      dbPassword: postgres
+      dbHost: localhost
+      dbPort: 5432
+      dbUrl: postgresql://{test.dbUsername}:{test.dbPassword}@{test.dbHost}:{test.dbPort}/{test.dbName}
+
 
    # (int) Maximum number of open connections to the database.
    dbMaxOpenConns: 100
@@ -73,7 +84,7 @@ database:
    # Database log mode
    # Options: silent, error, warn, info
    # Default: silent
-   logLevel: info
+   logLevel: silent
 security:
    cors:
       # AllowOrigin defines a list of origins that may access the resource.

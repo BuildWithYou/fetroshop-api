@@ -12,50 +12,52 @@ import (
 	"github.com/gofiber/utils"
 )
 
-func (rg *AuthServiceImpl) Register(request *webModel.RegistrationRequest) (*model.Response, error) {
+func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*model.Response, error) {
 
 	var (
 		message                                        string
 		existingUsername, existingPhone, existingEmail customers.Customer
 	)
+	payload := new(webModel.RegistrationRequest)
+	validatorhelper.ValidatePayload(ctx, svc.Validate, payload)
 
-	result := rg.CustomerRepository.Find(&existingUsername, &customers.Customer{
-		Username: request.Username,
+	result := svc.CustomerRepo.Find(&existingUsername, &customers.Customer{
+		Username: payload.Username,
 	})
-	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsRecordNotFound(result.Error) {
+	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsErrRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
-	if !gormhelper.IsRecordNotFound(result.Error) {
+	if !gormhelper.IsErrRecordNotFound(result.Error) {
 		return nil, errorhelper.Error400("Username already used") // #marked: message
 	}
 
-	result = rg.CustomerRepository.Find(&existingPhone, &customers.Customer{
-		Phone: request.Phone,
+	result = svc.CustomerRepo.Find(&existingPhone, &customers.Customer{
+		Phone: payload.Phone,
 	})
-	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsRecordNotFound(result.Error) {
+	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsErrRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
-	if !gormhelper.IsRecordNotFound(result.Error) {
+	if !gormhelper.IsErrRecordNotFound(result.Error) {
 		return nil, errorhelper.Error400("Phone already used") // #marked: message
 	}
 
-	result = rg.CustomerRepository.Find(&existingEmail, &customers.Customer{
-		Email: request.Email,
+	result = svc.CustomerRepo.Find(&existingEmail, &customers.Customer{
+		Email: payload.Email,
 	})
-	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsRecordNotFound(result.Error) {
+	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsErrRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
-	if !gormhelper.IsRecordNotFound(result.Error) {
+	if !gormhelper.IsErrRecordNotFound(result.Error) {
 		return nil, errorhelper.Error400("Email already used") // #marked: message
 	}
 
-	hashedPassword := password.Generate(request.Password)
+	hashedPassword := password.Generate(payload.Password)
 
-	result = rg.CustomerRepository.Create(&customers.Customer{
-		Username: request.Username,
-		Phone:    request.Phone,
-		Email:    request.Email,
-		FullName: request.FullName,
+	result = svc.CustomerRepo.Create(&customers.Customer{
+		Username: payload.Username,
+		Phone:    payload.Phone,
+		Email:    payload.Email,
+		FullName: payload.FullName,
 		Password: hashedPassword,
 	})
 	if validatorhelper.IsNotNil(result.Error) {

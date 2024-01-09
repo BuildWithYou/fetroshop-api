@@ -6,7 +6,9 @@ package injector
 import (
 	"github.com/BuildWithYou/fetroshop-api/app"
 	"github.com/BuildWithYou/fetroshop-api/app/connection"
+	customerAccessRepo "github.com/BuildWithYou/fetroshop-api/app/domain/customer_accesses/postgres"
 	customerRepo "github.com/BuildWithYou/fetroshop-api/app/domain/customers/postgres"
+	userAccessRepo "github.com/BuildWithYou/fetroshop-api/app/domain/user_accesses/postgres"
 	userRepo "github.com/BuildWithYou/fetroshop-api/app/domain/users/postgres"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
@@ -22,19 +24,23 @@ import (
 	"github.com/google/wire"
 )
 
+var dbType connection.DBType = connection.DB_MAIN
+
 var serverSet = wire.NewSet(
+	wire.Value(dbType),
 	confighelper.GetConfig,
 	connection.OpenDBConnection,
 	docs.DocsProvider,
 	middleware.JwtMiddlewareProvider,
 	validatorhelper.GetValidator,
+	userAccessRepo.UserAccessRepoProvider,
+	customerAccessRepo.CustomerAccessRepoProvider,
 	app.CreateFiber,
-	app.StartFiber,
 )
 
 // web dependencies
 var webRepoSet = wire.NewSet(
-	customerRepo.CustomerRepositoryProvider,
+	customerRepo.CustomerRepoProvider,
 )
 
 var webControllerSet = wire.NewSet(
@@ -46,7 +52,7 @@ var webServiceSet = wire.NewSet(
 	webAuthService.AuthServiceProvider,
 )
 
-func InitializeWebServer() error {
+func InitializeWebServer() *app.Fetroshop {
 	wire.Build(
 		serverSet,
 		webRepoSet,
@@ -60,7 +66,7 @@ func InitializeWebServer() error {
 
 // cms dependencies
 var cmsRepoSet = wire.NewSet(
-	userRepo.UserRepositoryProvider,
+	userRepo.UserRepoProvider,
 )
 
 var cmsControllerSet = wire.NewSet(
@@ -72,7 +78,7 @@ var cmsServiceSet = wire.NewSet(
 	cmsAuthService.AuthServiceProvider,
 )
 
-func InitializeCmsServer() error {
+func InitializeCmsServer() *app.Fetroshop {
 	wire.Build(
 		serverSet,
 		cmsRepoSet,

@@ -5,46 +5,60 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 )
 
+const CMS_IDENTIFIER = "USER_ID"
+const WEB_IDENTIFIER = "CUSTOMER_ID"
+const ACCESS_IDENTIFIER = "ACCESS_IDENTIFIER"
+const errorMessage = "something went wrong"
+
 // TokenPayload defines the payload for the token
 type TokenPayload struct {
-	Expiration string
+	AccessKey  string
 	TokenKey   string
-	ID         int64
+	Expiration time.Time
+	Type       string
+}
+
+type TokenGenerated struct {
+	Token     string
+	ExpiredAt time.Time
+}
+
+type TokenReversed struct {
+	AccessKey string
+	Type      string
+	ExpiredAt time.Time
 }
 
 // Generate generates the jwt token based on payload
-func Generate(payload *TokenPayload) (token string, expiration time.Time) {
-	v, err := time.ParseDuration(payload.Expiration)
-
-	if err != nil {
-		panic("Invalid time duration. Should be time.ParseDuration string")
-	}
-
-	expiration = time.Now().Add(v)
+func Generate(payload *TokenPayload) *TokenGenerated {
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"exp":  expiration.Unix(),
-		"ID":   payload.ID,
-		"role": "customer",
+		"exp":       payload.Expiration.Unix(),
+		"accessKey": payload.AccessKey,
+		"type":      payload.Type,
 	})
 
-	token, err = t.SignedString([]byte(payload.TokenKey))
+	token, err := t.SignedString([]byte(payload.TokenKey))
 
 	if err != nil {
 		panic(err)
 	}
 
-	return token, expiration
+	return &TokenGenerated{
+		Token:     token,
+		ExpiredAt: payload.Expiration,
+	}
 }
 
-func parse(tokenKey string, token string) (*jwt.Token, error) {
+func parse(tokenKey string, jwtToken string) (*jwt.Token, error) {
 	// Parse takes the token string and a function for looking up the key. The latter is especially
 	// useful if you use multiple keys for your application.  The standard is to use 'kid' in the
 	// head of the token to identify which key to use, but the parsed token (head and claims) is provided
 	// to the callback, providing flexibility.
-	return jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
+	return jwt.Parse(jwtToken, func(t *jwt.Token) (interface{}, error) {
 		// Don't forget to validate the alg is what you expect:
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
@@ -56,26 +70,58 @@ func parse(tokenKey string, token string) (*jwt.Token, error) {
 }
 
 // Verify verifies the jwt token against the secret
-func Verify(tokenKey string, token string) (*TokenPayload, error) {
-	parsed, err := parse(tokenKey, token)
+func Reverse(tokenKey string, jwtToken string) (*TokenReversed, error) {
+	var expiredAt time.Time
+	parsed, err := parse(tokenKey, jwtToken)
 
 	if err != nil {
+		fmt.Println("Error from jwt.parse : ", err.Error()) // #marked: logging
 		return nil, err
 	}
 
 	// Parsing token claims
 	claims, ok := parsed.Claims.(jwt.MapClaims)
 	if !ok {
+		fmt.Println("Error from jwt.Reverse on parsed.Claims") // #marked: logging
 		return nil, err
 	}
 
-	// Getting ID, it's an interface{} so I need to cast it to uint
-	id, ok := claims["ID"].(int64)
+	accessKey, ok := claims["accessKey"].(string)
 	if !ok {
-		return nil, errors.New("something went wrong")
+		fmt.Println("Error from jwt.Reverse when parsing accessKey") // #marked: logging
+		return nil, errors.New(errorMessage)                         // #marked: message
 	}
 
-	return &TokenPayload{
-		ID: id,
+	expiredAtFloat, ok := claims["exp"].(float64)
+	if ok {
+		seconds := int64(expiredAtFloat)
+		expiredAt = time.Unix(seconds, 0)
+	} else {
+		fmt.Println("Error from jwt.Reverse when parsing exp") // #marked: logging
+		return nil, errors.New(errorMessage)                   // #marked: message
+	}
+
+	tokenType, ok := claims["type"].(string)
+	if !ok {
+		fmt.Println("Error from jwt.Reverse when parsing type") // #marked: logging
+		return nil, errors.New(errorMessage)                    // #marked: message
+	}
+
+	return &TokenReversed{
+		AccessKey: accessKey,
+		ExpiredAt: expiredAt,
+		Type:      tokenType,
 	}, nil
+}
+
+func GetCustomerID(ctx *fiber.Ctx) int64 {
+	return ctx.Locals(WEB_IDENTIFIER).(int64)
+}
+
+func GetUserID(ctx *fiber.Ctx) int64 {
+	return ctx.Locals(CMS_IDENTIFIER).(int64)
+}
+
+func GetAccessIdentifier(ctx *fiber.Ctx) string {
+	return ctx.Locals(ACCESS_IDENTIFIER).(string)
 }

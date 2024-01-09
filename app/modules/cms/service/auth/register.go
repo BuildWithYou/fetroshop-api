@@ -7,62 +7,63 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/password"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/model"
-	webModel "github.com/BuildWithYou/fetroshop-api/app/modules/cms/model"
+	cmsModel "github.com/BuildWithYou/fetroshop-api/app/modules/cms/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/utils"
 )
 
-func (rg *AuthServiceImpl) Register(request *webModel.RegistrationRequest) (*model.Response, error) {
-
+func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*model.Response, error) {
 	var (
 		message                                        string
 		existingUsername, existingPhone, existingEmail users.User
 	)
+	payload := new(cmsModel.RegistrationRequest)
+	validatorhelper.ValidatePayload(ctx, svc.Validate, payload)
 
-	result := rg.UserRepository.Find(&existingUsername, &users.User{
-		Username: request.Username,
+	result := svc.UserRepo.Find(&existingUsername, &users.User{
+		Username: payload.Username,
 	})
-	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsRecordNotFound(result.Error) {
+	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsErrRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
-	if !gormhelper.IsRecordNotFound(result.Error) {
+	if !gormhelper.IsErrRecordNotFound(result.Error) {
 		return nil, errorhelper.Error400("Username already used") // #marked: message
 	}
 
-	result = rg.UserRepository.Find(&existingPhone, &users.User{
-		Phone: request.Phone,
+	result = svc.UserRepo.Find(&existingPhone, &users.User{
+		Phone: payload.Phone,
 	})
-	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsRecordNotFound(result.Error) {
+	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsErrRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
-	if !gormhelper.IsRecordNotFound(result.Error) {
+	if !gormhelper.IsErrRecordNotFound(result.Error) {
 		return nil, errorhelper.Error400("Phone already used") // #marked: message
 	}
 
-	result = rg.UserRepository.Find(&existingEmail, &users.User{
-		Email: request.Email,
+	result = svc.UserRepo.Find(&existingEmail, &users.User{
+		Email: payload.Email,
 	})
-	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsRecordNotFound(result.Error) {
+	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsErrRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
-	if !gormhelper.IsRecordNotFound(result.Error) {
+	if !gormhelper.IsErrRecordNotFound(result.Error) {
 		return nil, errorhelper.Error400("Email already used") // #marked: message
 	}
 
-	hashedPassword := password.Generate(request.Password)
+	hashedPassword := password.Generate(payload.Password)
 
-	result = rg.UserRepository.Create(&users.User{
-		Username: request.Username,
-		Phone:    request.Phone,
-		Email:    request.Email,
-		FullName: request.FullName,
+	result = svc.UserRepo.Create(&users.User{
+		Username: payload.Username,
+		Phone:    payload.Phone,
+		Email:    payload.Email,
+		FullName: payload.FullName,
 		Password: hashedPassword,
 	})
 	if validatorhelper.IsNotNil(result.Error) {
 		return nil, result.Error
 	}
 
-	if result.RowsAffected > 0 {
+	if gormhelper.HasAffectedRows(result) {
 		message = "User created successfully" // #marked: message
 	}
 

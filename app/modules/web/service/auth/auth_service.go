@@ -1,31 +1,45 @@
 package auth
 
 import (
+	"github.com/BuildWithYou/fetroshop-api/app/connection"
+	"github.com/BuildWithYou/fetroshop-api/app/domain/customer_accesses"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/customers"
 	"github.com/BuildWithYou/fetroshop-api/app/model"
-	webModel "github.com/BuildWithYou/fetroshop-api/app/modules/web/model"
+	"github.com/go-playground/validator/v10"
+	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/viper"
 	"gorm.io/gorm"
 )
 
+const CUSTOMER_TYPE = "customer"
+
 type AuthService interface {
-	Register(request *webModel.RegistrationRequest) (*model.Response, error)
-	Login(request *webModel.LoginRequest) (*model.Response, error)
+	Register(ctx *fiber.Ctx) (*model.Response, error)
+	Login(ctx *fiber.Ctx) (*model.Response, error)
+	Logout(ctx *fiber.Ctx) (*model.Response, error)
+	Refresh(ctx *fiber.Ctx) (*model.Response, error)
 }
 
 type AuthServiceImpl struct {
 	DB                 *gorm.DB
 	Config             *viper.Viper
-	CustomerRepository customers.CustomerRepository
+	Validate           *validator.Validate
+	CustomerRepo       customers.CustomerRepo
+	CustomerAccessRepo customer_accesses.CustomerAccessRepo
 }
 
 func AuthServiceProvider(
-	db *gorm.DB,
+	db *connection.Connection,
 	config *viper.Viper,
-	customerRepository customers.CustomerRepository) AuthService {
+	validate *validator.Validate,
+	customerRepo customers.CustomerRepo,
+	customerAccessRepo customer_accesses.CustomerAccessRepo,
+) AuthService {
 	return &AuthServiceImpl{
-		DB:                 db,
+		DB:                 db.DB,
 		Config:             config,
-		CustomerRepository: customerRepository,
+		Validate:           validate,
+		CustomerRepo:       customerRepo,
+		CustomerAccessRepo: customerAccessRepo,
 	}
 }

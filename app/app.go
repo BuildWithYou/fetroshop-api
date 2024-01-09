@@ -14,6 +14,12 @@ import (
 	"github.com/spf13/viper"
 )
 
+type Fetroshop struct {
+	FiberApp *fiber.App
+	Host     string
+	Port     int
+}
+
 type ServerConfig struct {
 	Config *viper.Viper
 	Host   string
@@ -29,9 +35,9 @@ type ServerConfig struct {
 //
 // Returns:
 // - fiberApp: a pointer to a fiber.App object representing the initialized Fiber app.
-func CreateFiber(serverConfig *ServerConfig) (fiberApp *fiber.App) {
+func CreateFiber(serverConfig *ServerConfig) *Fetroshop {
 	// Fiber app initialization
-	return fiber.New(fiber.Config{
+	fiberApp := fiber.New(fiber.Config{
 		IdleTimeout:  time.Second * time.Duration(serverConfig.Config.GetInt("fiber.idleTimeout")),
 		WriteTimeout: time.Second * time.Duration(serverConfig.Config.GetInt("fiber.writeTimeout")),
 		ReadTimeout:  time.Second * time.Duration(serverConfig.Config.GetInt("fiber.readTimeout")),
@@ -55,6 +61,34 @@ func CreateFiber(serverConfig *ServerConfig) (fiberApp *fiber.App) {
 			})
 		},
 	})
+
+	middleware.CorsMiddleware(fiberApp, serverConfig.Config)
+
+	if serverConfig.Config.GetBool("fiber.recovery") {
+		fiberApp.Use(recover.New(recover.Config{
+			EnableStackTrace: serverConfig.Config.GetBool("fiber.enableStackTrace"),
+		})) // Panic Handler
+	}
+
+	serverConfig.Router.Init(fiberApp)
+
+	// Static files
+	if serverConfig.Static != nil {
+		for key, value := range serverConfig.Static {
+			fiberApp.Static(key, value)
+		}
+	}
+
+	// Middleware
+	middleware.NotFoundMiddleware(fiberApp) // 404 Handler
+
+	host := serverConfig.Host
+	port := serverConfig.Port
+	return &Fetroshop{
+		FiberApp: fiberApp,
+		Host:     host,
+		Port:     port,
+	}
 }
 
 // StartFiber initializes and starts a Fiber application.
