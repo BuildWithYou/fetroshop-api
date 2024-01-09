@@ -3,6 +3,7 @@ package middleware
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/BuildWithYou/fetroshop-api/app/domain/customer_accesses"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/user_accesses"
@@ -79,8 +80,12 @@ func (jwtMid *JwtMiddleware) Authenticate(ctx *fiber.Ctx) error {
 			userAccess := new(user_accesses.UserAccess)
 			result := jwtMid.UserAccessRepo.Find(userAccess, &user_accesses.UserAccess{
 				ID: reversedToken.ID,
-			})
+			}) // TODO: implement redis caching to improve performance
 			if gormhelper.IsErrRecordNotFound(result.Error) {
+				return fiber.ErrUnauthorized
+			}
+			if userAccess.ExpiredAt.Before(time.Now()) {
+				jwtMid.UserAccessRepo.Delete(userAccess)
 				return fiber.ErrUnauthorized
 			}
 			ctx.Locals(jwt.CMS_IDENTIFIER, userAccess.UserID)
@@ -90,8 +95,12 @@ func (jwtMid *JwtMiddleware) Authenticate(ctx *fiber.Ctx) error {
 			customerAccess := new(customer_accesses.CustomerAccess)
 			result := jwtMid.CustomerAccessRepo.Find(customerAccess, &customer_accesses.CustomerAccess{
 				ID: reversedToken.ID,
-			})
+			}) // TODO: implement redis caching to improve performance
 			if gormhelper.IsErrRecordNotFound(result.Error) {
+				return fiber.ErrUnauthorized
+			}
+			if customerAccess.ExpiredAt.Before(time.Now()) {
+				jwtMid.CustomerAccessRepo.Delete(customerAccess)
 				return fiber.ErrUnauthorized
 			}
 			ctx.Locals(jwt.WEB_IDENTIFIER, customerAccess.CustomerID)

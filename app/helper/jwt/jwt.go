@@ -18,7 +18,7 @@ const errorMessage = "something went wrong"
 type TokenPayload struct {
 	ID         string
 	TokenKey   string
-	Expiration string
+	Expiration time.Time
 	Type       string
 }
 
@@ -35,15 +35,8 @@ type TokenReversed struct {
 
 // Generate generates the jwt token based on payload
 func Generate(payload *TokenPayload) *TokenGenerated {
-	additionalDuration, err := time.ParseDuration(payload.Expiration)
-
-	if err != nil {
-		panic("Invalid time duration. Should be time.ParseDuration string")
-	}
-
-	expiration := time.Now().Add(additionalDuration)
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"exp":  expiration.Unix(),
+		"exp":  payload.Expiration.Unix(),
 		"id":   payload.ID,
 		"type": payload.Type,
 	})
@@ -56,7 +49,7 @@ func Generate(payload *TokenPayload) *TokenGenerated {
 
 	return &TokenGenerated{
 		Token:     token,
-		ExpiredAt: expiration,
+		ExpiredAt: payload.Expiration,
 	}
 }
 

@@ -19,11 +19,18 @@ import (
 )
 
 func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*model.Response, error) {
-	var user users.User
+	var (
+		user       users.User
+		userAccess user_accesses.UserAccess
+	)
 
 	payload := new(cmsModel.LoginRequest)
+	jwtTokenKey := svc.Config.GetString("security.jwt.tokenKey")
+	jwtExpiration := svc.Config.GetString("security.jwt.expiration")
+
 	validatorhelper.ValidatePayload(ctx, svc.Validate, payload)
 
+	// check is customer exist
 	result := svc.UserRepo.Find(&user, &users.User{
 		Username: payload.Username,
 	})
@@ -34,8 +41,33 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*model.Response, error) {
 		return nil, errorhelper.Error401("Invalid email or password") // #marked: message
 	}
 	if err := password.Verify(user.Password, payload.Password); validatorhelper.IsNotNil(err) {
-		fmt.Println(err.Error())
 		return nil, errorhelper.Error401("Invalid email or password") // #marked: message
+	}
+
+	// check is customer access exist
+	result = svc.UserAccessRepo.Find(&userAccess, &user_accesses.UserAccess{
+		UserID: user.ID,
+	})
+	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+		return nil, errorhelper.Error500("Something went wrong") // #marked: message
+	}
+	if !gormhelper.IsErrRecordNotFound(result.Error) {
+		generatedJwt := jwt.Generate(&jwt.TokenPayload{
+			ID:         userAccess.ID,
+			TokenKey:   jwtTokenKey,
+			Expiration: user.CreatedAt,
+			Type:       USER_TYPE,
+		})
+		return &model.Response{
+			Code:    fiber.StatusCreated,
+			Status:  utils.StatusMessage(fiber.StatusOK),
+			Message: "Login success", // #marked: message
+			Data: map[string]string{
+				"token":     generatedJwt.Token,
+				"createdAt": user.CreatedAt.Format("2006-01-02 15:04:05"),
+				"expiredAt": generatedJwt.ExpiredAt.Format("2006-01-02 15:04:05"),
+			},
+		}, nil
 	}
 
 	accessToken := password.Generate(fmt.Sprintf(
@@ -45,11 +77,18 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*model.Response, error) {
 		time.Now().Format("2006-01-02 15:04:05"),
 	))
 
+	additionalDuration, err := time.ParseDuration(jwtExpiration)
+	if err != nil {
+		panic("Invalid time duration. Should be time.ParseDuration string")
+	}
+	expiredAt := time.Now().Add(additionalDuration)
+
 	result = svc.UserAccessRepo.UpdateOrCreate(&user_accesses.UserAccess{
 		ID:        accessToken,
 		UserID:    user.ID,
 		Platform:  ctx.Get("Sec-Ch-Ua-Platform"),
 		UserAgent: ctx.Get("User-Agent"),
+		ExpiredAt: expiredAt,
 	},
 		&user_accesses.UserAccess{
 			UserID:    user.ID,
@@ -57,15 +96,17 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*model.Response, error) {
 			UserAgent: ctx.Get("User-Agent"),
 		},
 	)
-
+	if validatorhelper.IsNotNil(result.Error) && !gormhelper.HasAffectedRows(result) {
+		return nil, result.Error
+	}
 	if !gormhelper.HasAffectedRows(result) {
 		return nil, errorhelper.Error500("Failed to record user access") // #marked: message
 	}
 
 	generatedJwt := jwt.Generate(&jwt.TokenPayload{
 		ID:         accessToken,
-		Expiration: svc.Config.GetString("security.jwt.expiration"),
-		TokenKey:   svc.Config.GetString("security.jwt.tokenKey"),
+		TokenKey:   jwtTokenKey,
+		Expiration: expiredAt,
 		Type:       USER_TYPE,
 	})
 

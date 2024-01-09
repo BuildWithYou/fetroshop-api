@@ -3,6 +3,7 @@ package confighelper
 import (
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -43,6 +44,8 @@ func TestPrintConfig(t *testing.T) {
 			switch tt.typeData {
 			case "string":
 				fmt.Println(config.GetString(tt.key))
+				fmt.Println(time.Now())
+				fmt.Println(time.Now().Unix())
 			}
 		})
 	}
