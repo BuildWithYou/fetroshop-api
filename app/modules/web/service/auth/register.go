@@ -24,30 +24,30 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*model.Response, error) {
 	result := svc.CustomerRepo.Find(&existingUsername, &customers.Customer{
 		Username: payload.Username,
 	})
-	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsRecordNotFound(result.Error) {
+	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsErrRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
-	if !gormhelper.IsRecordNotFound(result.Error) {
+	if !gormhelper.IsErrRecordNotFound(result.Error) {
 		return nil, errorhelper.Error400("Username already used") // #marked: message
 	}
 
 	result = svc.CustomerRepo.Find(&existingPhone, &customers.Customer{
 		Phone: payload.Phone,
 	})
-	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsRecordNotFound(result.Error) {
+	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsErrRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
-	if !gormhelper.IsRecordNotFound(result.Error) {
+	if !gormhelper.IsErrRecordNotFound(result.Error) {
 		return nil, errorhelper.Error400("Phone already used") // #marked: message
 	}
 
 	result = svc.CustomerRepo.Find(&existingEmail, &customers.Customer{
 		Email: payload.Email,
 	})
-	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsRecordNotFound(result.Error) {
+	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsErrRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
-	if !gormhelper.IsRecordNotFound(result.Error) {
+	if !gormhelper.IsErrRecordNotFound(result.Error) {
 		return nil, errorhelper.Error400("Email already used") // #marked: message
 	}
 

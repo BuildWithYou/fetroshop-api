@@ -80,7 +80,7 @@ func (jwtMid *JwtMiddleware) Authenticate(ctx *fiber.Ctx) error {
 			result := jwtMid.UserAccessRepo.Find(userAccess, &user_accesses.UserAccess{
 				Token: reversedToken.Token,
 			})
-			if gormhelper.IsRecordNotFound(result.Error) {
+			if gormhelper.IsErrRecordNotFound(result.Error) {
 				return fiber.ErrUnauthorized
 			}
 			userID = userAccess.UserID
@@ -91,7 +91,7 @@ func (jwtMid *JwtMiddleware) Authenticate(ctx *fiber.Ctx) error {
 			result := jwtMid.CustomerAccessRepo.Find(customerAccess, &customer_accesses.CustomerAccess{
 				Token: reversedToken.Token,
 			})
-			if gormhelper.IsRecordNotFound(result.Error) {
+			if gormhelper.IsErrRecordNotFound(result.Error) {
 				return fiber.ErrUnauthorized
 			}
 		}

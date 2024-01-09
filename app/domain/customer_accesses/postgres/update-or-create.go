@@ -11,10 +11,10 @@ func (p *PostgreSQL) UpdateOrCreate(data *customer_accesses.CustomerAccess, cond
 	var result *gorm.DB
 	existingData := new(customer_accesses.CustomerAccess)
 	searchResult := p.DB.Where(condition).First(existingData, condition)
-	if validatorhelper.IsNotNil(searchResult.Error) && !gormhelper.IsRecordNotFound(searchResult.Error) {
+	if validatorhelper.IsNotNil(searchResult.Error) && !gormhelper.IsErrRecordNotFound(searchResult.Error) {
 		return searchResult
 	}
-	if !gormhelper.IsRecordNotFound(searchResult.Error) {
+	if !gormhelper.IsErrRecordNotFound(searchResult.Error) {
 		// result = p.DB.Where(existingData).Updates(data)
 		result = p.DB.Where(data).Updates(existingData)
 	} else {

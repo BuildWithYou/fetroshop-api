@@ -1,4 +1,5 @@
 ---
+# options: development, production
 environment: development
 app:
    web:
