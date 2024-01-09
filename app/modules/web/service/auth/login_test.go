@@ -11,9 +11,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var fiberApp = injector.InitializeCmsServer()
+var fiberApp = injector.InitializeWebServer()
 
-func TestCmsServiceLogin(t *testing.T) {
+func TestWebServiceLogin(t *testing.T) {
 	type args struct {
 		username  string
 		password  string
