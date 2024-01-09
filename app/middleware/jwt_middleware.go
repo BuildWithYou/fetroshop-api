@@ -72,6 +72,7 @@ func (jwtMid *JwtMiddleware) Authenticate(ctx *fiber.Ctx) error {
 		return fiber.ErrUnauthorized
 	}
 
+	ctx.Locals(jwt.ACCESS_IDENTIFIER, reversedToken.ID)
 	switch reversedToken.Type {
 	case cmsAuthSvc.USER_TYPE:
 		{
@@ -82,7 +83,7 @@ func (jwtMid *JwtMiddleware) Authenticate(ctx *fiber.Ctx) error {
 			if gormhelper.IsErrRecordNotFound(result.Error) {
 				return fiber.ErrUnauthorized
 			}
-			ctx.Locals("UserID", userAccess.UserID)
+			ctx.Locals(jwt.CMS_IDENTIFIER, userAccess.UserID)
 		}
 	case webAuthSvc.CUSTOMER_TYPE:
 		{
@@ -93,7 +94,7 @@ func (jwtMid *JwtMiddleware) Authenticate(ctx *fiber.Ctx) error {
 			if gormhelper.IsErrRecordNotFound(result.Error) {
 				return fiber.ErrUnauthorized
 			}
-			ctx.Locals("CustomerID", customerAccess.CustomerID)
+			ctx.Locals(jwt.WEB_IDENTIFIER, customerAccess.CustomerID)
 		}
 	default:
 		return errorhelper.Error500("Invalid token type") // #marked: message

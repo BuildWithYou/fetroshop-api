@@ -75,5 +75,5 @@ func (ctr *AuthControllerImpl) Login(ctx *fiber.Ctx) (err error) {
 // @Router       /api/auth/logout [post]
 // @Security Bearer
 func (ctr *AuthControllerImpl) Logout(ctx *fiber.Ctx) (err error) {
-	return ctr.execute(ctx, ctr.AuthService.Login)
+	return ctr.execute(ctx, ctr.AuthService.Logout)
 }

@@ -5,9 +5,13 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 )
 
+const CMS_IDENTIFIER = "USER_ID"
+const WEB_IDENTIFIER = "CUSTOMER_ID"
+const ACCESS_IDENTIFIER = "ACCESS_IDENTIFIER"
 const errorMessage = "something went wrong"
 
 // TokenPayload defines the payload for the token
@@ -115,4 +119,16 @@ func Reverse(tokenKey string, jwtToken string) (*TokenReversed, error) {
 		ExpiredAt: expiredAt,
 		Type:      tokenType,
 	}, nil
+}
+
+func GetCustomerID(ctx *fiber.Ctx) int64 {
+	return ctx.Locals(WEB_IDENTIFIER).(int64)
+}
+
+func GetUserID(ctx *fiber.Ctx) int64 {
+	return ctx.Locals(CMS_IDENTIFIER).(int64)
+}
+
+func GetIdentifierID(ctx *fiber.Ctx) string {
+	return ctx.Locals(ACCESS_IDENTIFIER).(string)
 }
