@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/BuildWithYou/fetroshop-api/app/domain/customer_accesses"
+	"github.com/BuildWithYou/fetroshop-api/app/domain/user_accesses"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/jwt"
@@ -16,7 +16,7 @@ import (
 )
 
 func (svc *AuthServiceImpl) Refresh(ctx *fiber.Ctx) (*model.Response, error) {
-	customerID := jwt.GetCustomerID(ctx)
+	userID := jwt.GetUserID(ctx)
 	identifier := jwt.GetAccessIdentifier(ctx)
 	jwtTokenKey := svc.Config.GetString("security.jwt.tokenKey")
 	jwtExpiration := svc.Config.GetString("security.jwt.expiration")
@@ -29,7 +29,7 @@ func (svc *AuthServiceImpl) Refresh(ctx *fiber.Ctx) (*model.Response, error) {
 
 	accessToken := password.Generate(fmt.Sprintf(
 		"%s::%s::%s",
-		strconv.Itoa(int(customerID)),
+		strconv.Itoa(int(userID)),
 		jwtTokenKey,
 		time.Now().Format("2006-01-02 15:04:05"),
 	))
@@ -38,18 +38,18 @@ func (svc *AuthServiceImpl) Refresh(ctx *fiber.Ctx) (*model.Response, error) {
 		AccessKey:  accessToken,
 		TokenKey:   jwtTokenKey,
 		Expiration: expiredAt,
-		Type:       CUSTOMER_TYPE,
+		Type:       USER_TYPE,
 	})
 
-	result := svc.CustomerAccessRepo.Update(
-		&customer_accesses.CustomerAccess{
-			Key:        accessToken,
-			CustomerID: customerID,
-			ExpiredAt:  expiredAt,
+	result := svc.UserAccessRepo.Update(
+		&user_accesses.UserAccess{
+			Key:       accessToken,
+			UserID:    userID,
+			ExpiredAt: expiredAt,
 		},
-		&customer_accesses.CustomerAccess{
-			Key:        identifier,
-			CustomerID: customerID,
+		&user_accesses.UserAccess{
+			Key:    identifier,
+			UserID: userID,
 		},
 	)
 	if !gormhelper.HasAffectedRows(result) {
