@@ -63,7 +63,7 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*model.Response, error) {
 	}
 
 	generatedJwt := jwt.Generate(&jwt.TokenPayload{
-		Token:      accessToken,
+		ID:         accessToken,
 		Expiration: svc.Config.GetString("security.jwt.expiration"),
 		TokenKey:   svc.Config.GetString("security.jwt.tokenKey"),
 		Type:       USER_TYPE,

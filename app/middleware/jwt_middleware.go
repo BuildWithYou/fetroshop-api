@@ -41,10 +41,7 @@ func JwtMiddlewareProvider(
 //
 // It takes a *fiber.Ctx object as a parameter and returns an error.
 func (jwtMid *JwtMiddleware) Authenticate(ctx *fiber.Ctx) error {
-	var (
-		tokenString string
-		userID      int64
-	)
+	var tokenString string
 	authorization := ctx.Get("Authorization")
 
 	if authorization == "" {
@@ -68,8 +65,6 @@ func (jwtMid *JwtMiddleware) Authenticate(ctx *fiber.Ctx) error {
 		return fiber.ErrUnauthorized
 	}
 
-	fmt.Println("chunks[1] : ", chunks[1]) // #marked: debug
-
 	// Verify the token which is in the chunks
 	reversedToken, err := jwt.Reverse(jwtMid.Config.GetString("security.jwt.tokenKey"), chunks[1])
 	if validatorhelper.IsNotNil(err) {
@@ -77,35 +72,32 @@ func (jwtMid *JwtMiddleware) Authenticate(ctx *fiber.Ctx) error {
 		return fiber.ErrUnauthorized
 	}
 
-	fmt.Println("reversedToken : ", reversedToken) // #marked: debug
-
 	switch reversedToken.Type {
 	case cmsAuthSvc.USER_TYPE:
 		{
 			userAccess := new(user_accesses.UserAccess)
 			result := jwtMid.UserAccessRepo.Find(userAccess, &user_accesses.UserAccess{
-				ID: reversedToken.Token,
+				ID: reversedToken.ID,
 			})
 			if gormhelper.IsErrRecordNotFound(result.Error) {
 				return fiber.ErrUnauthorized
 			}
-			userID = userAccess.UserID
+			ctx.Locals("UserID", userAccess.UserID)
 		}
 	case webAuthSvc.CUSTOMER_TYPE:
 		{
 			customerAccess := new(customer_accesses.CustomerAccess)
 			result := jwtMid.CustomerAccessRepo.Find(customerAccess, &customer_accesses.CustomerAccess{
-				ID: reversedToken.Token,
+				ID: reversedToken.ID,
 			})
 			if gormhelper.IsErrRecordNotFound(result.Error) {
 				return fiber.ErrUnauthorized
 			}
+			ctx.Locals("CustomerID", customerAccess.CustomerID)
 		}
 	default:
 		return errorhelper.Error500("Invalid token type") // #marked: message
 	}
-
-	ctx.Locals("UserID", userID)
 
 	return ctx.Next()
 }

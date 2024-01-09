@@ -12,7 +12,7 @@ const errorMessage = "something went wrong"
 
 // TokenPayload defines the payload for the token
 type TokenPayload struct {
-	Token      string
+	ID         string
 	TokenKey   string
 	Expiration string
 	Type       string
@@ -24,9 +24,9 @@ type TokenGenerated struct {
 }
 
 type TokenReversed struct {
-	Token     string
+	ID        string
 	Type      string
-	ExpiredAt string
+	ExpiredAt time.Time
 }
 
 // Generate generates the jwt token based on payload
@@ -39,9 +39,9 @@ func Generate(payload *TokenPayload) *TokenGenerated {
 
 	expiration := time.Now().Add(additionalDuration)
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"exp":   expiration.Unix(),
-		"Token": payload.Token,
-		"type":  payload.Type,
+		"exp":  expiration.Unix(),
+		"id":   payload.ID,
+		"type": payload.Type,
 	})
 
 	token, err := t.SignedString([]byte(payload.TokenKey))
@@ -74,37 +74,44 @@ func parse(tokenKey string, jwtToken string) (*jwt.Token, error) {
 
 // Verify verifies the jwt token against the secret
 func Reverse(tokenKey string, jwtToken string) (*TokenReversed, error) {
+	var expiredAt time.Time
 	parsed, err := parse(tokenKey, jwtToken)
 
 	if err != nil {
-		fmt.Println("Error from jwt.parse : ", err.Error()) // #marked: debug
+		fmt.Println("Error from jwt.parse : ", err.Error()) // #marked: logging
 		return nil, err
 	}
 
 	// Parsing token claims
 	claims, ok := parsed.Claims.(jwt.MapClaims)
 	if !ok {
-		fmt.Println("Error from parsed.Claims : ", err.Error()) // #marked: debug
+		fmt.Println("Error from jwt.Reverse on parsed.Claims") // #marked: logging
 		return nil, err
 	}
 
-	token, ok := claims["Token"].(string)
+	identifier, ok := claims["id"].(string)
 	if !ok {
-		return nil, errors.New(errorMessage) // #marked: message
+		fmt.Println("Error from jwt.Reverse when parsing id") // #marked: logging
+		return nil, errors.New(errorMessage)                  // #marked: message
 	}
 
-	expiredAt, ok := claims["exp"].(string)
-	if !ok {
-		return nil, errors.New(errorMessage) // #marked: message
+	expiredAtFloat, ok := claims["exp"].(float64)
+	if ok {
+		seconds := int64(expiredAtFloat)
+		expiredAt = time.Unix(seconds, 0)
+	} else {
+		fmt.Println("Error from jwt.Reverse when parsing exp") // #marked: logging
+		return nil, errors.New(errorMessage)                   // #marked: message
 	}
 
 	tokenType, ok := claims["type"].(string)
 	if !ok {
-		return nil, errors.New(errorMessage) // #marked: message
+		fmt.Println("Error from jwt.Reverse when parsing type") // #marked: logging
+		return nil, errors.New(errorMessage)                    // #marked: message
 	}
 
 	return &TokenReversed{
-		Token:     token,
+		ID:        identifier,
 		ExpiredAt: expiredAt,
 		Type:      tokenType,
 	}, nil
