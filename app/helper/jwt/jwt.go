@@ -16,7 +16,7 @@ const errorMessage = "something went wrong"
 
 // TokenPayload defines the payload for the token
 type TokenPayload struct {
-	ID         string
+	AccessKey  string
 	TokenKey   string
 	Expiration time.Time
 	Type       string
@@ -28,7 +28,7 @@ type TokenGenerated struct {
 }
 
 type TokenReversed struct {
-	ID        string
+	AccessKey string
 	Type      string
 	ExpiredAt time.Time
 }
@@ -36,9 +36,9 @@ type TokenReversed struct {
 // Generate generates the jwt token based on payload
 func Generate(payload *TokenPayload) *TokenGenerated {
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"exp":  payload.Expiration.Unix(),
-		"id":   payload.ID,
-		"type": payload.Type,
+		"exp":       payload.Expiration.Unix(),
+		"accessKey": payload.AccessKey,
+		"type":      payload.Type,
 	})
 
 	token, err := t.SignedString([]byte(payload.TokenKey))
@@ -86,10 +86,10 @@ func Reverse(tokenKey string, jwtToken string) (*TokenReversed, error) {
 		return nil, err
 	}
 
-	identifier, ok := claims["id"].(string)
+	accessKey, ok := claims["accessKey"].(string)
 	if !ok {
-		fmt.Println("Error from jwt.Reverse when parsing id") // #marked: logging
-		return nil, errors.New(errorMessage)                  // #marked: message
+		fmt.Println("Error from jwt.Reverse when parsing accessKey") // #marked: logging
+		return nil, errors.New(errorMessage)                         // #marked: message
 	}
 
 	expiredAtFloat, ok := claims["exp"].(float64)
@@ -108,7 +108,7 @@ func Reverse(tokenKey string, jwtToken string) (*TokenReversed, error) {
 	}
 
 	return &TokenReversed{
-		ID:        identifier,
+		AccessKey: accessKey,
 		ExpiredAt: expiredAt,
 		Type:      tokenType,
 	}, nil

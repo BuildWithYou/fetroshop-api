@@ -73,13 +73,13 @@ func (jwtMid *JwtMiddleware) Authenticate(ctx *fiber.Ctx) error {
 		return fiber.ErrUnauthorized
 	}
 
-	ctx.Locals(jwt.ACCESS_IDENTIFIER, reversedToken.ID)
+	ctx.Locals(jwt.ACCESS_IDENTIFIER, reversedToken.AccessKey)
 	switch reversedToken.Type {
 	case cmsAuthSvc.USER_TYPE:
 		{
 			userAccess := new(user_accesses.UserAccess)
 			result := jwtMid.UserAccessRepo.Find(userAccess, &user_accesses.UserAccess{
-				ID: reversedToken.ID,
+				Key: reversedToken.AccessKey,
 			}) // TODO: implement redis caching to improve performance
 			if gormhelper.IsErrRecordNotFound(result.Error) {
 				return fiber.ErrUnauthorized
@@ -94,7 +94,7 @@ func (jwtMid *JwtMiddleware) Authenticate(ctx *fiber.Ctx) error {
 		{
 			customerAccess := new(customer_accesses.CustomerAccess)
 			result := jwtMid.CustomerAccessRepo.Find(customerAccess, &customer_accesses.CustomerAccess{
-				ID: reversedToken.ID,
+				Key: reversedToken.AccessKey,
 			}) // TODO: implement redis caching to improve performance
 			if gormhelper.IsErrRecordNotFound(result.Error) {
 				return fiber.ErrUnauthorized

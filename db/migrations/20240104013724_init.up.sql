@@ -66,8 +66,9 @@ create table users (
 /* Table: user_accesses                                     */
 /*==============================================================*/
 create table user_accesses (
-   id                VARCHAR(255)         not null,
+   id                   SERIAL not null,
    user_id              INT4                 not null,
+   key                  VARCHAR(255)         not null,
    platform             VARCHAR(32)          null,
    user_agent           VARCHAR(255)         null,
    expired_at           TIMESTAMP            not null,
@@ -81,8 +82,9 @@ create table user_accesses (
 /* Table: customer_accesses                                     */
 /*==============================================================*/
 create table customer_accesses (
-   id                VARCHAR(255)         not null,
+   id                   SERIAL not null,
    customer_id          INT4                 not null,
+   key                  VARCHAR(255)          not null,
    platform             VARCHAR(32)          null,
    user_agent           VARCHAR(255)         null,
    expired_at           TIMESTAMP            not null,
@@ -91,6 +93,7 @@ create table customer_accesses (
    deleted_at           TIMESTAMP            null,
    constraint PK_CUSTOMER_ACCESSES primary key (id)
 );
+
 
 alter table user_accesses
    add constraint FK_USER_ACC_REFERENCE_USERS foreign key (user_id)

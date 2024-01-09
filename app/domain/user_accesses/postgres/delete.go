@@ -6,5 +6,5 @@ import (
 )
 
 func (p *PostgreSQL) Delete(condition *user_accesses.UserAccess) *gorm.DB {
-	return p.DB.Delete(condition)
+	return p.DB.Delete(&user_accesses.UserAccess{}, condition)
 }
