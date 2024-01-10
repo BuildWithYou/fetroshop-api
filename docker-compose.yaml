@@ -7,7 +7,7 @@ services:
       image: fetroshop-api
       container_name: fetroshop-api
       restart: no # available options: no, always, on-failure, unless-stopped, on-abnormal
-      working_dir: /app/fetroshop-api
+      working_dir: /app/api
       ports:
          - 3000:3000
          - 3001:3001
