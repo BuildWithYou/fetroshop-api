@@ -51,8 +51,7 @@ Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum quam aut at. Nostru
 1. Pull this repository
 2. Build docker image using this command
    ```
-   docker builder prune
-   docker-compose up --force-recreate
+   docker-compose up
    ```
 
 Testing
