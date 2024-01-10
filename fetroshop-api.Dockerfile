@@ -15,8 +15,6 @@ WORKDIR /app/api
 COPY --from=build /app/api/fetroshop-api /app/api/fetroshop-api
 COPY config.yaml.docker config.yaml
 COPY docs docs
-COPY db db
-COPY db/init.sql docker-entrypoint-initdb.d/init.sql
 
 
 # Update the package repository and install curl

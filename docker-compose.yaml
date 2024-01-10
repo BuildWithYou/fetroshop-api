@@ -3,7 +3,7 @@ services:
    api:
       build:
          context: ./
-         dockerfile: Dockerfile
+         dockerfile: fetroshop-api.Dockerfile
       image: fetroshop-api
       container_name: fetroshop-api
       restart: no # available options: no, always, on-failure, unless-stopped, on-abnormal
@@ -14,23 +14,29 @@ services:
       networks:
          - fetroshop_network
       volumes:
-         - fetroshop_volume:/app
+         - fetroshop_app_volume:/app
 
    db:
-      image: postgres:latest
+      build:
+         context: ./
+         dockerfile: postgres.Dockerfile
+      image: fetroshop-db
       container_name: fetroshop-db
       restart: no # available options: no, always, on-failure, unless-stopped, on-abnormal
+      working_dir: /
       environment:
          POSTGRES_PASSWORD: postgres
          PGDATA: /var/lib/postgresql/data/pgdata
       ports:
          - 5432:5432
       volumes:
-         - fetroshop_volume:/var/lib/postgresql/data
+         - fetroshop_db_volume:/var/lib/postgresql/data
       networks:
          - fetroshop_network
+
 volumes:
-   fetroshop_volume:
+   fetroshop_app_volume:
+   fetroshop_db_volume:
 networks:
    fetroshop_network:
       driver: bridge
