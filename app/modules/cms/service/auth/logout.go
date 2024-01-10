@@ -16,7 +16,7 @@ import (
 
 func (svc *AuthServiceImpl) Logout(ctx *fiber.Ctx) (*model.Response, error) {
 	if validatorhelper.IsNotNil(svc.Err) {
-		fmt.Print("Error: ", svc.Err.Error()) // #marked: logging
+		fmt.Printf("\nError: %s\n", svc.Err.Error()) // #marked: logging
 		return nil, errorhelper.Error500(constant.ERROR_GENERAL)
 	}
 
