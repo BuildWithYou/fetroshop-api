@@ -47,28 +47,21 @@ fiber:
    # Optional. Default: false
    enableStackTrace: true
 database:
-   # MIGRATION COMMAND TEMPLATE:
-   # migrate create -ext sql -dir db/migrations migration_file_name
-   # migrate -database "postgresql://postgres:postgres@localhost:5432/fetroshop?sslmode=disable" -path db/migrations up
-   # migrate -database "postgresql://postgres:postgres@localhost:5432/fetroshop?sslmode=disable" -path db/migrations down
-   # migrate -database "postgresql://postgres:postgres@localhost:5432/fetroshop_test?sslmode=disable" -path db/migrations up
-   # migrate -database "postgresql://postgres:postgres@localhost:5432/fetroshop_test?sslmode=disable" -path db/migrations down
-
    main:
       dbName: fetroshop
       dbUsername: postgres
       dbPassword: postgres
-      dbHost: localhost
+      dbHost: host.docker.internal
       dbPort: 5432
-      dbUrl: postgresql://postgres:postgres@localhost:5432/fetroshop?sslmode=disable
+      dbUrl: postgresql://postgres:postgres@host.docker.internal:5432/fetroshop?sslmode=disable
 
    test:
       dbName: fetroshop_test
       dbUsername: postgres
       dbPassword: postgres
-      dbHost: localhost
+      dbHost: host.docker.internal
       dbPort: 5432
-      dbUrl: postgresql://postgres:postgres@localhost:5432/fetroshop_test?sslmode=disable
+      dbUrl: postgresql://postgres:postgres@host.docker.internal:5432/fetroshop_test?sslmode=disable
 
    # (int) Maximum number of open connections to the database.
    dbMaxOpenConns: 100
