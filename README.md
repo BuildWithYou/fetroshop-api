@@ -6,8 +6,10 @@ Fetroshop API is a robust and efficient backend solution designed to power the o
 
 Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum quam aut at. Nostrum ut id mollitia at quidem debitis iste tempore culpa, tenetur perferendis porro impedit est molestias laborum accusamus? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum repellendus architecto, tempore eius incidunt nam ex recusandae! Sint officia saepe animi quis odio consequuntur expedita sed ipsa laudantium! Expedita, illum. Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur, ab. Eos cupiditate velit, minima voluptates quae enim delectus iste rem similique et autem est voluptas ipsum ratione ipsa magni nemo.
 
-Generate Docs File
+API Documentation
 =================
+We use [swag](https://github.com/swaggo/swag) to generate API documentation. Here is commands you can use to generate documentation.
+You can access the documentation in `http://localhost:3000/documentation` for web api module documentation and `http://localhost:3001/documentation` for cms api module documentation.
 
 For Web
 ```
@@ -30,6 +32,8 @@ Migration
    migrate create -ext sql -dir db/migrations migration_file_name
 ```
 ## C. Runing Migration
+We use [golang-migrate](https://github.com/golang-migrate/migrate) to sync database.
+
 Migration Up
 ```
    migrate -database "postgresql://{username}:{password}@{host}:{port}/{database}" -path db/migrations up
