@@ -2,7 +2,6 @@ package app
 
 import (
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/BuildWithYou/fetroshop-api/app/middleware"
@@ -18,6 +17,7 @@ type Fetroshop struct {
 	FiberApp *fiber.App
 	Host     string
 	Port     int
+	Err      error
 }
 
 type ServerConfig struct {
@@ -89,38 +89,4 @@ func CreateFiber(serverConfig *ServerConfig) *Fetroshop {
 		Host:     host,
 		Port:     port,
 	}
-}
-
-// StartFiber initializes and starts a Fiber application.
-//
-// fiberApp: A pointer to the Fiber application instance.
-// serverConfig: A pointer to the server configuration.
-// Returns an error if there is an issue starting the Fiber application.
-func StartFiber(
-	fiberApp *fiber.App,
-	serverConfig *ServerConfig) error {
-
-	middleware.CorsMiddleware(fiberApp, serverConfig.Config)
-
-	if serverConfig.Config.GetBool("fiber.recovery") {
-		fiberApp.Use(recover.New(recover.Config{
-			EnableStackTrace: serverConfig.Config.GetBool("fiber.enableStackTrace"),
-		})) // Panic Handler
-	}
-
-	serverConfig.Router.Init(fiberApp)
-
-	// Static files
-	if serverConfig.Static != nil {
-		for key, value := range serverConfig.Static {
-			fiberApp.Static(key, value)
-		}
-	}
-
-	// Middleware
-	middleware.NotFoundMiddleware(fiberApp) // 404 Handler
-
-	host := serverConfig.Host
-	port := serverConfig.Port
-	return fiberApp.Listen(fmt.Sprintf("%s:%d", host, port))
 }

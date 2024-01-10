@@ -19,6 +19,10 @@ import (
 )
 
 func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*model.Response, error) {
+	if validatorhelper.IsNotNil(svc.Err) {
+		return nil, errorhelper.Error500(svc.Err.Error())
+	}
+
 	var user users.User
 
 	payload := new(cmsModel.LoginRequest)
