@@ -47,11 +47,8 @@ Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum quam aut at. Nostru
 1. Pull this repository
 2. Build docker image using this command
    ```
-   docker build -t fetroshop-api:latest .
-   ```
-3. Run docker images using this command
-   ```
-   docker run --name fetroshop-api -p 3000:3000 -p 3001:3001 fetroshop-api
+   docker builder prune
+   docker-compose up --force-recreate
    ```
 
 Testing
