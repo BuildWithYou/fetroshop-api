@@ -11,8 +11,8 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o fetroshop-api .
 ## Base image
 FROM alpine:latest
 
-WORKDIR /app/fetroshop-api
-COPY --from=build /app/fetroshop-api/fetroshop-api /app/fetroshop-api/fetroshop-api
+WORKDIR /app
+COPY --from=build /app/fetroshop-api/fetroshop-api /app/api
 COPY config.yaml.docker config.yaml
 COPY docs docs
 
@@ -23,4 +23,4 @@ RUN apk update && apk add --no-cache curl
 EXPOSE 3000
 EXPOSE 3001
 
-CMD /app/fetroshop-api/fetroshop-api
+CMD /app/api
