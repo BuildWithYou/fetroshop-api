@@ -1,11 +1,14 @@
 package errorhelper
 
 import (
+	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 )
 
 func PanicIfError(err error) {
 	if err != nil {
+		fmt.Println("Error : ", err.Error())
 		panic(err)
 	}
 }
