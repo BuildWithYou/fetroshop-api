@@ -21,6 +21,7 @@ type AuthService interface {
 }
 
 type AuthServiceImpl struct {
+	Err                error
 	DB                 *gorm.DB
 	Config             *viper.Viper
 	Validate           *validator.Validate
@@ -36,6 +37,7 @@ func AuthServiceProvider(
 	customerAccessRepo customer_accesses.CustomerAccessRepo,
 ) AuthService {
 	return &AuthServiceImpl{
+		Err:                db.Err,
 		DB:                 db.DB,
 		Config:             config,
 		Validate:           validate,

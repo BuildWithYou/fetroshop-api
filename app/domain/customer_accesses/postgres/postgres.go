@@ -7,11 +7,13 @@ import (
 )
 
 type PostgreSQL struct {
-	DB *gorm.DB
+	Err error
+	DB  *gorm.DB
 }
 
 func CustomerAccessRepoProvider(db *connection.Connection) customer_accesses.CustomerAccessRepo {
 	return &PostgreSQL{
-		DB: db.DB,
+		Err: db.Err,
+		DB:  db.DB,
 	}
 }
