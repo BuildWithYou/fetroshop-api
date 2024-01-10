@@ -28,13 +28,12 @@ type ServerConfig struct {
 	Static map[string]string
 }
 
-// CreateFiber initializes a Fiber app with the given server configuration.
+// CreateFiber initializes a Fiber app with the given server configuration and returns a Fetroshop instance.
 //
-// Parameters:
-// - serverConfig: a pointer to a ServerConfig object containing the server configuration.
+// The function takes a pointer to a ServerConfig struct as its parameter.
+// The ServerConfig struct contains various settings for the Fiber app, such as idle timeout, write timeout, read timeout, prefork, and error handler.
 //
-// Returns:
-// - fiberApp: a pointer to a fiber.App object representing the initialized Fiber app.
+// The function returns a pointer to a Fetroshop struct, which contains the initialized Fiber app, host, and port.
 func CreateFiber(serverConfig *ServerConfig) *Fetroshop {
 	// Fiber app initialization
 	fiberApp := fiber.New(fiber.Config{

@@ -7,6 +7,7 @@ import (
 
 	"github.com/BuildWithYou/fetroshop-api/app/domain/user_accesses"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/users"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/constant"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/jwt"
@@ -20,7 +21,8 @@ import (
 
 func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*model.Response, error) {
 	if validatorhelper.IsNotNil(svc.Err) {
-		return nil, errorhelper.Error500(svc.Err.Error())
+		fmt.Print("Error: ", svc.Err.Error()) // #marked: logging
+		return nil, errorhelper.Error500(constant.ERROR_GENERAL)
 	}
 
 	var user users.User

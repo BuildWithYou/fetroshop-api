@@ -1,7 +1,10 @@
 package auth
 
 import (
+	"fmt"
+
 	"github.com/BuildWithYou/fetroshop-api/app/domain/users"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/constant"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/password"
@@ -13,6 +16,11 @@ import (
 )
 
 func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*model.Response, error) {
+	if validatorhelper.IsNotNil(svc.Err) {
+		fmt.Print("Error: ", svc.Err.Error()) // #marked: logging
+		return nil, errorhelper.Error500(constant.ERROR_GENERAL)
+	}
+
 	var (
 		message                                        string
 		existingUsername, existingPhone, existingEmail users.User
