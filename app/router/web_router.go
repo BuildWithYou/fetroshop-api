@@ -10,12 +10,14 @@ import (
 type WebRouter struct {
 	Docs          *docs.Docs
 	JwtMiddleware *middleware.JwtMiddleware
+	DbMiddleware  *middleware.DbMiddleware
 	Controller    *controller.Controller
 }
 
 func (router *WebRouter) Init(app *fiber.App) {
 	// Middlewares
 	jwtMiddleware := router.JwtMiddleware.Authenticate
+	dbMiddleware := router.DbMiddleware.Authenticate
 
 	// root
 	app.Get("/", router.redirectToDocs)
@@ -24,8 +26,11 @@ func (router *WebRouter) Init(app *fiber.App) {
 	// documentation
 	app.Get("/documentation/*", router.Docs.SwaggerWeb())
 
+	// api Group
+	api := app.Group("/api", dbMiddleware)
+
 	// Authentication
-	authentication := app.Group("/api/auth")
+	authentication := api.Group("/auth")
 	authentication.Post("/register", router.Controller.Auth.Register)
 	authentication.Post("/login", router.Controller.Auth.Login)
 	authentication.Post("/logout", jwtMiddleware, router.Controller.Auth.Logout)
@@ -35,13 +40,15 @@ func (router *WebRouter) Init(app *fiber.App) {
 
 func WebRouterProvider(
 	docs *docs.Docs,
-	ctr *controller.Controller,
 	jwtMiddleware *middleware.JwtMiddleware,
+	dbMiddleware *middleware.DbMiddleware,
+	ctr *controller.Controller,
 ) Router {
 	return &WebRouter{
 		Docs:          docs,
-		Controller:    ctr,
 		JwtMiddleware: jwtMiddleware,
+		DbMiddleware:  dbMiddleware,
+		Controller:    ctr,
 	}
 }
 

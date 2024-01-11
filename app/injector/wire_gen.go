@@ -10,8 +10,8 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app"
 	"github.com/BuildWithYou/fetroshop-api/app/connection"
 	postgres2 "github.com/BuildWithYou/fetroshop-api/app/domain/customer_accesses/postgres"
-	"github.com/BuildWithYou/fetroshop-api/app/domain/customers/postgres"
-	postgres3 "github.com/BuildWithYou/fetroshop-api/app/domain/user_accesses/postgres"
+	postgres3 "github.com/BuildWithYou/fetroshop-api/app/domain/customers/postgres"
+	"github.com/BuildWithYou/fetroshop-api/app/domain/user_accesses/postgres"
 	postgres4 "github.com/BuildWithYou/fetroshop-api/app/domain/users/postgres"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
@@ -32,17 +32,18 @@ import (
 func InitializeWebServer() *app.Fetroshop {
 	viper := confighelper.GetConfig()
 	docsDocs := docs.DocsProvider(viper)
-	validate := validatorhelper.GetValidator()
 	connectionDBType := _wireDBTypeValue
 	connectionConnection := connection.OpenDBConnection(connectionDBType, viper)
-	customerRepo := postgres.CustomerRepoProvider(connectionConnection)
+	userAccessRepo := postgres.UserAccessRepoProvider(connectionConnection)
 	customerAccessRepo := postgres2.CustomerAccessRepoProvider(connectionConnection)
+	jwtMiddleware := middleware.JwtMiddlewareProvider(viper, userAccessRepo, customerAccessRepo)
+	dbMiddleware := middleware.DBMiddlewareProvider(connectionConnection)
+	validate := validatorhelper.GetValidator()
+	customerRepo := postgres3.CustomerRepoProvider(connectionConnection)
 	authService := auth.AuthServiceProvider(connectionConnection, viper, validate, customerRepo, customerAccessRepo)
 	authController := controller.AuthControllerProvider(validate, authService)
 	controllerController := controller.WebControllerProvider(authController)
-	userAccessRepo := postgres3.UserAccessRepoProvider(connectionConnection)
-	jwtMiddleware := middleware.JwtMiddlewareProvider(viper, userAccessRepo, customerAccessRepo)
-	routerRouter := router.WebRouterProvider(docsDocs, controllerController, jwtMiddleware)
+	routerRouter := router.WebRouterProvider(docsDocs, jwtMiddleware, dbMiddleware, controllerController)
 	serverConfig := web.WebServerConfigProvider(routerRouter)
 	fetroshop := app.CreateFiber(serverConfig)
 	return fetroshop
@@ -57,15 +58,16 @@ func InitializeCmsServer() *app.Fetroshop {
 	docsDocs := docs.DocsProvider(viper)
 	connectionDBType := _wireDBTypeValue
 	connectionConnection := connection.OpenDBConnection(connectionDBType, viper)
-	userAccessRepo := postgres3.UserAccessRepoProvider(connectionConnection)
+	userAccessRepo := postgres.UserAccessRepoProvider(connectionConnection)
 	customerAccessRepo := postgres2.CustomerAccessRepoProvider(connectionConnection)
 	jwtMiddleware := middleware.JwtMiddlewareProvider(viper, userAccessRepo, customerAccessRepo)
+	dbMiddleware := middleware.DBMiddlewareProvider(connectionConnection)
 	validate := validatorhelper.GetValidator()
 	userRepo := postgres4.UserRepoProvider(connectionConnection)
 	authService := auth2.AuthServiceProvider(connectionConnection, viper, validate, userRepo, userAccessRepo)
 	authController := controller2.AuthControllerProvider(authService)
 	controllerController := controller2.CmsControllerProvider(authController)
-	routerRouter := router.CmsRouterProvider(docsDocs, jwtMiddleware, controllerController)
+	routerRouter := router.CmsRouterProvider(docsDocs, jwtMiddleware, dbMiddleware, controllerController)
 	serverConfig := cms.CmsServerConfigProvider(routerRouter)
 	fetroshop := app.CreateFiber(serverConfig)
 	return fetroshop
@@ -75,10 +77,10 @@ func InitializeCmsServer() *app.Fetroshop {
 
 var dbType connection.DBType = connection.DB_MAIN
 
-var serverSet = wire.NewSet(wire.Value(dbType), confighelper.GetConfig, connection.OpenDBConnection, docs.DocsProvider, middleware.JwtMiddlewareProvider, validatorhelper.GetValidator, postgres3.UserAccessRepoProvider, postgres2.CustomerAccessRepoProvider, app.CreateFiber)
+var serverSet = wire.NewSet(wire.Value(dbType), confighelper.GetConfig, connection.OpenDBConnection, docs.DocsProvider, middleware.JwtMiddlewareProvider, middleware.DBMiddlewareProvider, validatorhelper.GetValidator, postgres.UserAccessRepoProvider, postgres2.CustomerAccessRepoProvider, app.CreateFiber)
 
 // web dependencies
-var webRepoSet = wire.NewSet(postgres.CustomerRepoProvider)
+var webRepoSet = wire.NewSet(postgres3.CustomerRepoProvider)
 
 var webControllerSet = wire.NewSet(controller.WebControllerProvider, controller.AuthControllerProvider)
 

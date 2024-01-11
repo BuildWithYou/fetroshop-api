@@ -7,7 +7,6 @@ import (
 
 	"github.com/BuildWithYou/fetroshop-api/app/domain/customer_accesses"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/customers"
-	"github.com/BuildWithYou/fetroshop-api/app/helper/constant"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/jwt"
@@ -20,11 +19,6 @@ import (
 )
 
 func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*model.Response, error) {
-	if validatorhelper.IsNotNil(svc.Err) {
-		fmt.Printf("\nError: %s\n", svc.Err.Error()) // #marked: logging
-		return nil, errorhelper.Error500(constant.ERROR_GENERAL)
-	}
-
 	var customer customers.Customer
 
 	payload := new(webModel.LoginRequest)

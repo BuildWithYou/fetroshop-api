@@ -32,6 +32,7 @@ var serverSet = wire.NewSet(
 	connection.OpenDBConnection,
 	docs.DocsProvider,
 	middleware.JwtMiddlewareProvider,
+	middleware.DBMiddlewareProvider,
 	validatorhelper.GetValidator,
 	userAccessRepo.UserAccessRepoProvider,
 	customerAccessRepo.CustomerAccessRepoProvider,
