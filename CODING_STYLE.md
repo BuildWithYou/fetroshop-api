@@ -9,3 +9,6 @@ Coding Preference
 
 ### Coding Style
 1. Function: returning pointer
+
+### Data Processing Rules
+1. Identifier: ID used inside system, username/code used outside system
