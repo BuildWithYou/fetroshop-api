@@ -16,7 +16,15 @@ services:
       volumes:
          - fetroshop_app_volume:/app
       depends_on:
-      - db
+         db:
+            condition: service_healthy
+      links:
+         - "db"
+      healthcheck:
+         test: ["CMD", "curl", "-f", "http://localhost:3000/welcome"]
+         interval: 30s
+         timeout: 10s
+         retries: 5
 
    db:
       build:
@@ -35,6 +43,11 @@ services:
          - fetroshop_db_volume:/var/lib/postgresql/data
       networks:
          - fetroshop_network
+      healthcheck:
+         test: ["CMD-SHELL", "pg_isready -U postgres"]
+         interval: 10s
+         timeout: 5s
+         retries: 5
 
 volumes:
    fetroshop_app_volume:
