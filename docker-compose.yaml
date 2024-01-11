@@ -41,6 +41,7 @@ services:
          - 5432:5432
       volumes:
          - fetroshop_db_volume:/var/lib/postgresql/data
+         - fetroshop_db_volume:/db
       networks:
          - fetroshop_network
       healthcheck:
@@ -48,6 +49,17 @@ services:
          interval: 10s
          timeout: 5s
          retries: 5
+
+   migrate:
+      image: migrate/migrate
+      command: -path=/db/migrations/ -database=postgresql://postgres:postgres@db:5432/fetroshop?sslmode=disable up
+      volumes:
+         - fetroshop_db_volume:/db
+      depends_on:
+         db:
+            condition: service_healthy
+      networks:
+         - fetroshop_network
 
 volumes:
    fetroshop_app_volume:
