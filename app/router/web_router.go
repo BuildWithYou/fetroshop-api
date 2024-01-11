@@ -18,7 +18,8 @@ func (router *WebRouter) Init(app *fiber.App) {
 	jwtMiddleware := router.JwtMiddleware.Authenticate
 
 	// root
-	app.Get("/", router.welcome)
+	app.Get("/", router.redirectToDocs)
+	app.Get("/welcome", router.welcome)
 
 	// documentation
 	app.Get("/documentation/*", router.Docs.SwaggerWeb())
@@ -46,4 +47,8 @@ func WebRouterProvider(
 
 func (d *WebRouter) welcome(ctx *fiber.Ctx) error {
 	return ctx.SendString("Welcome to fetroshop web api service!")
+}
+
+func (d *WebRouter) redirectToDocs(ctx *fiber.Ctx) error {
+	return ctx.Redirect("/documentation/")
 }

@@ -18,7 +18,8 @@ func (router *CmsRouter) Init(app *fiber.App) {
 	jwtMiddleware := router.JwtMiddleware.Authenticate
 
 	// root
-	app.Get("/", router.welcome)
+	app.Get("/", router.redirectToDocs)
+	app.Get("/welcome", router.welcome)
 
 	// documentation
 	app.Get("/documentation/*", router.Docs.SwaggerCms())
@@ -44,4 +45,8 @@ func CmsRouterProvider(docs *docs.Docs, jwtMiddleware *middleware.JwtMiddleware,
 
 func (d *CmsRouter) welcome(ctx *fiber.Ctx) error {
 	return ctx.SendString("Welcome to fetroshop cms api service!")
+}
+
+func (d *CmsRouter) redirectToDocs(ctx *fiber.Ctx) error {
+	return ctx.Redirect("/documentation/")
 }
