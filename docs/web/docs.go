@@ -304,7 +304,7 @@ const docTemplate = `{
                     },
                     {
                         "enum": [
-                            "displayOrder",
+                            "display_order",
                             "code",
                             "name"
                         ],
@@ -322,6 +322,11 @@ const docTemplate = `{
                         "name": "orderDirection",
                         "in": "query",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "parentCode",
+                        "in": "query"
                     }
                 ],
                 "responses": {

@@ -201,7 +201,7 @@ paths:
         required: true
         type: integer
       - enum:
-        - displayOrder
+        - display_order
         - code
         - name
         in: query
@@ -214,6 +214,9 @@ paths:
         in: query
         name: orderDirection
         required: true
+        type: string
+      - in: query
+        name: parentCode
         type: string
       produces:
       - application/json
