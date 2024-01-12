@@ -1,14 +1,12 @@
 package controller
 
 import (
-	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
-	"github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/cms/service/auth"
 	"github.com/gofiber/fiber/v2"
 )
 
 type AuthController interface {
-	execute(ctx *fiber.Ctx, handler func(ctx *fiber.Ctx) (*model.Response, error)) (err error)
+	// execute(ctx *fiber.Ctx, handler func(ctx *fiber.Ctx) (*model.Response, error)) (err error)
 	Register(ctx *fiber.Ctx) (err error)
 	Login(ctx *fiber.Ctx) (err error)
 	Logout(ctx *fiber.Ctx) (err error)
@@ -25,14 +23,6 @@ func AuthControllerProvider(regSvc auth.AuthService) AuthController {
 	}
 }
 
-func (ctr *AuthControllerImpl) execute(ctx *fiber.Ctx, handler func(ctx *fiber.Ctx) (*model.Response, error)) (err error) {
-	response, err := handler(ctx)
-	if validatorhelper.IsNotNil(err) {
-		return err
-	}
-	return ctx.JSON(response)
-}
-
 // @Summary      Register new user
 // @Description
 // @Tags         Authentication
@@ -45,7 +35,7 @@ func (ctr *AuthControllerImpl) execute(ctx *fiber.Ctx, handler func(ctx *fiber.C
 // @Failure      500  {object}  model.Response
 // @Router       /api/auth/register [post]
 func (ctr *AuthControllerImpl) Register(ctx *fiber.Ctx) (err error) {
-	return ctr.execute(ctx, ctr.AuthService.Register)
+	return execute(ctx, ctr.AuthService.Register)
 }
 
 // @Summary      Login for users
@@ -60,7 +50,7 @@ func (ctr *AuthControllerImpl) Register(ctx *fiber.Ctx) (err error) {
 // @Failure      500  {object}  model.Response
 // @Router       /api/auth/login [post]
 func (ctr *AuthControllerImpl) Login(ctx *fiber.Ctx) (err error) {
-	return ctr.execute(ctx, ctr.AuthService.Login)
+	return execute(ctx, ctr.AuthService.Login)
 }
 
 // @Summary      Logout for users
@@ -74,7 +64,7 @@ func (ctr *AuthControllerImpl) Login(ctx *fiber.Ctx) (err error) {
 // @Router       /api/auth/logout [post]
 // @Security Bearer
 func (ctr *AuthControllerImpl) Logout(ctx *fiber.Ctx) (err error) {
-	return ctr.execute(ctx, ctr.AuthService.Logout)
+	return execute(ctx, ctr.AuthService.Logout)
 }
 
 // @Summary      Refresh for customers
@@ -88,5 +78,5 @@ func (ctr *AuthControllerImpl) Logout(ctx *fiber.Ctx) (err error) {
 // @Router       /api/auth/refresh [post]
 // @Security Bearer
 func (ctr *AuthControllerImpl) Refresh(ctx *fiber.Ctx) (err error) {
-	return ctr.execute(ctx, ctr.AuthService.Refresh)
+	return execute(ctx, ctr.AuthService.Refresh)
 }

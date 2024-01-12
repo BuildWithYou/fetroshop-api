@@ -11,7 +11,7 @@ type PostgreSQL struct {
 	DB  *gorm.DB
 }
 
-func UserAccessRepoProvider(db *connection.Connection) user_accesses.UserAccessRepo {
+func RepoProvider(db *connection.Connection) user_accesses.UserAccessRepo {
 	return &PostgreSQL{
 		Err: db.Err,
 		DB:  db.DB,

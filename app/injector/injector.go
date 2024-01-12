@@ -34,14 +34,14 @@ var serverSet = wire.NewSet(
 	middleware.JwtMiddlewareProvider,
 	middleware.DBMiddlewareProvider,
 	validatorhelper.GetValidator,
-	userAccessRepo.UserAccessRepoProvider,
-	customerAccessRepo.CustomerAccessRepoProvider,
+	userAccessRepo.RepoProvider,
+	customerAccessRepo.RepoProvider,
 	app.CreateFiber,
 )
 
 // web dependencies
 var webRepoSet = wire.NewSet(
-	customerRepo.CustomerRepoProvider,
+	customerRepo.RepoProvider,
 )
 
 var webControllerSet = wire.NewSet(
@@ -50,7 +50,7 @@ var webControllerSet = wire.NewSet(
 )
 
 var webServiceSet = wire.NewSet(
-	webAuthService.AuthServiceProvider,
+	webAuthService.ServiceProvider,
 )
 
 func InitializeWebServer() *app.Fetroshop {
@@ -67,7 +67,7 @@ func InitializeWebServer() *app.Fetroshop {
 
 // cms dependencies
 var cmsRepoSet = wire.NewSet(
-	userRepo.UserRepoProvider,
+	userRepo.RepoProvider,
 )
 
 var cmsControllerSet = wire.NewSet(
@@ -76,7 +76,7 @@ var cmsControllerSet = wire.NewSet(
 )
 
 var cmsServiceSet = wire.NewSet(
-	cmsAuthService.AuthServiceProvider,
+	cmsAuthService.ServiceProvider,
 )
 
 func InitializeCmsServer() *app.Fetroshop {

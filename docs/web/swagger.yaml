@@ -1,4 +1,33 @@
 definitions:
+  model.FindCategoryRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  model.ListCategoriesRequest:
+    properties:
+      email:
+        type: string
+      fullName:
+        type: string
+      password:
+        type: string
+      phone:
+        type: string
+      username:
+        type: string
+    required:
+    - email
+    - fullName
+    - password
+    - phone
+    - username
+    type: object
   model.LoginRequest:
     properties:
       password:
@@ -165,6 +194,74 @@ paths:
       summary: Register new user
       tags:
       - Authentication
+  /api/category/find:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve categories detail
+      parameters:
+      - description: Request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.FindCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Response'
+      summary: Get category
+      tags:
+      - Categories
+  /api/category/list:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve categories list
+      parameters:
+      - description: Request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.ListCategoriesRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Response'
+      summary: List categories
+      tags:
+      - Categories
 securityDefinitions:
   Bearer:
     description: Use format 'Bearer YOUR_TOKEN'

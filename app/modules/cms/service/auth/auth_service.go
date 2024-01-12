@@ -29,16 +29,16 @@ type AuthServiceImpl struct {
 	UserAccessRepo user_accesses.UserAccessRepo
 }
 
-func AuthServiceProvider(
-	db *connection.Connection,
+func ServiceProvider(
+	conn *connection.Connection,
 	config *viper.Viper,
 	validate *validator.Validate,
 	userRepo users.UserRepo,
 	userAccessRepo user_accesses.UserAccessRepo,
 ) AuthService {
 	return &AuthServiceImpl{
-		Err:            db.Err,
-		DB:             db.DB,
+		Err:            conn.Err,
+		DB:             conn.DB,
 		Config:         config,
 		Validate:       validate,
 		UserRepo:       userRepo,
