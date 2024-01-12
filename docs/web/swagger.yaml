@@ -1,62 +1,4 @@
 definitions:
-  model.FindCategoryRequest:
-    properties:
-      password:
-        type: string
-      username:
-        type: string
-    required:
-    - password
-    - username
-    type: object
-  model.ListCategoriesRequest:
-    properties:
-      email:
-        type: string
-      fullName:
-        type: string
-      password:
-        type: string
-      phone:
-        type: string
-      username:
-        type: string
-    required:
-    - email
-    - fullName
-    - password
-    - phone
-    - username
-    type: object
-  model.LoginRequest:
-    properties:
-      password:
-        type: string
-      username:
-        type: string
-    required:
-    - password
-    - username
-    type: object
-  model.RegistrationRequest:
-    properties:
-      email:
-        type: string
-      fullName:
-        type: string
-      password:
-        type: string
-      phone:
-        type: string
-      username:
-        type: string
-    required:
-    - email
-    - fullName
-    - password
-    - phone
-    - username
-    type: object
   model.Response:
     properties:
       code:
@@ -81,12 +23,14 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: Login Request
-        in: body
-        name: body
+      - in: formData
+        name: password
         required: true
-        schema:
-          $ref: '#/definitions/model.LoginRequest'
+        type: string
+      - in: formData
+        name: username
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -166,12 +110,26 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: Registration Request
-        in: body
-        name: body
+      - in: formData
+        name: email
         required: true
-        schema:
-          $ref: '#/definitions/model.RegistrationRequest'
+        type: string
+      - in: formData
+        name: fullName
+        required: true
+        type: string
+      - in: formData
+        name: password
+        required: true
+        type: string
+      - in: formData
+        name: phone
+        required: true
+        type: string
+      - in: formData
+        name: username
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -200,12 +158,10 @@ paths:
       - application/json
       description: Retrieve categories detail
       parameters:
-      - description: Request
-        in: body
-        name: body
+      - in: query
+        name: code
         required: true
-        schema:
-          $ref: '#/definitions/model.FindCategoryRequest'
+        type: string
       produces:
       - application/json
       responses:
@@ -234,12 +190,31 @@ paths:
       - application/json
       description: Retrieve categories list
       parameters:
-      - description: Request
-        in: body
-        name: body
+      - default: 10
+        in: query
+        name: limit
         required: true
-        schema:
-          $ref: '#/definitions/model.ListCategoriesRequest'
+        type: integer
+      - default: 0
+        in: query
+        name: offset
+        required: true
+        type: integer
+      - enum:
+        - displayOrder
+        - code
+        - name
+        in: query
+        name: orderBy
+        required: true
+        type: string
+      - enum:
+        - ASC
+        - DESC
+        in: query
+        name: orderDirection
+        required: true
+        type: string
       produces:
       - application/json
       responses:

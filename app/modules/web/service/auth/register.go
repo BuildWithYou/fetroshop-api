@@ -6,20 +6,20 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/password"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
-	"github.com/BuildWithYou/fetroshop-api/app/model"
+	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
 	webModel "github.com/BuildWithYou/fetroshop-api/app/modules/web/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/utils"
 )
 
-func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*model.Response, error) {
+func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error) {
 	var (
 		message                                        string
 		existingUsername, existingPhone, existingEmail customers.Customer
 	)
 
 	payload := new(webModel.RegistrationRequest)
-	validatorhelper.ValidatePayload(ctx, svc.Validate, payload)
+	validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
 
 	result := svc.CustomerRepo.Find(&existingUsername, &customers.Customer{
 		Username: payload.Username,
@@ -68,7 +68,7 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*model.Response, error) {
 		message = "User created successfully" // #marked: message
 	}
 
-	return &model.Response{
+	return &appModel.Response{
 		Code:    fiber.StatusCreated,
 		Status:  utils.StatusMessage(fiber.StatusCreated),
 		Message: message,

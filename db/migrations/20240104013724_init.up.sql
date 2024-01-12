@@ -104,7 +104,7 @@ create table categories (
    name                 VARCHAR(64)          not null,
    is_active            BOOL                 not null default false,
    icon                 VARCHAR(255)         null,
-   order_display        INT4                 null,
+   display_order        INT4                 null,
    created_at           TIMESTAMP            not null,
    updated_at           TIMESTAMP            not null,
    deleted_at           TIMESTAMP            null,
@@ -136,7 +136,7 @@ alter table user_roles
 
 -- data initialization
 /* categories table data init */
-INSERT INTO categories (id, parent_id, code, name, is_active, icon, order_display, created_at, updated_at) VALUES
+INSERT INTO categories (id, parent_id, code, name, is_active, icon, display_order, created_at, updated_at) VALUES
 (1, null, 'kebutuhan-dapur', 'Kebutuhan Dapur', true, null, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 (2, null, 'kebutuhan-ibu-anak', 'Kebutuhan Ibu & Anak', true, null, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 (3, null, 'kebutuhan-rumah', 'Kebutuhan Rumah', true, null, 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
@@ -204,5 +204,5 @@ ON CONFLICT (id) DO UPDATE SET
    name = EXCLUDED.name,
    is_active = EXCLUDED.is_active,
    icon = EXCLUDED.icon,
-   order_display = EXCLUDED.order_display,
+   display_order = EXCLUDED.display_order,
    updated_at = EXCLUDED.updated_at;

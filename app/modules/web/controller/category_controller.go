@@ -28,7 +28,7 @@ func CategoryControllerProvider(vld *validator.Validate, catSvc category.Categor
 // @Tags         Categories
 // @Accept       json
 // @Produce      json
-// @Param        body  body     model.ListCategoriesRequest  true  "Request"
+// @Param        q     query    model.ListCategoriesRequest  true  "Request"
 // @Success      200  {object}  model.Response
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response
@@ -43,7 +43,7 @@ func (ctr *CategoryControllerImpl) List(ctx *fiber.Ctx) (err error) {
 // @Tags         Categories
 // @Accept       json
 // @Produce      json
-// @Param        body  body     model.FindCategoryRequest  true  "Request"
+// @Param        q     query    model.FindCategoryRequest  true  "Request"
 // @Success      200  {object}  model.Response
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response

@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
-	"github.com/BuildWithYou/fetroshop-api/app/model"
+	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -21,7 +21,7 @@ func WebControllerProvider(
 	}
 }
 
-func execute(ctx *fiber.Ctx, handler func(ctx *fiber.Ctx) (*model.Response, error)) (err error) {
+func execute(ctx *fiber.Ctx, handler func(ctx *fiber.Ctx) (*appModel.Response, error)) (err error) {
 	response, err := handler(ctx)
 	if validatorhelper.IsNotNil(err) {
 		return err

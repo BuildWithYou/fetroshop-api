@@ -1,33 +1,4 @@
 definitions:
-  model.LoginRequest:
-    properties:
-      password:
-        type: string
-      username:
-        type: string
-    required:
-    - password
-    - username
-    type: object
-  model.RegistrationRequest:
-    properties:
-      email:
-        type: string
-      fullName:
-        type: string
-      password:
-        type: string
-      phone:
-        type: string
-      username:
-        type: string
-    required:
-    - email
-    - fullName
-    - password
-    - phone
-    - username
-    type: object
   model.Response:
     properties:
       code:
@@ -52,12 +23,14 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: Login Request
-        in: body
-        name: body
+      - in: formData
+        name: password
         required: true
-        schema:
-          $ref: '#/definitions/model.LoginRequest'
+        type: string
+      - in: formData
+        name: username
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -137,12 +110,26 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: Registration Request
-        in: body
-        name: body
+      - in: formData
+        name: email
         required: true
-        schema:
-          $ref: '#/definitions/model.RegistrationRequest'
+        type: string
+      - in: formData
+        name: fullName
+        required: true
+        type: string
+      - in: formData
+        name: password
+        required: true
+        type: string
+      - in: formData
+        name: phone
+        required: true
+        type: string
+      - in: formData
+        name: username
+        required: true
+        type: string
       produces:
       - application/json
       responses:

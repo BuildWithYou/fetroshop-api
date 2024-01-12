@@ -1,10 +1,10 @@
 package model
 
 type ListCategoriesRequest struct {
-	Offset         int64 `json:"offset" validate:"required"`
-	Limit          int64 `json:"limit" validate:"required"`
-	OrderBy        int64 `json:"orderBy" validate:"required"`
-	OrderDirection int64 `json:"orderDirection" validate:"required"`
+	Offset         int64  `json:"offset" validate:"required" default:"0"`
+	Limit          int64  `json:"limit" validate:"required" default:"10"`
+	OrderBy        string `json:"orderBy" validate:"required" enums:"displayOrder,code,name"`
+	OrderDirection string `json:"orderDirection" validate:"required" enums:"ASC,DESC"`
 }
 
 type FindCategoryRequest struct {

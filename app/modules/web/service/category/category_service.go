@@ -3,7 +3,7 @@ package category
 import (
 	"github.com/BuildWithYou/fetroshop-api/app/connection"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/categories"
-	"github.com/BuildWithYou/fetroshop-api/app/model"
+	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/viper"
@@ -11,8 +11,8 @@ import (
 )
 
 type CategoryService interface {
-	List(ctx *fiber.Ctx) (*model.Response, error)
-	Find(ctx *fiber.Ctx) (*model.Response, error)
+	List(ctx *fiber.Ctx) (*appModel.Response, error)
+	Find(ctx *fiber.Ctx) (*appModel.Response, error)
 }
 
 type CategoryServiceImpl struct {

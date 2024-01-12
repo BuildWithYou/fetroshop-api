@@ -13,7 +13,7 @@ type Category struct {
 	Name         string         `gorm:"column:name" json:"name"`
 	IsActive     bool           `gorm:"column:is_active" json:"isActive"`
 	Icon         string         `gorm:"column:icon" json:"icon"`
-	OrderDisplay int64          `gorm:"column:order_display" json:"orderDisplay"`
+	DisplayOrder int64          `gorm:"column:display_order" json:"displayOrder"`
 	CreatedAt    time.Time      `gorm:"column:created_at;autoCreateTime" json:"createdAt"`
 	UpdatedAt    time.Time      `gorm:"column:updated_at;autoCreateTime;autoUpdateTime" json:"updatedAt"`
 	DeletedAt    gorm.DeletedAt `gorm:"column:deleted_at" json:"deletedAt"`

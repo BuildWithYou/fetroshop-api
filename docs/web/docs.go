@@ -29,13 +29,16 @@ const docTemplate = `{
                 "summary": "Login for customers",
                 "parameters": [
                     {
-                        "description": "Login Request",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.LoginRequest"
-                        }
+                        "type": "string",
+                        "name": "password",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "username",
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -164,13 +167,34 @@ const docTemplate = `{
                 "summary": "Register new user",
                 "parameters": [
                     {
-                        "description": "Registration Request",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.RegistrationRequest"
-                        }
+                        "type": "string",
+                        "name": "email",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "fullName",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "password",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "phone",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "username",
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -216,13 +240,10 @@ const docTemplate = `{
                 "summary": "Get category",
                 "parameters": [
                     {
-                        "description": "Request",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.FindCategoryRequest"
-                        }
+                        "type": "string",
+                        "name": "code",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -268,13 +289,39 @@ const docTemplate = `{
                 "summary": "List categories",
                 "parameters": [
                     {
-                        "description": "Request",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.ListCategoriesRequest"
-                        }
+                        "type": "integer",
+                        "default": 10,
+                        "name": "limit",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "default": 0,
+                        "name": "offset",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "displayOrder",
+                            "code",
+                            "name"
+                        ],
+                        "type": "string",
+                        "name": "orderBy",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "ASC",
+                            "DESC"
+                        ],
+                        "type": "string",
+                        "name": "orderDirection",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -307,90 +354,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "model.FindCategoryRequest": {
-            "type": "object",
-            "required": [
-                "password",
-                "username"
-            ],
-            "properties": {
-                "password": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                }
-            }
-        },
-        "model.ListCategoriesRequest": {
-            "type": "object",
-            "required": [
-                "email",
-                "fullName",
-                "password",
-                "phone",
-                "username"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "fullName": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                },
-                "phone": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                }
-            }
-        },
-        "model.LoginRequest": {
-            "type": "object",
-            "required": [
-                "password",
-                "username"
-            ],
-            "properties": {
-                "password": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                }
-            }
-        },
-        "model.RegistrationRequest": {
-            "type": "object",
-            "required": [
-                "email",
-                "fullName",
-                "password",
-                "phone",
-                "username"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "fullName": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                },
-                "phone": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                }
-            }
-        },
         "model.Response": {
             "type": "object",
             "properties": {

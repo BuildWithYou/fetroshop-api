@@ -12,20 +12,20 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/jwt"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/password"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
-	"github.com/BuildWithYou/fetroshop-api/app/model"
+	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
 	cmsModel "github.com/BuildWithYou/fetroshop-api/app/modules/cms/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/utils"
 )
 
-func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*model.Response, error) {
+func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*appModel.Response, error) {
 	var user users.User
 
 	payload := new(cmsModel.LoginRequest)
 	jwtTokenKey := svc.Config.GetString("security.jwt.tokenKey")
 	jwtExpiration := svc.Config.GetString("security.jwt.expiration")
 
-	validatorhelper.ValidatePayload(ctx, svc.Validate, payload)
+	validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
 
 	// check is customer exist
 	result := svc.UserRepo.Find(&user, &users.User{
@@ -81,7 +81,7 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*model.Response, error) {
 		Type:       USER_TYPE,
 	})
 
-	return &model.Response{
+	return &appModel.Response{
 		Code:    fiber.StatusCreated,
 		Status:  utils.StatusMessage(fiber.StatusOK),
 		Message: "Login success", // #marked: message
