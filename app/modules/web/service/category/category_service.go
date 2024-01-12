@@ -20,14 +20,14 @@ type CategoryServiceImpl struct {
 	DB           *gorm.DB
 	Config       *viper.Viper
 	Validate     *validator.Validate
-	CategoryRepo *categories.CategoryRepo
+	CategoryRepo categories.CategoryRepo
 }
 
 func ServiceProvider(
 	conn *connection.Connection,
 	config *viper.Viper,
 	validate *validator.Validate,
-	categoryRepo *categories.CategoryRepo,
+	categoryRepo categories.CategoryRepo,
 ) CategoryService {
 	return &CategoryServiceImpl{
 		Err:          conn.Err,

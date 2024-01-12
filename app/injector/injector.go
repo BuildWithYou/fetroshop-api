@@ -6,6 +6,7 @@ package injector
 import (
 	"github.com/BuildWithYou/fetroshop-api/app"
 	"github.com/BuildWithYou/fetroshop-api/app/connection"
+	categoryRepo "github.com/BuildWithYou/fetroshop-api/app/domain/categories/postgres"
 	customerAccessRepo "github.com/BuildWithYou/fetroshop-api/app/domain/customer_accesses/postgres"
 	customerRepo "github.com/BuildWithYou/fetroshop-api/app/domain/customers/postgres"
 	userAccessRepo "github.com/BuildWithYou/fetroshop-api/app/domain/user_accesses/postgres"
@@ -20,6 +21,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web"
 	webController "github.com/BuildWithYou/fetroshop-api/app/modules/web/controller"
 	webAuthService "github.com/BuildWithYou/fetroshop-api/app/modules/web/service/auth"
+	webCategoryService "github.com/BuildWithYou/fetroshop-api/app/modules/web/service/category"
 	"github.com/BuildWithYou/fetroshop-api/app/router"
 	"github.com/google/wire"
 )
@@ -42,15 +44,18 @@ var serverSet = wire.NewSet(
 // web dependencies
 var webRepoSet = wire.NewSet(
 	customerRepo.RepoProvider,
+	categoryRepo.RepoProvider,
 )
 
 var webControllerSet = wire.NewSet(
 	webController.WebControllerProvider,
 	webController.AuthControllerProvider,
+	webController.CategoryControllerProvider,
 )
 
 var webServiceSet = wire.NewSet(
 	webAuthService.ServiceProvider,
+	webCategoryService.ServiceProvider,
 )
 
 func InitializeWebServer() *app.Fetroshop {

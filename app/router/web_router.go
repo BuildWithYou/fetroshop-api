@@ -36,6 +36,11 @@ func (router *WebRouter) Init(app *fiber.App) {
 	authentication.Post("/logout", jwtMiddleware, router.Controller.Auth.Logout)
 	authentication.Post("/refresh", jwtMiddleware, router.Controller.Auth.Refresh)
 
+	// Categories
+	category := api.Group("/category")
+	category.Get("/list", router.Controller.Category.List)
+	category.Get("/find", router.Controller.Category.Find)
+
 }
 
 func WebRouterProvider(
