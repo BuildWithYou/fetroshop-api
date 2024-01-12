@@ -13,7 +13,7 @@ func (svc *CategoryServiceImpl) Find(ctx *fiber.Ctx) (*appModel.Response, error)
 	validatorhelper.ValidateQueryPayload(ctx, svc.Validate, payload)
 	// TODO: implement this
 	return &appModel.Response{
-		Code:    fiber.StatusCreated,
+		Code:    fiber.StatusOK,
 		Status:  utils.StatusMessage(fiber.StatusOK),
 		Message: "Unimplemented", // #marked: message
 		Data:    payload,

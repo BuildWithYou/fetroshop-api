@@ -82,7 +82,7 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*appModel.Response, error) {
 	})
 
 	return &appModel.Response{
-		Code:    fiber.StatusCreated,
+		Code:    fiber.StatusOK,
 		Status:  utils.StatusMessage(fiber.StatusOK),
 		Message: "Login success", // #marked: message
 		Data: map[string]string{

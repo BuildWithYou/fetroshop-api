@@ -21,7 +21,7 @@ func (svc *AuthServiceImpl) Logout(ctx *fiber.Ctx) (*appModel.Response, error) {
 	}
 
 	return &appModel.Response{
-		Code:    fiber.StatusCreated,
+		Code:    fiber.StatusOK,
 		Status:  utils.StatusMessage(fiber.StatusOK),
 		Message: "Logout success", // #marked: message
 	}, nil

@@ -8,7 +8,7 @@ import (
 
 func PanicIfError(err error) {
 	if err != nil {
-		fmt.Println("Error : ", err.Error())
+		fmt.Println("Error : ", err.Error()) // #marked: logging
 		panic(err)
 	}
 }
