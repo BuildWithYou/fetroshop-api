@@ -1,6 +1,7 @@
-drop table user_roles;
-drop table user_accesses;
-drop table customer_accesses;
-drop table roles;
-drop table customers;
-drop table users;
+drop table if exists user_roles;
+drop table if exists user_accesses;
+drop table if exists customer_accesses;
+drop table if exists roles;
+drop table if exists customers;
+drop table if exists users;
+drop table if exists categories;
