@@ -1,14 +1,12 @@
 package model
 
 type ListCategoriesRequest struct {
-	Username string `json:"username" validate:"required"`
-	Phone    string `json:"phone" validate:"required"`
-	Email    string `json:"email" validate:"required"`
-	FullName string `json:"fullName" validate:"required"`
-	Password string `json:"password" validate:"required"`
+	Offset         int64 `json:"offset" validate:"required"`
+	Limit          int64 `json:"limit" validate:"required"`
+	OrderBy        int64 `json:"orderBy" validate:"required"`
+	OrderDirection int64 `json:"orderDirection" validate:"required"`
 }
 
 type FindCategoryRequest struct {
-	Username string `json:"username" validate:"required"`
-	Password string `json:"password" validate:"required"`
+	Code string `json:"code" validate:"required"`
 }
