@@ -22,18 +22,10 @@ func (svc *CategoryServiceImpl) List(ctx *fiber.Ctx) (*appModel.Response, error)
 	payload := new(model.ListCategoriesRequest)
 	validatorhelper.ValidateQueryPayload(ctx, svc.Validate, payload)
 
-	parent := new(ctEty.Category)
-	orderBy := fmt.Sprintf("%s %s", payload.OrderBy, payload.OrderDirection)
 	if payload.ParentCode == "" {
-		// when parent code is empty string
-		result := svc.CategoryRepo.List(&categories, map[string]any{
-			"parent_id": null.NewInt(0, false),
-		}, int(payload.Limit), int(payload.Offset), orderBy)
-		if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
-			return nil, errorhelper.Error500("Something went wrong") // #marked: message
-		}
+		parentID = null.NewInt(0, false)
 	} else {
-		// when parent code is not empty
+		parent := new(ctEty.Category)
 		result := svc.CategoryRepo.Find(parent, map[string]any{
 			"code": payload.ParentCode,
 		})
@@ -43,16 +35,15 @@ func (svc *CategoryServiceImpl) List(ctx *fiber.Ctx) (*appModel.Response, error)
 		if gormhelper.IsErrRecordNotFound(result.Error) {
 			return nil, errorhelper.Error400("Invalid parent code") // #marked: message
 		}
+		parentID = null.NewInt(parent.ID, parent.ID != 0)
+	}
 
-		if validatorhelper.IsNotZero(parent.ID) {
-			parentID = null.NewInt(parent.ID, true)
-		}
-		result = svc.CategoryRepo.List(&categories, map[string]any{
-			"parent_id": parentID,
-		}, int(payload.Limit), int(payload.Offset), orderBy)
-		if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
-			return nil, errorhelper.Error500("Something went wrong") // #marked: message
-		}
+	orderBy := fmt.Sprintf("%s %s", payload.OrderBy, payload.OrderDirection)
+	result := svc.CategoryRepo.List(&categories, map[string]any{
+		"parent_id": parentID,
+	}, int(payload.Limit), int(payload.Offset), orderBy)
+	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+		return nil, errorhelper.Error500("Something went wrong") // #marked: message
 	}
 
 	var list []*model.CategoryResponse
@@ -64,7 +55,7 @@ func (svc *CategoryServiceImpl) List(ctx *fiber.Ctx) (*appModel.Response, error)
 
 		category := &model.CategoryResponse{
 			Code:         ct.Code,
-			ParentCode:   null.NewString(parentCode, false),
+			ParentCode:   null.NewString(parentCode, parentCode != ""),
 			Name:         ct.Name,
 			IsActive:     ct.IsActive,
 			Icon:         ct.Icon,
@@ -79,9 +70,6 @@ func (svc *CategoryServiceImpl) List(ctx *fiber.Ctx) (*appModel.Response, error)
 		Code:    fiber.StatusCreated,
 		Status:  utils.StatusMessage(fiber.StatusOK),
 		Message: "Successfuly got list of categories", // #marked: message
-		Data: map[string]any{
-			"list":     list,
-			"original": categories,
-		},
+		Data:    list,
 	}, nil
 }
