@@ -25,7 +25,10 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*appModel.Response, error) {
 	jwtTokenKey := svc.Config.GetString("security.jwt.tokenKey")
 	jwtExpiration := svc.Config.GetString("security.jwt.expiration")
 
-	validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
+	err := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
+	if validatorhelper.IsNotNil(err) {
+		return nil, err
+	}
 
 	// check is customer exist
 	result := svc.UserRepo.Find(&user, &users.User{

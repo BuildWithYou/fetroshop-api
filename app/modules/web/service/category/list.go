@@ -20,7 +20,10 @@ func (svc *CategoryServiceImpl) List(ctx *fiber.Ctx) (*appModel.Response, error)
 		parentID   null.Int
 	)
 	payload := new(model.ListCategoriesRequest)
-	validatorhelper.ValidateQueryPayload(ctx, svc.Validate, payload)
+	err := validatorhelper.ValidateQueryPayload(ctx, svc.Validate, payload)
+	if validatorhelper.IsNotNil(err) {
+		return nil, err
+	}
 
 	if payload.ParentCode == "" {
 		parentID = null.NewInt(0, false)
@@ -67,7 +70,7 @@ func (svc *CategoryServiceImpl) List(ctx *fiber.Ctx) (*appModel.Response, error)
 	}
 
 	return &appModel.Response{
-		Code:    fiber.StatusCreated,
+		Code:    fiber.StatusOK,
 		Status:  utils.StatusMessage(fiber.StatusOK),
 		Message: "Successfuly got list of categories", // #marked: message
 		Data:    list,

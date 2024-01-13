@@ -193,12 +193,10 @@ paths:
       - default: 10
         in: query
         name: limit
-        required: true
         type: integer
       - default: 0
         in: query
         name: offset
-        required: true
         type: integer
       - enum:
         - display_order

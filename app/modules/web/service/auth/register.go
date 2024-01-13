@@ -19,7 +19,10 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error)
 	)
 
 	payload := new(webModel.RegistrationRequest)
-	validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
+	err := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
+	if validatorhelper.IsNotNil(err) {
+		return nil, err
+	}
 
 	result := svc.CustomerRepo.Find(&existingUsername, &customers.Customer{
 		Username: payload.Username,

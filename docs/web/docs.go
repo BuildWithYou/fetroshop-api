@@ -292,15 +292,13 @@ const docTemplate = `{
                         "type": "integer",
                         "default": 10,
                         "name": "limit",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     },
                     {
                         "type": "integer",
                         "default": 0,
                         "name": "offset",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     },
                     {
                         "enum": [

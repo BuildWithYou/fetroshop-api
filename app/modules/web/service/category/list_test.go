@@ -65,8 +65,6 @@ func TestCategoryServiceList(t *testing.T) {
 			formData.Set("orderBy", tt.args.OrderBy)
 			formData.Set("orderDirection", tt.args.OrderDirection)
 
-			fmt.Println("formData : ", formData)
-
 			// Define the request body
 			body := strings.NewReader(formData.Encode())
 

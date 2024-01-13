@@ -8,8 +8,8 @@ import (
 
 type ListCategoriesRequest struct {
 	ParentCode     string `json:"parentCode"`
-	Offset         int64  `json:"offset" validate:"required" default:"0"`
-	Limit          int64  `json:"limit" validate:"required" default:"10"`
+	Offset         int64  `json:"offset" default:"0"`
+	Limit          int64  `json:"limit" default:"10"`
 	OrderBy        string `json:"orderBy" validate:"required" enums:"display_order,code,name"`
 	OrderDirection string `json:"orderDirection" validate:"required" enums:"ASC,DESC"`
 }
