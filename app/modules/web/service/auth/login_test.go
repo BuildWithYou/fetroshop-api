@@ -8,6 +8,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/BuildWithYou/fetroshop-api/app/injector"
 	"github.com/stretchr/testify/assert"
 )
@@ -57,7 +58,8 @@ func TestWebServiceLogin(t *testing.T) {
 			assert.NotNil(t, bytes)
 
 			if response.StatusCode != tt.wantResponseCode {
-				fmt.Println("Response : ", string(bytes)) // #marked: logging
+				logger := logger.NewFrameworkLogger()
+				logger.LogConsole.Error(fmt.Sprintln("Response : ", string(bytes)))
 			}
 
 		})

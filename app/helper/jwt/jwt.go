@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 )
@@ -75,21 +76,24 @@ func Reverse(tokenKey string, jwtToken string) (*TokenReversed, error) {
 	parsed, err := parse(tokenKey, jwtToken)
 
 	if err != nil {
-		fmt.Println("Error from jwt.parse : ", err.Error()) // #marked: logging
+		logger := logger.NewFrameworkLogger()
+		logger.Error(fmt.Sprint("Error from jwt.parse : ", err.Error()))
 		return nil, err
 	}
 
 	// Parsing token claims
 	claims, ok := parsed.Claims.(jwt.MapClaims)
 	if !ok {
-		fmt.Println("Error from jwt.Reverse on parsed.Claims") // #marked: logging
+		logger := logger.NewFrameworkLogger()
+		logger.Error("Error from jwt.Reverse on parsed.Claims")
 		return nil, err
 	}
 
 	accessKey, ok := claims["accessKey"].(string)
 	if !ok {
-		fmt.Println("Error from jwt.Reverse when parsing accessKey") // #marked: logging
-		return nil, errors.New(errorMessage)                         // #marked: message
+		logger := logger.NewFrameworkLogger()
+		logger.Error("Error from jwt.Reverse when parsing accessKey")
+		return nil, errors.New(errorMessage) // #marked: message
 	}
 
 	expiredAtFloat, ok := claims["exp"].(float64)
@@ -97,14 +101,16 @@ func Reverse(tokenKey string, jwtToken string) (*TokenReversed, error) {
 		seconds := int64(expiredAtFloat)
 		expiredAt = time.Unix(seconds, 0)
 	} else {
-		fmt.Println("Error from jwt.Reverse when parsing exp") // #marked: logging
-		return nil, errors.New(errorMessage)                   // #marked: message
+		logger := logger.NewFrameworkLogger()
+		logger.Error("Error from jwt.Reverse when parsing exp")
+		return nil, errors.New(errorMessage) // #marked: message
 	}
 
 	tokenType, ok := claims["type"].(string)
 	if !ok {
-		fmt.Println("Error from jwt.Reverse when parsing type") // #marked: logging
-		return nil, errors.New(errorMessage)                    // #marked: message
+		logger := logger.NewFrameworkLogger()
+		logger.Error("Error from jwt.Reverse when parsing type")
+		return nil, errors.New(errorMessage) // #marked: message
 	}
 
 	return &TokenReversed{

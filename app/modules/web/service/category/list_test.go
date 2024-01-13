@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/BuildWithYou/fetroshop-api/app/injector"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/model"
 	"github.com/stretchr/testify/assert"
@@ -81,7 +82,8 @@ func TestCategoryServiceList(t *testing.T) {
 			assert.NotNil(t, bytes)
 
 			if response.StatusCode != tt.wantResponseCode {
-				fmt.Println("Response : ", string(bytes)) // #marked: logging
+				logger := logger.NewFrameworkLogger()
+				logger.LogConsole.Error(fmt.Sprintln("Response : ", string(bytes)))
 			}
 
 		})

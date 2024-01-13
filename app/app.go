@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/BuildWithYou/fetroshop-api/app/middleware"
 	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/BuildWithYou/fetroshop-api/app/router"
@@ -55,7 +56,8 @@ func CreateFiber(serverConfig *ServerConfig) *Fetroshop {
 			}
 
 			if code == fiber.StatusInternalServerError {
-				fmt.Println("Error : ", err.Error()) // #marked: logging
+				logger := logger.NewFrameworkLogger()
+				logger.Error(fmt.Sprint("Error : ", err.Error()))
 			}
 
 			return ctx.Status(code).JSON(appModel.Response{

@@ -10,6 +10,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/jwt"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	cmsAuthSvc "github.com/BuildWithYou/fetroshop-api/app/modules/cms/service/auth"
 	webAuthSvc "github.com/BuildWithYou/fetroshop-api/app/modules/web/service/auth"
@@ -69,7 +70,8 @@ func (jwtMid *JwtMiddleware) Authenticate(ctx *fiber.Ctx) error {
 	// Verify the token which is in the chunks
 	reversedToken, err := jwt.Reverse(jwtMid.Config.GetString("security.jwt.tokenKey"), chunks[1])
 	if validatorhelper.IsNotNil(err) {
-		fmt.Println("Error on reverse jwt token : ", err.Error()) // #marked: logging
+		logger := logger.NewFrameworkLogger()
+		logger.Error(fmt.Sprintln("Error on reverse jwt token : ", err.Error()))
 		return fiber.ErrUnauthorized
 	}
 

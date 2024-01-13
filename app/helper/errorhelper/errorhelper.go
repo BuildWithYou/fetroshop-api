@@ -3,13 +3,14 @@ package errorhelper
 import (
 	"fmt"
 
+	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/gofiber/fiber/v2"
 )
 
 func PanicIfError(err error) {
 	if err != nil {
-		fmt.Println("Error : ", err.Error()) // #marked: logging
-		panic(err)
+		logger := logger.NewFrameworkLogger()
+		logger.Panic(fmt.Sprint("Error : ", err.Error()))
 	}
 }
 
@@ -22,7 +23,6 @@ func Error401(msg string) error {
 }
 
 func Error500(msg string) error {
-	fmt.Println("Error : ", msg) // #marked: logging
 	return fiber.NewError(fiber.StatusInternalServerError, msg)
 }
 

@@ -23,6 +23,15 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error)
 	if validatorhelper.IsNotNil(err) {
 		return nil, err
 	}
+	/*
+			   TODO:
+		      Add validation and give proper messages:
+		         - Username : required, unique
+		         - Phone : required, unique, numeric
+		         - Email : required, unique, valid email
+		         - FullName : required
+		         - Password : required, min 8
+	*/
 
 	result := svc.CustomerRepo.Find(&existingUsername, map[string]any{"username": payload.Username})
 	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsErrRecordNotFound(result.Error) {

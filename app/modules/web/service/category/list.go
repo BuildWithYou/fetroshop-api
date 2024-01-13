@@ -6,6 +6,7 @@ import (
 	ctEty "github.com/BuildWithYou/fetroshop-api/app/domain/categories"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/model"
@@ -19,6 +20,7 @@ func (svc *CategoryServiceImpl) List(ctx *fiber.Ctx) (*appModel.Response, error)
 		categories []ctEty.Category
 		parentID   null.Int
 	)
+	logger := logger.NewWebLogger(svc.Config)
 	payload := new(model.ListCategoriesRequest)
 	err := validatorhelper.ValidateQueryPayload(ctx, svc.Validate, payload)
 	if validatorhelper.IsNotNil(err) {
@@ -33,6 +35,7 @@ func (svc *CategoryServiceImpl) List(ctx *fiber.Ctx) (*appModel.Response, error)
 			"code": payload.ParentCode,
 		})
 		if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+			logger.Error(result.Error.Error())
 			return nil, errorhelper.Error500("Something went wrong") // #marked: message
 		}
 		if gormhelper.IsErrRecordNotFound(result.Error) {
@@ -46,6 +49,7 @@ func (svc *CategoryServiceImpl) List(ctx *fiber.Ctx) (*appModel.Response, error)
 		"parent_id": parentID,
 	}, int(payload.Limit), int(payload.Offset), orderBy)
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+		logger.Error(result.Error.Error())
 		return nil, errorhelper.Error500("Something went wrong") // #marked: message
 	}
 
