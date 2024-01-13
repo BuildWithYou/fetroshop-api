@@ -18,6 +18,7 @@ const docTemplate = `{
         "/api/auth/login": {
             "post": {
                 "consumes": [
+                    "application/x-www-form-urlencoded",
                     "application/json"
                 ],
                 "produces": [
@@ -156,6 +157,7 @@ const docTemplate = `{
         "/api/auth/register": {
             "post": {
                 "consumes": [
+                    "application/x-www-form-urlencoded",
                     "application/json"
                 ],
                 "produces": [
