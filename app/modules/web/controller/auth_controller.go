@@ -27,7 +27,7 @@ func AuthControllerProvider(vld *validator.Validate, regSvc auth.AuthService) Au
 // @Summary      Register new user
 // @Description
 // @Tags         Authentication
-// @Accept       json,x-www-form-urlencoded
+// @Accept       x-www-form-urlencoded,json
 // @Produce      json
 // @Param        req  formData  model.RegistrationRequest  true  "Registration Request"
 // @Success      200  {object}  model.Response
@@ -42,7 +42,7 @@ func (ctr *AuthControllerImpl) Register(ctx *fiber.Ctx) (err error) {
 // @Summary      Login for customers
 // @Description
 // @Tags         Authentication
-// @Accept       json,x-www-form-urlencoded
+// @Accept       x-www-form-urlencoded,json
 // @Produce      json
 // @Param        req  formData  model.LoginRequest  true  "Login Request"
 // @Success      200  {object}  model.Response

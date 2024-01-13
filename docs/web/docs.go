@@ -18,8 +18,8 @@ const docTemplate = `{
         "/api/auth/login": {
             "post": {
                 "consumes": [
-                    "application/json",
-                    "application/x-www-form-urlencoded"
+                    "application/x-www-form-urlencoded",
+                    "application/json"
                 ],
                 "produces": [
                     "application/json"
@@ -157,8 +157,8 @@ const docTemplate = `{
         "/api/auth/register": {
             "post": {
                 "consumes": [
-                    "application/json",
-                    "application/x-www-form-urlencoded"
+                    "application/x-www-form-urlencoded",
+                    "application/json"
                 ],
                 "produces": [
                     "application/json"
@@ -231,6 +231,7 @@ const docTemplate = `{
             "get": {
                 "description": "Retrieve categories detail",
                 "consumes": [
+                    "application/x-www-form-urlencoded",
                     "application/json"
                 ],
                 "produces": [
@@ -280,6 +281,7 @@ const docTemplate = `{
             "get": {
                 "description": "Retrieve categories list",
                 "consumes": [
+                    "application/x-www-form-urlencoded",
                     "application/json"
                 ],
                 "produces": [

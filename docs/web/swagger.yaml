@@ -21,8 +21,8 @@ paths:
   /api/auth/login:
     post:
       consumes:
-      - application/json
       - application/x-www-form-urlencoded
+      - application/json
       parameters:
       - in: formData
         name: password
@@ -109,8 +109,8 @@ paths:
   /api/auth/register:
     post:
       consumes:
-      - application/json
       - application/x-www-form-urlencoded
+      - application/json
       parameters:
       - in: formData
         name: email
@@ -157,6 +157,7 @@ paths:
   /api/category/find:
     get:
       consumes:
+      - application/x-www-form-urlencoded
       - application/json
       description: Retrieve categories detail
       parameters:
@@ -189,6 +190,7 @@ paths:
   /api/category/list:
     get:
       consumes:
+      - application/x-www-form-urlencoded
       - application/json
       description: Retrieve categories list
       parameters:

@@ -10,8 +10,8 @@
         "/api/auth/login": {
             "post": {
                 "consumes": [
-                    "application/json",
-                    "application/x-www-form-urlencoded"
+                    "application/x-www-form-urlencoded",
+                    "application/json"
                 ],
                 "produces": [
                     "application/json"
@@ -149,8 +149,8 @@
         "/api/auth/register": {
             "post": {
                 "consumes": [
-                    "application/json",
-                    "application/x-www-form-urlencoded"
+                    "application/x-www-form-urlencoded",
+                    "application/json"
                 ],
                 "produces": [
                     "application/json"
@@ -223,6 +223,7 @@
             "get": {
                 "description": "Retrieve categories detail",
                 "consumes": [
+                    "application/x-www-form-urlencoded",
                     "application/json"
                 ],
                 "produces": [
@@ -272,6 +273,7 @@
             "get": {
                 "description": "Retrieve categories list",
                 "consumes": [
+                    "application/x-www-form-urlencoded",
                     "application/json"
                 ],
                 "produces": [
