@@ -7,36 +7,31 @@ import (
 
 	"github.com/BuildWithYou/fetroshop-api/app/domain/customer_accesses"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/customers"
-	"github.com/BuildWithYou/fetroshop-api/app/helper/constant"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/jwt"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/password"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
-	"github.com/BuildWithYou/fetroshop-api/app/model"
+	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
 	webModel "github.com/BuildWithYou/fetroshop-api/app/modules/web/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/utils"
 )
 
-func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*model.Response, error) {
-	if validatorhelper.IsNotNil(svc.Err) {
-		fmt.Printf("\nError: %s\n", svc.Err.Error()) // #marked: logging
-		return nil, errorhelper.Error500(constant.ERROR_GENERAL)
-	}
-
+func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*appModel.Response, error) {
 	var customer customers.Customer
 
 	payload := new(webModel.LoginRequest)
 	jwtTokenKey := svc.Config.GetString("security.jwt.tokenKey")
 	jwtExpiration := svc.Config.GetString("security.jwt.expiration")
 
-	validatorhelper.ValidatePayload(ctx, svc.Validate, payload)
+	err := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
+	if validatorhelper.IsNotNil(err) {
+		return nil, err
+	}
 
 	// check is customer exist
-	result := svc.CustomerRepo.Find(&customer, &customers.Customer{
-		Username: payload.Username,
-	})
+	result := svc.CustomerRepo.Find(&customer, map[string]any{"username": payload.Username})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
 		return nil, errorhelper.Error500("Something went wrong") // #marked: message
 	}
@@ -67,10 +62,10 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*model.Response, error) {
 		UserAgent:  ctx.Get("User-Agent"),
 		ExpiredAt:  expiredAt,
 	},
-		&customer_accesses.CustomerAccess{
-			CustomerID: customer.ID,
-			Platform:   ctx.Get("Sec-Ch-Ua-Platform"),
-			UserAgent:  ctx.Get("User-Agent"),
+		map[string]any{
+			"customer_id": customer.ID,
+			"platform":    ctx.Get("Sec-Ch-Ua-Platform"),
+			"user_agent":  ctx.Get("User-Agent"),
 		},
 	)
 	if validatorhelper.IsNotNil(result.Error) && !gormhelper.HasAffectedRows(result) {
@@ -87,8 +82,8 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*model.Response, error) {
 		Type:       CUSTOMER_TYPE,
 	})
 
-	return &model.Response{
-		Code:    fiber.StatusCreated,
+	return &appModel.Response{
+		Code:    fiber.StatusOK,
 		Status:  utils.StatusMessage(fiber.StatusOK),
 		Message: "Login success", // #marked: message
 		Data: map[string]string{

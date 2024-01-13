@@ -9,10 +9,11 @@ package injector
 import (
 	"github.com/BuildWithYou/fetroshop-api/app"
 	"github.com/BuildWithYou/fetroshop-api/app/connection"
+	postgres4 "github.com/BuildWithYou/fetroshop-api/app/domain/categories/postgres"
 	postgres2 "github.com/BuildWithYou/fetroshop-api/app/domain/customer_accesses/postgres"
-	"github.com/BuildWithYou/fetroshop-api/app/domain/customers/postgres"
-	postgres3 "github.com/BuildWithYou/fetroshop-api/app/domain/user_accesses/postgres"
-	postgres4 "github.com/BuildWithYou/fetroshop-api/app/domain/users/postgres"
+	postgres3 "github.com/BuildWithYou/fetroshop-api/app/domain/customers/postgres"
+	"github.com/BuildWithYou/fetroshop-api/app/domain/user_accesses/postgres"
+	postgres5 "github.com/BuildWithYou/fetroshop-api/app/domain/users/postgres"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/middleware"
@@ -23,6 +24,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/controller"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/service/auth"
+	"github.com/BuildWithYou/fetroshop-api/app/modules/web/service/category"
 	"github.com/BuildWithYou/fetroshop-api/app/router"
 	"github.com/google/wire"
 )
@@ -32,17 +34,21 @@ import (
 func InitializeWebServer() *app.Fetroshop {
 	viper := confighelper.GetConfig()
 	docsDocs := docs.DocsProvider(viper)
-	validate := validatorhelper.GetValidator()
 	connectionDBType := _wireDBTypeValue
 	connectionConnection := connection.OpenDBConnection(connectionDBType, viper)
-	customerRepo := postgres.CustomerRepoProvider(connectionConnection)
-	customerAccessRepo := postgres2.CustomerAccessRepoProvider(connectionConnection)
-	authService := auth.AuthServiceProvider(connectionConnection, viper, validate, customerRepo, customerAccessRepo)
-	authController := controller.AuthControllerProvider(validate, authService)
-	controllerController := controller.WebControllerProvider(authController)
-	userAccessRepo := postgres3.UserAccessRepoProvider(connectionConnection)
+	userAccessRepo := postgres.RepoProvider(connectionConnection)
+	customerAccessRepo := postgres2.RepoProvider(connectionConnection)
 	jwtMiddleware := middleware.JwtMiddlewareProvider(viper, userAccessRepo, customerAccessRepo)
-	routerRouter := router.WebRouterProvider(docsDocs, controllerController, jwtMiddleware)
+	dbMiddleware := middleware.DBMiddlewareProvider(connectionConnection)
+	validate := validatorhelper.GetValidator()
+	customerRepo := postgres3.RepoProvider(connectionConnection)
+	authService := auth.ServiceProvider(connectionConnection, viper, validate, customerRepo, customerAccessRepo)
+	authController := controller.AuthControllerProvider(validate, authService)
+	categoryRepo := postgres4.RepoProvider(connectionConnection)
+	categoryService := category.ServiceProvider(connectionConnection, viper, validate, categoryRepo)
+	categoryController := controller.CategoryControllerProvider(validate, categoryService)
+	controllerController := controller.WebControllerProvider(authController, categoryController)
+	routerRouter := router.WebRouterProvider(docsDocs, jwtMiddleware, dbMiddleware, controllerController)
 	serverConfig := web.WebServerConfigProvider(routerRouter)
 	fetroshop := app.CreateFiber(serverConfig)
 	return fetroshop
@@ -57,15 +63,16 @@ func InitializeCmsServer() *app.Fetroshop {
 	docsDocs := docs.DocsProvider(viper)
 	connectionDBType := _wireDBTypeValue
 	connectionConnection := connection.OpenDBConnection(connectionDBType, viper)
-	userAccessRepo := postgres3.UserAccessRepoProvider(connectionConnection)
-	customerAccessRepo := postgres2.CustomerAccessRepoProvider(connectionConnection)
+	userAccessRepo := postgres.RepoProvider(connectionConnection)
+	customerAccessRepo := postgres2.RepoProvider(connectionConnection)
 	jwtMiddleware := middleware.JwtMiddlewareProvider(viper, userAccessRepo, customerAccessRepo)
+	dbMiddleware := middleware.DBMiddlewareProvider(connectionConnection)
 	validate := validatorhelper.GetValidator()
-	userRepo := postgres4.UserRepoProvider(connectionConnection)
-	authService := auth2.AuthServiceProvider(connectionConnection, viper, validate, userRepo, userAccessRepo)
+	userRepo := postgres5.RepoProvider(connectionConnection)
+	authService := auth2.ServiceProvider(connectionConnection, viper, validate, userRepo, userAccessRepo)
 	authController := controller2.AuthControllerProvider(authService)
 	controllerController := controller2.CmsControllerProvider(authController)
-	routerRouter := router.CmsRouterProvider(docsDocs, jwtMiddleware, controllerController)
+	routerRouter := router.CmsRouterProvider(docsDocs, jwtMiddleware, dbMiddleware, controllerController)
 	serverConfig := cms.CmsServerConfigProvider(routerRouter)
 	fetroshop := app.CreateFiber(serverConfig)
 	return fetroshop
@@ -75,18 +82,18 @@ func InitializeCmsServer() *app.Fetroshop {
 
 var dbType connection.DBType = connection.DB_MAIN
 
-var serverSet = wire.NewSet(wire.Value(dbType), confighelper.GetConfig, connection.OpenDBConnection, docs.DocsProvider, middleware.JwtMiddlewareProvider, validatorhelper.GetValidator, postgres3.UserAccessRepoProvider, postgres2.CustomerAccessRepoProvider, app.CreateFiber)
+var serverSet = wire.NewSet(wire.Value(dbType), confighelper.GetConfig, connection.OpenDBConnection, docs.DocsProvider, middleware.JwtMiddlewareProvider, middleware.DBMiddlewareProvider, validatorhelper.GetValidator, postgres.RepoProvider, postgres2.RepoProvider, app.CreateFiber)
 
 // web dependencies
-var webRepoSet = wire.NewSet(postgres.CustomerRepoProvider)
+var webRepoSet = wire.NewSet(postgres3.RepoProvider, postgres4.RepoProvider)
 
-var webControllerSet = wire.NewSet(controller.WebControllerProvider, controller.AuthControllerProvider)
+var webControllerSet = wire.NewSet(controller.WebControllerProvider, controller.AuthControllerProvider, controller.CategoryControllerProvider)
 
-var webServiceSet = wire.NewSet(auth.AuthServiceProvider)
+var webServiceSet = wire.NewSet(auth.ServiceProvider, category.ServiceProvider)
 
 // cms dependencies
-var cmsRepoSet = wire.NewSet(postgres4.UserRepoProvider)
+var cmsRepoSet = wire.NewSet(postgres5.RepoProvider)
 
 var cmsControllerSet = wire.NewSet(controller2.CmsControllerProvider, controller2.AuthControllerProvider)
 
-var cmsServiceSet = wire.NewSet(auth2.AuthServiceProvider)
+var cmsServiceSet = wire.NewSet(auth2.ServiceProvider)

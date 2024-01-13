@@ -6,23 +6,16 @@ import (
 	"time"
 
 	"github.com/BuildWithYou/fetroshop-api/app/domain/customer_accesses"
-	"github.com/BuildWithYou/fetroshop-api/app/helper/constant"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/jwt"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/password"
-	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
-	"github.com/BuildWithYou/fetroshop-api/app/model"
+	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/utils"
 )
 
-func (svc *AuthServiceImpl) Refresh(ctx *fiber.Ctx) (*model.Response, error) {
-	if validatorhelper.IsNotNil(svc.Err) {
-		fmt.Printf("\nError: %s\n", svc.Err.Error()) // #marked: logging
-		return nil, errorhelper.Error500(constant.ERROR_GENERAL)
-	}
-
+func (svc *AuthServiceImpl) Refresh(ctx *fiber.Ctx) (*appModel.Response, error) {
 	customerID := jwt.GetCustomerID(ctx)
 	identifier := jwt.GetAccessIdentifier(ctx)
 	jwtTokenKey := svc.Config.GetString("security.jwt.tokenKey")
@@ -54,17 +47,17 @@ func (svc *AuthServiceImpl) Refresh(ctx *fiber.Ctx) (*model.Response, error) {
 			CustomerID: customerID,
 			ExpiredAt:  expiredAt,
 		},
-		&customer_accesses.CustomerAccess{
-			Key:        identifier,
-			CustomerID: customerID,
+		map[string]any{
+			"key":         identifier,
+			"customer_id": customerID,
 		},
 	)
 	if !gormhelper.HasAffectedRows(result) {
 		return nil, errorhelper.Error500("Failed to refresh token") // #marked: message
 	}
 
-	return &model.Response{
-		Code:    fiber.StatusCreated,
+	return &appModel.Response{
+		Code:    fiber.StatusOK,
 		Status:  utils.StatusMessage(fiber.StatusOK),
 		Message: "Refresh success", // #marked: message
 		Data: map[string]string{

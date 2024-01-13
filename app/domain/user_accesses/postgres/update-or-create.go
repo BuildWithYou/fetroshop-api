@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func (p *PostgreSQL) UpdateOrCreate(data *user_accesses.UserAccess, condition *user_accesses.UserAccess) *gorm.DB {
+func (p *PostgreSQL) UpdateOrCreate(data *user_accesses.UserAccess, condition map[string]any) *gorm.DB {
 	var result *gorm.DB
 	updateResult := p.DB.Where(condition).Updates(data)
 	if gormhelper.HasAffectedRows(updateResult) {

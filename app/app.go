@@ -2,10 +2,11 @@ package app
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/BuildWithYou/fetroshop-api/app/middleware"
-	"github.com/BuildWithYou/fetroshop-api/app/model"
+	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/BuildWithYou/fetroshop-api/app/router"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/recover"
@@ -53,7 +54,11 @@ func CreateFiber(serverConfig *ServerConfig) *Fetroshop {
 				status = utils.StatusMessage(e.Code)
 			}
 
-			return ctx.Status(code).JSON(model.Response{
+			if code == fiber.StatusInternalServerError {
+				fmt.Println("Error : ", err.Error()) // #marked: logging
+			}
+
+			return ctx.Status(code).JSON(appModel.Response{
 				Code:    code,
 				Status:  status,
 				Message: err.Error(),

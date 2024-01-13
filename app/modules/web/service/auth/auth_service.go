@@ -4,7 +4,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/connection"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/customer_accesses"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/customers"
-	"github.com/BuildWithYou/fetroshop-api/app/model"
+	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/viper"
@@ -14,10 +14,10 @@ import (
 const CUSTOMER_TYPE = "customer"
 
 type AuthService interface {
-	Register(ctx *fiber.Ctx) (*model.Response, error)
-	Login(ctx *fiber.Ctx) (*model.Response, error)
-	Logout(ctx *fiber.Ctx) (*model.Response, error)
-	Refresh(ctx *fiber.Ctx) (*model.Response, error)
+	Register(ctx *fiber.Ctx) (*appModel.Response, error)
+	Login(ctx *fiber.Ctx) (*appModel.Response, error)
+	Logout(ctx *fiber.Ctx) (*appModel.Response, error)
+	Refresh(ctx *fiber.Ctx) (*appModel.Response, error)
 }
 
 type AuthServiceImpl struct {
@@ -29,16 +29,16 @@ type AuthServiceImpl struct {
 	CustomerAccessRepo customer_accesses.CustomerAccessRepo
 }
 
-func AuthServiceProvider(
-	db *connection.Connection,
+func ServiceProvider(
+	conn *connection.Connection,
 	config *viper.Viper,
 	validate *validator.Validate,
 	customerRepo customers.CustomerRepo,
 	customerAccessRepo customer_accesses.CustomerAccessRepo,
 ) AuthService {
 	return &AuthServiceImpl{
-		Err:                db.Err,
-		DB:                 db.DB,
+		Err:                conn.Err,
+		DB:                 conn.DB,
 		Config:             config,
 		Validate:           validate,
 		CustomerRepo:       customerRepo,

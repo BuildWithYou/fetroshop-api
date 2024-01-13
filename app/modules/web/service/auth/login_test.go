@@ -3,6 +3,7 @@ package auth_test
 import (
 	"fmt"
 	"io"
+	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
@@ -11,7 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var fiberApp = injector.InitializeWebServer()
+var fetroshopApp = injector.InitializeWebServer()
 
 func TestWebServiceLogin(t *testing.T) {
 	type args struct {
@@ -43,11 +44,11 @@ func TestWebServiceLogin(t *testing.T) {
             "password": "%s",
             "username": "%s"
          }`, tt.args.password, tt.args.username))
-			request := httptest.NewRequest("POST", "/api/auth/login", body)
+			request := httptest.NewRequest(http.MethodPost, "/api/auth/login", body)
 			request.Header.Set("Content-Type", "application/json")
-			request.Header.Set("Sec-Ch-Ua-Platform", "string")
-			request.Header.Set("User-Agent", "string")
-			response, err := fiberApp.FiberApp.Test(request)
+			request.Header.Set("Sec-Ch-Ua-Platform", "sec-ch-ua-platform-test")
+			request.Header.Set("User-Agent", "user-agent-test")
+			response, err := fetroshopApp.FiberApp.Test(request)
 			assert.Nil(t, err)
 			assert.Equal(t, tt.wantResponseCode, response.StatusCode)
 

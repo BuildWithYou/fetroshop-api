@@ -8,7 +8,7 @@ import (
 
 func PanicIfError(err error) {
 	if err != nil {
-		fmt.Println("Error : ", err.Error())
+		fmt.Println("Error : ", err.Error()) // #marked: logging
 		panic(err)
 	}
 }
@@ -22,6 +22,7 @@ func Error401(msg string) error {
 }
 
 func Error500(msg string) error {
+	fmt.Println("Error : ", msg) // #marked: logging
 	return fiber.NewError(fiber.StatusInternalServerError, msg)
 }
 

@@ -1,33 +1,4 @@
 definitions:
-  model.LoginRequest:
-    properties:
-      password:
-        type: string
-      username:
-        type: string
-    required:
-    - password
-    - username
-    type: object
-  model.RegistrationRequest:
-    properties:
-      email:
-        type: string
-      fullName:
-        type: string
-      password:
-        type: string
-      phone:
-        type: string
-      username:
-        type: string
-    required:
-    - email
-    - fullName
-    - password
-    - phone
-    - username
-    type: object
   model.Response:
     properties:
       code:
@@ -50,14 +21,17 @@ paths:
   /api/auth/login:
     post:
       consumes:
+      - application/x-www-form-urlencoded
       - application/json
       parameters:
-      - description: Login Request
-        in: body
-        name: body
+      - in: formData
+        name: password
         required: true
-        schema:
-          $ref: '#/definitions/model.LoginRequest'
+        type: string
+      - in: formData
+        name: username
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -135,14 +109,29 @@ paths:
   /api/auth/register:
     post:
       consumes:
+      - application/x-www-form-urlencoded
       - application/json
       parameters:
-      - description: Registration Request
-        in: body
-        name: body
+      - in: formData
+        name: email
         required: true
-        schema:
-          $ref: '#/definitions/model.RegistrationRequest'
+        type: string
+      - in: formData
+        name: fullName
+        required: true
+        type: string
+      - in: formData
+        name: password
+        required: true
+        type: string
+      - in: formData
+        name: phone
+        required: true
+        type: string
+      - in: formData
+        name: username
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -165,6 +154,94 @@ paths:
       summary: Register new user
       tags:
       - Authentication
+  /api/category/find:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      description: Retrieve categories detail
+      parameters:
+      - in: query
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Response'
+      summary: Get category
+      tags:
+      - Categories
+  /api/category/list:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      description: Retrieve categories list
+      parameters:
+      - default: 10
+        in: query
+        name: limit
+        type: integer
+      - default: 0
+        in: query
+        name: offset
+        type: integer
+      - enum:
+        - display_order
+        - code
+        - name
+        in: query
+        name: orderBy
+        required: true
+        type: string
+      - enum:
+        - ASC
+        - DESC
+        in: query
+        name: orderDirection
+        required: true
+        type: string
+      - in: query
+        name: parentCode
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Response'
+      summary: List categories
+      tags:
+      - Categories
 securityDefinitions:
   Bearer:
     description: Use format 'Bearer YOUR_TOKEN'
