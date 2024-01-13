@@ -47,9 +47,9 @@ func (svc *AuthServiceImpl) Refresh(ctx *fiber.Ctx) (*appModel.Response, error) 
 			UserID:    userID,
 			ExpiredAt: expiredAt,
 		},
-		&user_accesses.UserAccess{
-			Key:    identifier,
-			UserID: userID,
+		map[string]any{
+			"key":     identifier,
+			"user_id": userID,
 		},
 	)
 	if !gormhelper.HasAffectedRows(result) {

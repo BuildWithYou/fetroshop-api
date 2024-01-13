@@ -5,6 +5,6 @@ import (
 	"gorm.io/gorm"
 )
 
-func (p *PostgreSQL) Find(destination *user_accesses.UserAccess, condition *user_accesses.UserAccess) *gorm.DB {
+func (p *PostgreSQL) Find(destination *user_accesses.UserAccess, condition map[string]any) *gorm.DB {
 	return p.DB.Where(condition).First(destination)
 }

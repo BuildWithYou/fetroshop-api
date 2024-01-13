@@ -22,6 +22,7 @@ paths:
     post:
       consumes:
       - application/json
+      - application/x-www-form-urlencoded
       parameters:
       - in: formData
         name: password
@@ -109,6 +110,7 @@ paths:
     post:
       consumes:
       - application/json
+      - application/x-www-form-urlencoded
       parameters:
       - in: formData
         name: email

@@ -31,9 +31,7 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*appModel.Response, error) {
 	}
 
 	// check is customer exist
-	result := svc.UserRepo.Find(&user, &users.User{
-		Username: payload.Username,
-	})
+	result := svc.UserRepo.Find(&user, map[string]any{"username": payload.Username})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
 		return nil, errorhelper.Error500("Something went wrong") // #marked: message
 	}
@@ -64,10 +62,10 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*appModel.Response, error) {
 		UserAgent: ctx.Get("User-Agent"),
 		ExpiredAt: expiredAt,
 	},
-		&user_accesses.UserAccess{
-			UserID:    user.ID,
-			Platform:  ctx.Get("Sec-Ch-Ua-Platform"),
-			UserAgent: ctx.Get("User-Agent"),
+		map[string]any{
+			"user_id":    user.ID,
+			"platform":   ctx.Get("Sec-Ch-Ua-Platform"),
+			"user_agent": ctx.Get("User-Agent"),
 		},
 	)
 	if validatorhelper.IsNotNil(result.Error) && !gormhelper.HasAffectedRows(result) {

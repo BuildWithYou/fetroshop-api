@@ -5,6 +5,6 @@ import (
 	"gorm.io/gorm"
 )
 
-func (p *PostgreSQL) Update(data *customer_accesses.CustomerAccess, condition *customer_accesses.CustomerAccess) *gorm.DB {
+func (p *PostgreSQL) Update(data *customer_accesses.CustomerAccess, condition map[string]any) *gorm.DB {
 	return p.DB.Where(condition).Updates(data)
 }

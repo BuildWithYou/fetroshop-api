@@ -2,6 +2,7 @@ package app
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/BuildWithYou/fetroshop-api/app/middleware"
@@ -51,6 +52,10 @@ func CreateFiber(serverConfig *ServerConfig) *Fetroshop {
 			if errors.As(err, &e) {
 				code = e.Code
 				status = utils.StatusMessage(e.Code)
+			}
+
+			if code == fiber.StatusInternalServerError {
+				fmt.Println("Error : ", err.Error()) // #marked: logging
 			}
 
 			return ctx.Status(code).JSON(appModel.Response{
