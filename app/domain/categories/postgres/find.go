@@ -6,5 +6,5 @@ import (
 )
 
 func (p *PostgreSQL) Find(destination *categories.Category, condition map[string]any) *gorm.DB {
-	return p.DB.Where(condition).First(destination)
+	return p.DB.Preload("Parent").Where(condition).First(destination)
 }
