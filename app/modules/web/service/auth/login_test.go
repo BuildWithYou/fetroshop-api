@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var fiberApp = injector.InitializeWebServer()
+var fetroshopApp = injector.InitializeWebServer()
 
 func TestWebServiceLogin(t *testing.T) {
 	type args struct {
@@ -48,7 +48,7 @@ func TestWebServiceLogin(t *testing.T) {
 			request.Header.Set("Content-Type", "application/json")
 			request.Header.Set("Sec-Ch-Ua-Platform", "sec-ch-ua-platform-test")
 			request.Header.Set("User-Agent", "user-agent-test")
-			response, err := fiberApp.FiberApp.Test(request)
+			response, err := fetroshopApp.FiberApp.Test(request)
 			assert.Nil(t, err)
 			assert.Equal(t, tt.wantResponseCode, response.StatusCode)
 

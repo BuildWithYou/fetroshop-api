@@ -7,7 +7,6 @@ import (
 	"net/http/httptest"
 	"net/url"
 	"strconv"
-	"strings"
 	"testing"
 
 	"github.com/BuildWithYou/fetroshop-api/app/injector"
@@ -15,7 +14,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var fiberApp = injector.InitializeWebServer()
+var fetroshopApp = injector.InitializeWebServer()
 
 func TestCategoryServiceList(t *testing.T) {
 	tests := []struct {
@@ -36,7 +35,7 @@ func TestCategoryServiceList(t *testing.T) {
 			wantResponseCode: 200,
 		},
 		{
-			name: "ListNotEmptyParentCode200",
+			name: "ListCorrectParentCode200",
 			args: model.ListCategoriesRequest{
 				ParentCode:     "kebutuhan-dapur",
 				Offset:         0,
@@ -46,33 +45,34 @@ func TestCategoryServiceList(t *testing.T) {
 			},
 			wantResponseCode: 200,
 		},
+		{
+			name: "ListWrongParentCode400",
+			args: model.ListCategoriesRequest{
+				ParentCode:     "wrong-parent-code",
+				Offset:         0,
+				Limit:          10,
+				OrderBy:        "display_order",
+				OrderDirection: "ASC",
+			},
+			wantResponseCode: 400,
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			// Define the form data
-			/* formData := url.Values{
-				"parentCode": {tt.args.ParentCode},
-				"offset":     {strconv.Itoa(int(tt.args.Offset))},
-				"limit":      {strconv.Itoa(int(tt.args.Limit))},
-				"orderBy":    {tt.args.OrderBy},
-			} */
+			query := url.Values{}
+			query.Add("parentCode", tt.args.ParentCode)
+			query.Add("offset", strconv.Itoa(int(tt.args.Offset)))
+			query.Add("limit", strconv.Itoa(int(tt.args.Limit)))
+			query.Add("orderBy", tt.args.OrderBy)
+			query.Add("orderDirection", tt.args.OrderDirection)
 
-			formData := url.Values{}
-			formData.Set("parentCode", tt.args.ParentCode)
-			formData.Set("offset", strconv.Itoa(int(tt.args.Offset)))
-			formData.Set("limit", strconv.Itoa(int(tt.args.Limit)))
-			formData.Set("orderBy", tt.args.OrderBy)
-			formData.Set("orderDirection", tt.args.OrderDirection)
-
-			// Define the request body
-			body := strings.NewReader(formData.Encode())
-
-			request := httptest.NewRequest(http.MethodGet, "/api/category/list", body)
+			request := httptest.NewRequest(http.MethodGet, "/api/category/list?"+query.Encode(), nil)
 			request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 			request.Header.Set("Sec-Ch-Ua-Platform", "sec-ch-ua-platform-test")
 			request.Header.Set("User-Agent", "user-agent-test")
-			response, err := fiberApp.FiberApp.Test(request)
+
+			response, err := fetroshopApp.FiberApp.Test(request)
 			assert.Nil(t, err)
 			assert.Equal(t, tt.wantResponseCode, response.StatusCode)
 
