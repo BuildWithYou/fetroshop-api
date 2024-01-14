@@ -8,12 +8,14 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/BuildWithYou/fetroshop-api/app/injector"
 	"github.com/stretchr/testify/assert"
 )
 
 var fetroshopApp = injector.InitializeWebServer()
+var webLogger = logger.NewWebLogger(confighelper.GetConfig())
 
 func TestWebServiceLogin(t *testing.T) {
 	type args struct {
@@ -58,8 +60,7 @@ func TestWebServiceLogin(t *testing.T) {
 			assert.NotNil(t, bytes)
 
 			if response.StatusCode != tt.wantResponseCode {
-				logger := logger.NewFrameworkLogger()
-				logger.LogConsole.Error(fmt.Sprintln("Response : ", string(bytes)))
+				webLogger.LogConsole.Error(fmt.Sprintln("Response : ", string(bytes)))
 			}
 
 		})

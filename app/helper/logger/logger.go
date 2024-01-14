@@ -1,27 +1,21 @@
 package logger
 
 import (
+	"fmt"
 	"os"
+	"time"
 
+	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	"github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 )
 
-type Logger interface {
-	Trace(args ...interface{})
-	Debug(args ...interface{})
-	Info(args ...interface{})
-	Warning(args ...interface{})
-	Error(args ...interface{})
-	Fatal(args ...interface{})
-	Panic(args ...interface{})
-}
-
-type LoggerWrapper struct {
+type Logger struct {
 	LogFile    *logrus.Logger
 	LogConsole *logrus.Logger
 }
 
-func newLogger(pathFile string, levelStr string) *LoggerWrapper {
+func newLogger(pathFile string, levelStr string) *Logger {
 	var level logrus.Level
 
 	switch levelStr {
@@ -70,8 +64,72 @@ func newLogger(pathFile string, levelStr string) *LoggerWrapper {
 	logConsole.SetOutput(os.Stdout)
 	logConsole.SetLevel(level)
 
-	return &LoggerWrapper{
+	return &Logger{
 		LogFile:    logFile,
 		LogConsole: logConsole,
 	}
+}
+
+var FrameworkLogger, WebLogger, CmsLogger *Logger
+
+func NewFrameworkLogger() *Logger {
+	if validatorhelper.IsNil(FrameworkLogger) {
+		today := time.Now().Format("2006-01-02")
+		pathFile := fmt.Sprintf("logs/framework/fetroshop-api-%s.log", today)
+		FrameworkLogger = newLogger(pathFile, "trace")
+	}
+	return FrameworkLogger
+}
+
+func NewWebLogger(config *viper.Viper) *Logger {
+	if validatorhelper.IsNil(WebLogger) {
+		today := time.Now().Format("2006-01-02")
+		pathFile := fmt.Sprintf("logs/web/fetroshop-web-%s.log", today)
+		WebLogger = newLogger(pathFile, config.GetString("app.web.logLevel"))
+	}
+	return WebLogger
+}
+
+func NewCmsLogger(config *viper.Viper) *Logger {
+	if validatorhelper.IsNil(CmsLogger) {
+		today := time.Now().Format("2006-01-02")
+		pathFile := fmt.Sprintf("logs/cms/fetroshop-cms-%s.log", today)
+		CmsLogger = newLogger(pathFile, config.GetString("app.cms.logLevel"))
+	}
+	return CmsLogger
+}
+
+func (logger *Logger) Trace(args ...interface{}) {
+	logger.LogFile.Trace(args...)
+	logger.LogConsole.Trace(args...)
+}
+
+func (logger *Logger) Debug(args ...interface{}) {
+	logger.LogFile.Debug(args...)
+	logger.LogConsole.Debug(args...)
+}
+
+func (logger *Logger) Info(args ...interface{}) {
+	logger.LogFile.Info(args...)
+	logger.LogConsole.Info(args...)
+}
+
+func (logger *Logger) Warning(args ...interface{}) {
+	logger.LogFile.Warning(args...)
+	logger.LogConsole.Warning(args...)
+}
+
+func (logger *Logger) Error(args ...interface{}) {
+	logger.LogFile.Error(args...)
+	logger.LogConsole.Error(args...)
+}
+
+func (logger *Logger) Fatal(args ...interface{}) {
+	logger.LogFile.Fatal(args...)
+	logger.LogConsole.Fatal(args...)
+}
+
+func (logger *Logger) Panic(args ...interface{}) {
+	logger.LogFile.Panic(args...)
+	logger.LogConsole.Panic(args...)
 }

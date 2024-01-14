@@ -7,10 +7,11 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+var fwLogger = logger.NewFrameworkLogger()
+
 func PanicIfError(err error) {
 	if err != nil {
-		logger := logger.NewFrameworkLogger()
-		logger.Panic(fmt.Sprint("Error : ", err.Error()))
+		fwLogger.Panic(fmt.Sprint("Error : ", err.Error()))
 	}
 }
 
@@ -23,6 +24,7 @@ func Error401(msg string) error {
 }
 
 func Error500(msg string) error {
+	fwLogger.Error(fmt.Sprint("Error : ", msg))
 	return fiber.NewError(fiber.StatusInternalServerError, msg)
 }
 

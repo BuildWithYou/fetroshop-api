@@ -58,8 +58,7 @@ func CreateFiber(serverConfig *ServerConfig) *Fetroshop {
 			}
 
 			if code == fiber.StatusInternalServerError {
-				logger := logger.NewFrameworkLogger()
-				logger.Error(fmt.Sprint("Error : ", err.Error()))
+				serverConfig.Logger.Error(fmt.Sprint("Error : ", err.Error()))
 			}
 
 			return ctx.Status(code).JSON(appModel.Response{

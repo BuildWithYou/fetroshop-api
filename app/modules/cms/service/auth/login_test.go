@@ -8,12 +8,14 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/BuildWithYou/fetroshop-api/app/injector"
 	"github.com/stretchr/testify/assert"
 )
 
-var fiberApp = injector.InitializeCmsServer()
+var fetroshopApp = injector.InitializeCmsServer()
+var cmsLogger = logger.NewCmsLogger(confighelper.GetConfig())
 
 func TestCmsServiceLogin(t *testing.T) {
 	type args struct {
@@ -49,7 +51,7 @@ func TestCmsServiceLogin(t *testing.T) {
 			request.Header.Set("Content-Type", "application/json")
 			request.Header.Set("Sec-Ch-Ua-Platform", "sec-ch-ua-platform-test")
 			request.Header.Set("User-Agent", "user-agent-test")
-			response, err := fiberApp.FiberApp.Test(request)
+			response, err := fetroshopApp.FiberApp.Test(request)
 			assert.Nil(t, err)
 			assert.Equal(t, tt.wantResponseCode, response.StatusCode)
 
@@ -58,8 +60,8 @@ func TestCmsServiceLogin(t *testing.T) {
 			assert.NotNil(t, bytes)
 
 			if response.StatusCode != tt.wantResponseCode {
-				logger := logger.NewFrameworkLogger()
-				logger.LogConsole.Error(fmt.Sprintln("Response : ", string(bytes)))
+				fmt.Println("cmsLogger : ", cmsLogger)
+				cmsLogger.LogConsole.Error(fmt.Sprintln("Response : ", string(bytes)))
 			}
 
 		})

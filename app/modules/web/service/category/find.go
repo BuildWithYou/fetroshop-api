@@ -4,7 +4,6 @@ import (
 	ctEty "github.com/BuildWithYou/fetroshop-api/app/domain/categories"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
-	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/model"
@@ -14,7 +13,6 @@ import (
 )
 
 func (svc *CategoryServiceImpl) Find(ctx *fiber.Ctx) (*appModel.Response, error) {
-	logger := logger.NewWebLogger(svc.Config)
 	payload := new(model.FindCategoryRequest)
 	err := validatorhelper.ValidateQueryPayload(ctx, svc.Validate, payload)
 	if validatorhelper.IsNotNil(err) {
@@ -26,7 +24,7 @@ func (svc *CategoryServiceImpl) Find(ctx *fiber.Ctx) (*appModel.Response, error)
 		"code": payload.Code,
 	})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
-		logger.Error(result.Error.Error())
+		svc.Logger.Error(result.Error.Error())
 		return nil, errorhelper.Error500("Something went wrong") // #marked: message
 	}
 	if gormhelper.IsErrRecordNotFound(result.Error) {

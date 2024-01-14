@@ -10,7 +10,6 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/jwt"
-	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/password"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
@@ -21,7 +20,6 @@ import (
 
 func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*appModel.Response, error) {
 	var user users.User
-	logger := logger.NewCmsLogger(svc.Config)
 
 	payload := new(cmsModel.LoginRequest)
 	jwtTokenKey := svc.Config.GetString("security.jwt.tokenKey")
@@ -35,7 +33,7 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*appModel.Response, error) {
 	// check is customer exist
 	result := svc.UserRepo.Find(&user, map[string]any{"username": payload.Username})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
-		logger.Error(result.Error.Error())
+		svc.Logger.Error(result.Error.Error())
 		return nil, errorhelper.Error500("Something went wrong") // #marked: message
 	}
 	if gormhelper.IsErrRecordNotFound(result.Error) {

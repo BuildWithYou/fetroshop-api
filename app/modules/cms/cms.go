@@ -3,6 +3,7 @@ package cms
 import (
 	"github.com/BuildWithYou/fetroshop-api/app"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/BuildWithYou/fetroshop-api/app/router"
 )
 
@@ -17,6 +18,7 @@ import (
 
 func CmsServerConfigProvider(webRouter router.Router) *app.ServerConfig {
 	config := confighelper.GetConfig()
+	logger := logger.NewCmsLogger(config)
 	return &app.ServerConfig{
 		Config: config,
 		Host:   config.GetString("app.cms.host"),
@@ -25,5 +27,6 @@ func CmsServerConfigProvider(webRouter router.Router) *app.ServerConfig {
 		Static: map[string]string{
 			"/swagger": "docs",
 		},
+		Logger: logger,
 	}
 }

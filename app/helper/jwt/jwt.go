@@ -34,6 +34,8 @@ type TokenReversed struct {
 	ExpiredAt time.Time
 }
 
+var fwLogger = logger.NewFrameworkLogger()
+
 // Generate generates the jwt token based on payload
 func Generate(payload *TokenPayload) *TokenGenerated {
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
@@ -76,23 +78,20 @@ func Reverse(tokenKey string, jwtToken string) (*TokenReversed, error) {
 	parsed, err := parse(tokenKey, jwtToken)
 
 	if err != nil {
-		logger := logger.NewFrameworkLogger()
-		logger.Error(fmt.Sprint("Error from jwt.parse : ", err.Error()))
+		fwLogger.Error(fmt.Sprint("Error from jwt.parse : ", err.Error()))
 		return nil, err
 	}
 
 	// Parsing token claims
 	claims, ok := parsed.Claims.(jwt.MapClaims)
 	if !ok {
-		logger := logger.NewFrameworkLogger()
-		logger.Error("Error from jwt.Reverse on parsed.Claims")
+		fwLogger.Error("Error from jwt.Reverse on parsed.Claims")
 		return nil, err
 	}
 
 	accessKey, ok := claims["accessKey"].(string)
 	if !ok {
-		logger := logger.NewFrameworkLogger()
-		logger.Error("Error from jwt.Reverse when parsing accessKey")
+		fwLogger.Error("Error from jwt.Reverse when parsing accessKey")
 		return nil, errors.New(errorMessage) // #marked: message
 	}
 
@@ -101,15 +100,13 @@ func Reverse(tokenKey string, jwtToken string) (*TokenReversed, error) {
 		seconds := int64(expiredAtFloat)
 		expiredAt = time.Unix(seconds, 0)
 	} else {
-		logger := logger.NewFrameworkLogger()
-		logger.Error("Error from jwt.Reverse when parsing exp")
+		fwLogger.Error("Error from jwt.Reverse when parsing exp")
 		return nil, errors.New(errorMessage) // #marked: message
 	}
 
 	tokenType, ok := claims["type"].(string)
 	if !ok {
-		logger := logger.NewFrameworkLogger()
-		logger.Error("Error from jwt.Reverse when parsing type")
+		fwLogger.Error("Error from jwt.Reverse when parsing type")
 		return nil, errors.New(errorMessage) // #marked: message
 	}
 
