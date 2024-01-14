@@ -20,6 +20,7 @@ type Fetroshop struct {
 	Host     string
 	Port     int
 	Err      error
+	Logger   *logger.Logger
 }
 
 type ServerConfig struct {
@@ -28,6 +29,7 @@ type ServerConfig struct {
 	Port   int
 	Router router.Router
 	Static map[string]string
+	Logger *logger.Logger
 }
 
 // CreateFiber initializes a Fiber app with the given server configuration and returns a Fetroshop instance.

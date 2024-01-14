@@ -1,20 +1,27 @@
 package logger
 
 import (
-	"fmt"
 	"os"
-	"time"
 
 	"github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 )
 
-type Logger struct {
+type Logger interface {
+	Trace(args ...interface{})
+	Debug(args ...interface{})
+	Info(args ...interface{})
+	Warning(args ...interface{})
+	Error(args ...interface{})
+	Fatal(args ...interface{})
+	Panic(args ...interface{})
+}
+
+type LoggerWrapper struct {
 	LogFile    *logrus.Logger
 	LogConsole *logrus.Logger
 }
 
-func newLogger(pathFile string, levelStr string) *Logger {
+func newLogger(pathFile string, levelStr string) *LoggerWrapper {
 	var level logrus.Level
 
 	switch levelStr {
@@ -63,61 +70,8 @@ func newLogger(pathFile string, levelStr string) *Logger {
 	logConsole.SetOutput(os.Stdout)
 	logConsole.SetLevel(level)
 
-	return &Logger{
+	return &LoggerWrapper{
 		LogFile:    logFile,
 		LogConsole: logConsole,
 	}
-}
-
-func NewFrameworkLogger() *Logger {
-	today := time.Now().Format("2006-01-02")
-	pathFile := fmt.Sprintf("logs/framework/fetroshop-api-%s.log", today)
-	return newLogger(pathFile, "trace")
-}
-
-func NewWebLogger(config *viper.Viper) *Logger {
-	today := time.Now().Format("2006-01-02")
-	pathFile := fmt.Sprintf("logs/web/fetroshop-web-%s.log", today)
-	return newLogger(pathFile, config.GetString("app.web.logLevel"))
-}
-
-func NewCmsLogger(config *viper.Viper) *Logger {
-	today := time.Now().Format("2006-01-02")
-	pathFile := fmt.Sprintf("logs/cms/fetroshop-cms-%s.log", today)
-	return newLogger(pathFile, config.GetString("app.cms.logLevel"))
-}
-
-func (logger *Logger) Trace(args ...interface{}) {
-	logger.LogFile.Trace(args...)
-	logger.LogConsole.Trace(args...)
-}
-
-func (logger *Logger) Debug(args ...interface{}) {
-	logger.LogFile.Debug(args...)
-	logger.LogConsole.Debug(args...)
-}
-
-func (logger *Logger) Info(args ...interface{}) {
-	logger.LogFile.Info(args...)
-	logger.LogConsole.Info(args...)
-}
-
-func (logger *Logger) Warning(args ...interface{}) {
-	logger.LogFile.Warning(args...)
-	logger.LogConsole.Warning(args...)
-}
-
-func (logger *Logger) Error(args ...interface{}) {
-	logger.LogFile.Error(args...)
-	logger.LogConsole.Error(args...)
-}
-
-func (logger *Logger) Fatal(args ...interface{}) {
-	logger.LogFile.Fatal(args...)
-	logger.LogConsole.Fatal(args...)
-}
-
-func (logger *Logger) Panic(args ...interface{}) {
-	logger.LogFile.Panic(args...)
-	logger.LogConsole.Panic(args...)
 }

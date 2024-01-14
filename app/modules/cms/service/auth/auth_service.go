@@ -4,6 +4,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/connection"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/user_accesses"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/users"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -27,6 +28,7 @@ type AuthServiceImpl struct {
 	Validate       *validator.Validate
 	UserRepo       users.UserRepo
 	UserAccessRepo user_accesses.UserAccessRepo
+	Logger         *logger.Logger
 }
 
 func ServiceProvider(
