@@ -6,6 +6,7 @@ definitions:
       data: {}
       message:
         type: string
+      meta: {}
       status:
         type: string
     type: object

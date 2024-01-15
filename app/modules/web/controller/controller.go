@@ -25,5 +25,5 @@ func execute(ctx *fiber.Ctx, handler func(ctx *fiber.Ctx) (*appModel.Response, e
 	if err != nil {
 		return err
 	}
-	return ctx.JSON(response)
+	return ctx.Status(response.Code).JSON(response)
 }

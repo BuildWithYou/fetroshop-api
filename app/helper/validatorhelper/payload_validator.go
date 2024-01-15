@@ -3,14 +3,13 @@ package validatorhelper
 import (
 	"fmt"
 
-	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )
 
 // TODO: handle proper message here
 
-func generateErrorMessage(err error) error {
+func generateErrorMessage(err error) map[string]string {
 	// make error map
 	errorMap := make(map[string]string)
 	validationErrors := err.(validator.ValidationErrors)
@@ -29,62 +28,69 @@ func generateErrorMessage(err error) error {
 
 	}
 
-	return errorhelper.Error400(errorMap)
+	return errorMap
 
 }
 
-func ValidateBodyPayload(ctx *fiber.Ctx, vld *validator.Validate, payload interface{}) (err error) {
+func ValidateBodyPayload(ctx *fiber.Ctx, vld *validator.Validate, payload interface{}) (errorMap map[string]string, err error) {
+	fmt.Println("payload==nil : ", payload == nil)
 	err = ctx.BodyParser(payload)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	err = vld.Struct(payload)
+	fmt.Println("errorMap err : ", err)
 	if err != nil {
-		return generateErrorMessage(err)
+		errorMap := generateErrorMessage(err)
+		fmt.Println("errorMap : ", errorMap)
+		return errorMap, nil
 	}
 
-	return err
+	return nil, nil
 }
 
-func ValidateQueryPayload(ctx *fiber.Ctx, vld *validator.Validate, payload interface{}) (err error) {
+func ValidateQueryPayload(ctx *fiber.Ctx, vld *validator.Validate, payload interface{}) (errorMap map[string]string, err error) {
 	err = ctx.QueryParser(payload)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	err = vld.Struct(payload)
 	if err != nil {
-		return generateErrorMessage(err)
+		errorMap := generateErrorMessage(err)
+		return errorMap, nil
 	}
 
-	return err
+	return nil, nil
 }
 
-func ValidateParamPayload(ctx *fiber.Ctx, vld *validator.Validate, payload interface{}) (err error) {
+func ValidateParamPayload(ctx *fiber.Ctx, vld *validator.Validate, payload interface{}) (errorMap map[string]string, err error) {
 	err = ctx.ParamsParser(payload)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	err = vld.Struct(payload)
 	if err != nil {
-		return generateErrorMessage(err)
+		errorMap := generateErrorMessage(err)
+		return errorMap, nil
 	}
 
-	return err
+	return nil, nil
 }
 
-func ValidateCookiePayload(ctx *fiber.Ctx, vld *validator.Validate, payload interface{}) (err error) {
+func ValidateCookiePayload(ctx *fiber.Ctx, vld *validator.Validate, payload interface{}) (errorMap map[string]string, err error) {
 	err = ctx.CookieParser(payload)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	err = vld.Struct(payload)
 	if err != nil {
-		return generateErrorMessage(err)
+		errorMap := generateErrorMessage(err)
+		return errorMap, nil
 	}
 
-	return err
+	return nil, nil
 }

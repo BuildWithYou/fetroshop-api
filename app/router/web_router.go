@@ -21,6 +21,7 @@ func (router *WebRouter) Init(app *fiber.App) {
 	jwtMiddleware := router.JwtMiddleware.Authenticate
 	dbMiddleware := router.DbMiddleware.Authenticate
 	loggerMiddleware := router.LoggerMiddleware.WebLoggerResetOutput
+	contentTypeMiddleware := middleware.ContentTypeMiddleware
 
 	// root
 	app.Get("/", router.redirectToDocs)
@@ -34,8 +35,8 @@ func (router *WebRouter) Init(app *fiber.App) {
 
 	// Authentication
 	authentication := api.Group("/auth")
-	authentication.Post("/register", router.Controller.Auth.Register)
-	authentication.Post("/login", router.Controller.Auth.Login)
+	authentication.Post("/register", contentTypeMiddleware, router.Controller.Auth.Register)
+	authentication.Post("/login", contentTypeMiddleware, router.Controller.Auth.Login)
 	authentication.Post("/logout", jwtMiddleware, router.Controller.Auth.Logout)
 	authentication.Post("/refresh", jwtMiddleware, router.Controller.Auth.Refresh)
 

@@ -7,10 +7,12 @@ import (
 
 	"github.com/BuildWithYou/fetroshop-api/app/domain/customer_accesses"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/customers"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/constant"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/jwt"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/password"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/responsehelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
 	webModel "github.com/BuildWithYou/fetroshop-api/app/modules/web/model"
@@ -25,9 +27,9 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*appModel.Response, error) {
 	jwtTokenKey := svc.Config.GetString("security.jwt.tokenKey")
 	jwtExpiration := svc.Config.GetString("security.jwt.expiration")
 
-	err := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
+	errorMap, err := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
 	if err != nil {
-		return nil, err
+		return responsehelper.Response400(constant.ERROR_VALIDATION, nil, errorMap), nil
 	}
 
 	// check is customer exist

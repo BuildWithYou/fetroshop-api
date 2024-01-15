@@ -21,6 +21,7 @@ func (router *CmsRouter) Init(app *fiber.App) {
 	jwtMiddleware := router.JwtMiddleware.Authenticate
 	dbMiddleware := router.DbMiddleware.Authenticate
 	loggerMiddleware := router.LoggerMiddleware.CmsLoggerResetOutput
+	contentTypeMiddleware := middleware.ContentTypeMiddleware
 
 	// root
 	app.Get("/", router.redirectToDocs)
@@ -34,16 +35,16 @@ func (router *CmsRouter) Init(app *fiber.App) {
 
 	// Authentication
 	authentication := api.Group("/auth")
-	authentication.Post("/register", router.Controller.Auth.Register)
-	authentication.Post("/login", router.Controller.Auth.Login)
+	authentication.Post("/register", contentTypeMiddleware, router.Controller.Auth.Register)
+	authentication.Post("/login", contentTypeMiddleware, router.Controller.Auth.Login)
 	authentication.Post("/logout", jwtMiddleware, router.Controller.Auth.Logout)
 	authentication.Post("/refresh", jwtMiddleware, router.Controller.Auth.Refresh)
 
 	// Category
 	category := api.Group("/category")
-	category.Post("/create", router.Controller.Category.Create)
-	category.Put("/:categoryCode", router.Controller.Category.Update)
-	category.Delete("/:categoryCode", router.Controller.Category.Delete)
+	category.Post("/create", contentTypeMiddleware, router.Controller.Category.Create)
+	category.Put("/:categoryCode", contentTypeMiddleware, router.Controller.Category.Update)
+	category.Delete("/:categoryCode", contentTypeMiddleware, router.Controller.Category.Delete)
 
 }
 

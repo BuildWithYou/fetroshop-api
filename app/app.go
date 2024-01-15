@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
-	"github.com/BuildWithYou/fetroshop-api/app/helper/responsehelper"
 	"github.com/BuildWithYou/fetroshop-api/app/middleware"
 	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/BuildWithYou/fetroshop-api/app/router"
@@ -62,7 +61,7 @@ func CreateFiber(serverConfig *ServerConfig) *Fetroshop {
 				serverConfig.Logger.Error(fmt.Sprint("Error : ", err.Error()))
 			}
 
-			return responsehelper.SendResponse(ctx, code, appModel.Response{
+			return ctx.Status(code).JSON(appModel.Response{
 				Code:    code,
 				Status:  status,
 				Message: err.Error(),

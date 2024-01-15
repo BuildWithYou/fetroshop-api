@@ -446,6 +446,7 @@ const docTemplate = `{
                 "message": {
                     "type": "string"
                 },
+                "meta": {},
                 "status": {
                     "type": "string"
                 }
