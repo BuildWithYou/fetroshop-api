@@ -244,32 +244,35 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "name": "code",
-                        "in": "query"
+                        "in": "formData",
+                        "required": true
                     },
                     {
-                        "type": "string",
+                        "type": "integer",
                         "name": "displayOrder",
-                        "in": "query"
+                        "in": "formData",
+                        "required": true
                     },
                     {
                         "type": "string",
                         "name": "icon",
-                        "in": "query"
+                        "in": "formData"
                     },
                     {
-                        "type": "string",
+                        "type": "boolean",
                         "name": "isActive",
-                        "in": "query"
+                        "in": "formData"
                     },
                     {
                         "type": "string",
                         "name": "name",
-                        "in": "query"
+                        "in": "formData",
+                        "required": true
                     },
                     {
                         "type": "string",
                         "name": "parentCode",
-                        "in": "query"
+                        "in": "formData"
                     }
                 ],
                 "responses": {
@@ -324,12 +327,14 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "name": "code",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     },
                     {
-                        "type": "string",
+                        "type": "integer",
                         "name": "displayOrder",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     },
                     {
                         "type": "string",
@@ -337,14 +342,15 @@ const docTemplate = `{
                         "in": "formData"
                     },
                     {
-                        "type": "string",
+                        "type": "boolean",
                         "name": "isActive",
                         "in": "formData"
                     },
                     {
                         "type": "string",
                         "name": "name",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     },
                     {
                         "type": "string",

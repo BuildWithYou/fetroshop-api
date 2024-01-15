@@ -1,6 +1,7 @@
 package errorhelper
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
@@ -9,19 +10,33 @@ import (
 
 var fwLogger = logger.NewFrameworkLogger()
 
-func Error400(msg string) error {
-	return fiber.NewError(fiber.StatusBadRequest, msg)
+func generateErrorJson(jsonable interface{}) string {
+	// make json string
+	errorJson, err := json.Marshal(jsonable)
+	if err != nil {
+		return "Failed to parse error message to json"
+	}
+	errorMesage := string(errorJson)
+	return errorMesage
 }
 
-func Error401(msg string) error {
-	return fiber.NewError(fiber.StatusUnauthorized, msg)
+func Error400(jsonable interface{}) error {
+	errorMesage := generateErrorJson(jsonable)
+	return fiber.NewError(fiber.StatusBadRequest, errorMesage)
 }
 
-func Error500(msg string) error {
-	fwLogger.Error(fmt.Sprint("Error : ", msg))
-	return fiber.NewError(fiber.StatusInternalServerError, msg)
+func Error401(jsonable interface{}) error {
+	errorMesage := generateErrorJson(jsonable)
+	return fiber.NewError(fiber.StatusUnauthorized, errorMesage)
 }
 
-func ErrorCustom(errorCode int, msg string) error {
-	return fiber.NewError(errorCode, msg)
+func Error500(jsonable interface{}) error {
+	errorMesage := generateErrorJson(jsonable)
+	fwLogger.Error(fmt.Sprint("Error : ", errorMesage))
+	return fiber.NewError(fiber.StatusInternalServerError, errorMesage)
+}
+
+func ErrorCustom(errorCode int, jsonable interface{}) error {
+	errorMesage := generateErrorJson(jsonable)
+	return fiber.NewError(errorCode, errorMesage)
 }

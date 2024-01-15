@@ -29,11 +29,11 @@ func CategoryControllerProvider(vld *validator.Validate, catSvc category.Categor
 // @Tags         Categories
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
-// @Param        q     query    model.UpsertCategoryRequest  true  "Request"
-// @Success      200  {object}  model.Response
-// @Failure      400  {object}  model.Response
-// @Failure      404  {object}  model.Response
-// @Failure      500  {object}  model.Response
+// @Param        data    formData    model.UpsertCategoryRequest  true  "Request"
+// @Success      200     {object}    model.Response
+// @Failure      400     {object}    model.Response
+// @Failure      404     {object}    model.Response
+// @Failure      500     {object}    model.Response
 // @Router       /api/category/create  [post]
 func (ctr *CategoryControllerImpl) Create(ctx *fiber.Ctx) (err error) {
 	return execute(ctx, ctr.CategoryService.Create)
