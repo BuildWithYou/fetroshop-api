@@ -31,11 +31,13 @@ func ServiceProvider(
 	validate *validator.Validate,
 	categoryRepo categories.CategoryRepo,
 ) CategoryService {
+	logger := logger.NewWebLogger(config)
 	return &CategoryServiceImpl{
 		Err:          conn.Err,
 		DB:           conn.DB,
 		Config:       config,
 		Validate:     validate,
 		CategoryRepo: categoryRepo,
+		Logger:       logger,
 	}
 }

@@ -38,6 +38,7 @@ func ServiceProvider(
 	userRepo users.UserRepo,
 	userAccessRepo user_accesses.UserAccessRepo,
 ) AuthService {
+	logger := logger.NewCmsLogger(config)
 	return &AuthServiceImpl{
 		Err:            conn.Err,
 		DB:             conn.DB,
@@ -45,5 +46,6 @@ func ServiceProvider(
 		Validate:       validate,
 		UserRepo:       userRepo,
 		UserAccessRepo: userAccessRepo,
+		Logger:         logger,
 	}
 }

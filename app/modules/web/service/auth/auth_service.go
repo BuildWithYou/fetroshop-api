@@ -38,6 +38,7 @@ func ServiceProvider(
 	customerRepo customers.CustomerRepo,
 	customerAccessRepo customer_accesses.CustomerAccessRepo,
 ) AuthService {
+	logger := logger.NewWebLogger(config)
 	return &AuthServiceImpl{
 		Err:                conn.Err,
 		DB:                 conn.DB,
@@ -45,5 +46,6 @@ func ServiceProvider(
 		Validate:           validate,
 		CustomerRepo:       customerRepo,
 		CustomerAccessRepo: customerAccessRepo,
+		Logger:             logger,
 	}
 }
