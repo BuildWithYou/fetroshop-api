@@ -26,7 +26,7 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*appModel.Response, error) {
 	jwtExpiration := svc.Config.GetString("security.jwt.expiration")
 
 	err := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
-	if validatorhelper.IsNotNil(err) {
+	if err != nil {
 		return nil, err
 	}
 
@@ -39,7 +39,7 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*appModel.Response, error) {
 	if gormhelper.IsErrRecordNotFound(result.Error) {
 		return nil, errorhelper.Error401("Invalid email or password") // #marked: message
 	}
-	if err := password.Verify(customer.Password, payload.Password); validatorhelper.IsNotNil(err) {
+	if err := password.Verify(customer.Password, payload.Password); err != nil {
 		return nil, errorhelper.Error401("Invalid email or password")
 	}
 
@@ -69,7 +69,7 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*appModel.Response, error) {
 			"user_agent":  ctx.Get("User-Agent"),
 		},
 	)
-	if validatorhelper.IsNotNil(result.Error) && !gormhelper.HasAffectedRows(result) {
+	if result.Error != nil && !gormhelper.HasAffectedRows(result) {
 		return nil, result.Error
 	}
 	if !gormhelper.HasAffectedRows(result) {

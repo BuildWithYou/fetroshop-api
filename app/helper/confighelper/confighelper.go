@@ -1,10 +1,12 @@
 package confighelper
 
 import (
-	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/projectpath"
 	"github.com/spf13/viper"
 )
+
+var fwLogger = logger.NewFrameworkLogger()
 
 func GetConfig() *viper.Viper {
 	// Config
@@ -19,6 +21,8 @@ func GetConfig() *viper.Viper {
 	config.SetDefault("database.logLevel", "halo")
 
 	err := config.ReadInConfig()
-	errorhelper.PanicIfError(err)
+	if err != nil {
+		fwLogger.Panic(err.Error())
+	}
 	return config
 }

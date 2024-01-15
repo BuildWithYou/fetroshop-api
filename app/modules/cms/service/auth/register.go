@@ -19,7 +19,7 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error)
 	)
 	payload := new(cmsModel.RegistrationRequest)
 	err := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
-	if validatorhelper.IsNotNil(err) {
+	if err != nil {
 		return nil, err
 	}
 	/*
@@ -33,7 +33,7 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error)
 	*/
 
 	result := svc.UserRepo.Find(&existingUsername, map[string]any{"username": payload.Username})
-	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsErrRecordNotFound(result.Error) {
+	if result.Error != nil && !gormhelper.IsErrRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
 	if !gormhelper.IsErrRecordNotFound(result.Error) {
@@ -41,7 +41,7 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error)
 	}
 
 	result = svc.UserRepo.Find(&existingPhone, map[string]any{"phone": payload.Phone})
-	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsErrRecordNotFound(result.Error) {
+	if result.Error != nil && !gormhelper.IsErrRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
 	if !gormhelper.IsErrRecordNotFound(result.Error) {
@@ -49,7 +49,7 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error)
 	}
 
 	result = svc.UserRepo.Find(&existingEmail, map[string]any{"email": payload.Email})
-	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsErrRecordNotFound(result.Error) {
+	if result.Error != nil && !gormhelper.IsErrRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
 	if !gormhelper.IsErrRecordNotFound(result.Error) {
@@ -65,7 +65,7 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error)
 		FullName: payload.FullName,
 		Password: hashedPassword,
 	})
-	if validatorhelper.IsNotNil(result.Error) {
+	if result.Error != nil {
 		return nil, result.Error
 	}
 

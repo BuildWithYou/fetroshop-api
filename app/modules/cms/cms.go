@@ -19,6 +19,7 @@ import (
 func CmsServerConfigProvider(webRouter router.Router) *app.ServerConfig {
 	config := confighelper.GetConfig()
 	logger := logger.NewCmsLogger(config)
+	logger.Info("Starting cms server...")
 	return &app.ServerConfig{
 		Config: config,
 		Host:   config.GetString("app.cms.host"),

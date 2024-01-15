@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
-	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 )
@@ -49,7 +48,7 @@ func TestOpenDBConnection(t *testing.T) {
 			switch tt.name {
 			case "OpenMainDBConnection", "OpenTestDBConnection":
 				{
-					if validatorhelper.IsNotNil(err) {
+					if err != nil {
 						t.Errorf("%s failed. Error: %v", tt.name, err.Error())
 					}
 					assert.NotNil(t, got)

@@ -95,5 +95,6 @@ func CreateFiber(serverConfig *ServerConfig) *Fetroshop {
 		FiberApp: fiberApp,
 		Host:     host,
 		Port:     port,
+		Logger:   serverConfig.Logger,
 	}
 }

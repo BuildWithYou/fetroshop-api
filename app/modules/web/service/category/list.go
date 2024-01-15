@@ -21,7 +21,7 @@ func (svc *CategoryServiceImpl) List(ctx *fiber.Ctx) (*appModel.Response, error)
 	)
 	payload := new(model.ListCategoriesRequest)
 	err := validatorhelper.ValidateQueryPayload(ctx, svc.Validate, payload)
-	if validatorhelper.IsNotNil(err) {
+	if err != nil {
 		return nil, err
 	}
 

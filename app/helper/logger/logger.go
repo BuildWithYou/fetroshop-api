@@ -5,7 +5,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
@@ -73,7 +72,7 @@ func newLogger(pathFile string, levelStr string) *Logger {
 var FrameworkLogger, WebLogger, CmsLogger *Logger
 
 func NewFrameworkLogger() *Logger {
-	if validatorhelper.IsNil(FrameworkLogger) {
+	if FrameworkLogger == nil {
 		today := time.Now().Format("2006-01-02")
 		pathFile := fmt.Sprintf("logs/framework/fetroshop-api-%s.log", today)
 		FrameworkLogger = newLogger(pathFile, "trace")
@@ -82,7 +81,7 @@ func NewFrameworkLogger() *Logger {
 }
 
 func NewWebLogger(config *viper.Viper) *Logger {
-	if validatorhelper.IsNil(WebLogger) {
+	if WebLogger == nil {
 		today := time.Now().Format("2006-01-02")
 		pathFile := fmt.Sprintf("logs/web/fetroshop-web-%s.log", today)
 		WebLogger = newLogger(pathFile, config.GetString("app.web.logLevel"))
@@ -91,7 +90,7 @@ func NewWebLogger(config *viper.Viper) *Logger {
 }
 
 func NewCmsLogger(config *viper.Viper) *Logger {
-	if validatorhelper.IsNil(CmsLogger) {
+	if CmsLogger == nil {
 		today := time.Now().Format("2006-01-02")
 		pathFile := fmt.Sprintf("logs/cms/fetroshop-cms-%s.log", today)
 		CmsLogger = newLogger(pathFile, config.GetString("app.cms.logLevel"))

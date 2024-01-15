@@ -9,12 +9,6 @@ import (
 
 var fwLogger = logger.NewFrameworkLogger()
 
-func PanicIfError(err error) {
-	if err != nil {
-		fwLogger.Panic(fmt.Sprint("Error : ", err.Error()))
-	}
-}
-
 func Error400(msg string) error {
 	return fiber.NewError(fiber.StatusBadRequest, msg)
 }

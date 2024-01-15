@@ -15,7 +15,7 @@ import (
 func (svc *CategoryServiceImpl) Find(ctx *fiber.Ctx) (*appModel.Response, error) {
 	payload := new(model.FindCategoryRequest)
 	err := validatorhelper.ValidateQueryPayload(ctx, svc.Validate, payload)
-	if validatorhelper.IsNotNil(err) {
+	if err != nil {
 		return nil, err
 	}
 
