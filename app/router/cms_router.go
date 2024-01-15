@@ -1,7 +1,6 @@
 package router
 
 import (
-	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/BuildWithYou/fetroshop-api/app/middleware"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/cms/controller"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/docs"
@@ -13,7 +12,6 @@ type CmsRouter struct {
 	JwtMiddleware *middleware.JwtMiddleware
 	DbMiddleware  *middleware.DbMiddleware
 	Controller    *controller.Controller
-	Logger        *logger.Logger
 }
 
 func (router *CmsRouter) Init(app *fiber.App) {

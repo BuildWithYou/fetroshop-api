@@ -14,6 +14,10 @@ type Logger struct {
 	LogConsole *logrus.Logger
 }
 
+const frameworkBasePath = "logs/framework/fetroshop-api"
+const webBasePath = "logs/web/fetroshop-web"
+const cmsBasePath = "logs/cms/fetroshop-cms"
+
 func newLogger(pathFile string, levelStr string) *Logger {
 	var level logrus.Level
 
@@ -74,7 +78,7 @@ var FrameworkLogger, WebLogger, CmsLogger *Logger
 func NewFrameworkLogger() *Logger {
 	if FrameworkLogger == nil {
 		today := time.Now().Format("2006-01-02")
-		pathFile := fmt.Sprintf("logs/framework/fetroshop-api-%s.log", today)
+		pathFile := fmt.Sprintf("%s-%s.log", frameworkBasePath, today)
 		FrameworkLogger = newLogger(pathFile, "trace")
 	}
 	return FrameworkLogger
@@ -83,7 +87,7 @@ func NewFrameworkLogger() *Logger {
 func NewWebLogger(config *viper.Viper) *Logger {
 	if WebLogger == nil {
 		today := time.Now().Format("2006-01-02")
-		pathFile := fmt.Sprintf("logs/web/fetroshop-web-%s.log", today)
+		pathFile := fmt.Sprintf("%s-%s.log", webBasePath, today)
 		WebLogger = newLogger(pathFile, config.GetString("app.web.logLevel"))
 	}
 	return WebLogger
@@ -92,10 +96,33 @@ func NewWebLogger(config *viper.Viper) *Logger {
 func NewCmsLogger(config *viper.Viper) *Logger {
 	if CmsLogger == nil {
 		today := time.Now().Format("2006-01-02")
-		pathFile := fmt.Sprintf("logs/cms/fetroshop-cms-%s.log", today)
+		pathFile := fmt.Sprintf("%s-%s.log", cmsBasePath, today)
 		CmsLogger = newLogger(pathFile, config.GetString("app.cms.logLevel"))
 	}
 	return CmsLogger
+}
+
+func (logger *Logger) FrameworkLoggerResetOutput() {
+	today := time.Now().Format("2006-01-02")
+	pathFile := fmt.Sprintf("%s-%s.log", frameworkBasePath, today)
+	file, _ := os.OpenFile(pathFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	logger.LogFile.SetOutput(file)
+}
+
+func (logger *Logger) WebLoggerResetOutput() {
+	logger.FrameworkLoggerResetOutput()
+	today := time.Now().Format("2006-01-02")
+	pathFile := fmt.Sprintf("%s-%s.log", webBasePath, today)
+	file, _ := os.OpenFile(pathFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	logger.LogFile.SetOutput(file)
+}
+
+func (logger *Logger) CmsLoggerResetOutput() {
+	logger.FrameworkLoggerResetOutput()
+	today := time.Now().Format("2006-01-02")
+	pathFile := fmt.Sprintf("%s-%s.log", cmsBasePath, today)
+	file, _ := os.OpenFile(pathFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	logger.LogFile.SetOutput(file)
 }
 
 func (logger *Logger) Trace(args ...interface{}) {

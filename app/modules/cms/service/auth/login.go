@@ -19,6 +19,7 @@ import (
 )
 
 func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*appModel.Response, error) {
+	svc.Logger.CmsLoggerResetOutput()
 	var user users.User
 
 	payload := new(cmsModel.LoginRequest)

@@ -16,6 +16,7 @@ import (
 )
 
 func (svc *AuthServiceImpl) Refresh(ctx *fiber.Ctx) (*appModel.Response, error) {
+	svc.Logger.WebLoggerResetOutput()
 	customerID := jwt.GetCustomerID(ctx)
 	identifier := jwt.GetAccessIdentifier(ctx)
 	jwtTokenKey := svc.Config.GetString("security.jwt.tokenKey")

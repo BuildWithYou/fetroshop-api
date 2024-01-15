@@ -13,6 +13,7 @@ import (
 )
 
 func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error) {
+	svc.Logger.CmsLoggerResetOutput()
 	var (
 		message                                        string
 		existingUsername, existingPhone, existingEmail users.User
