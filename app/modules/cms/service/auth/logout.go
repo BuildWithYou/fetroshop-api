@@ -11,7 +11,6 @@ import (
 )
 
 func (svc *AuthServiceImpl) Logout(ctx *fiber.Ctx) (*appModel.Response, error) {
-	svc.Logger.CmsLoggerResetOutput()
 	userID := jwt.GetUserID(ctx)
 	identifier := jwt.GetAccessIdentifier(ctx)
 	result := svc.UserAccessRepo.Delete(&user_accesses.UserAccess{

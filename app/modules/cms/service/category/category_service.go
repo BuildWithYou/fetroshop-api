@@ -32,7 +32,7 @@ func ServiceProvider(
 	validate *validator.Validate,
 	categoryRepo categories.CategoryRepo,
 ) CategoryService {
-	logger := logger.NewWebLogger(config)
+	logger := logger.NewCmsLogger(config)
 	return &CategoryServiceImpl{
 		Err:          conn.Err,
 		DB:           conn.DB,

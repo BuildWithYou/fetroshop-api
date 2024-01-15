@@ -15,7 +15,6 @@ import (
 )
 
 func (svc *CategoryServiceImpl) List(ctx *fiber.Ctx) (*appModel.Response, error) {
-	svc.Logger.WebLoggerResetOutput()
 	var (
 		categories []ctEty.Category
 		parentID   null.Int

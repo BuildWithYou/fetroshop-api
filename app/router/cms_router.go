@@ -1,6 +1,7 @@
 package router
 
 import (
+	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/BuildWithYou/fetroshop-api/app/middleware"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/cms/controller"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/docs"
@@ -8,16 +9,18 @@ import (
 )
 
 type CmsRouter struct {
-	Docs          *docs.Docs
-	JwtMiddleware *middleware.JwtMiddleware
-	DbMiddleware  *middleware.DbMiddleware
-	Controller    *controller.Controller
+	Docs             *docs.Docs
+	JwtMiddleware    *middleware.JwtMiddleware
+	DbMiddleware     *middleware.DbMiddleware
+	LoggerMiddleware *middleware.LoggerMiddleware
+	Controller       *controller.Controller
 }
 
 func (router *CmsRouter) Init(app *fiber.App) {
 	// Middlewares
 	jwtMiddleware := router.JwtMiddleware.Authenticate
 	dbMiddleware := router.DbMiddleware.Authenticate
+	loggerMiddleware := router.LoggerMiddleware.CmsLoggerResetOutput
 
 	// root
 	app.Get("/", router.redirectToDocs)
@@ -27,7 +30,7 @@ func (router *CmsRouter) Init(app *fiber.App) {
 	app.Get("/documentation/*", router.Docs.SwaggerCms())
 
 	// api Group
-	api := app.Group("/api", dbMiddleware)
+	api := app.Group("/api", dbMiddleware, loggerMiddleware)
 
 	// Authentication
 	authentication := api.Group("/auth")
@@ -50,11 +53,14 @@ func CmsRouterProvider(
 	dbMiddleware *middleware.DbMiddleware,
 	ctr *controller.Controller,
 ) Router {
+	logger := logger.NewCmsLogger(docs.Config)
+	loggerMiddleware := middleware.LoggerMiddlewareProvider(logger)
 	return &CmsRouter{
-		Docs:          docs,
-		JwtMiddleware: jwtMiddleware,
-		DbMiddleware:  dbMiddleware,
-		Controller:    ctr,
+		Docs:             docs,
+		JwtMiddleware:    jwtMiddleware,
+		DbMiddleware:     dbMiddleware,
+		LoggerMiddleware: loggerMiddleware,
+		Controller:       ctr,
 	}
 }
 

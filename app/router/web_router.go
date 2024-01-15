@@ -1,6 +1,7 @@
 package router
 
 import (
+	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/BuildWithYou/fetroshop-api/app/middleware"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/docs"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/controller"
@@ -8,16 +9,18 @@ import (
 )
 
 type WebRouter struct {
-	Docs          *docs.Docs
-	JwtMiddleware *middleware.JwtMiddleware
-	DbMiddleware  *middleware.DbMiddleware
-	Controller    *controller.Controller
+	Docs             *docs.Docs
+	JwtMiddleware    *middleware.JwtMiddleware
+	DbMiddleware     *middleware.DbMiddleware
+	LoggerMiddleware *middleware.LoggerMiddleware
+	Controller       *controller.Controller
 }
 
 func (router *WebRouter) Init(app *fiber.App) {
 	// Middlewares
 	jwtMiddleware := router.JwtMiddleware.Authenticate
 	dbMiddleware := router.DbMiddleware.Authenticate
+	loggerMiddleware := router.LoggerMiddleware.WebLoggerResetOutput
 
 	// root
 	app.Get("/", router.redirectToDocs)
@@ -27,7 +30,7 @@ func (router *WebRouter) Init(app *fiber.App) {
 	app.Get("/documentation/*", router.Docs.SwaggerWeb())
 
 	// api Group
-	api := app.Group("/api", dbMiddleware)
+	api := app.Group("/api", dbMiddleware, loggerMiddleware)
 
 	// Authentication
 	authentication := api.Group("/auth")
@@ -49,11 +52,14 @@ func WebRouterProvider(
 	dbMiddleware *middleware.DbMiddleware,
 	ctr *controller.Controller,
 ) Router {
+	logger := logger.NewWebLogger(docs.Config)
+	loggerMiddleware := middleware.LoggerMiddlewareProvider(logger)
 	return &WebRouter{
-		Docs:          docs,
-		JwtMiddleware: jwtMiddleware,
-		DbMiddleware:  dbMiddleware,
-		Controller:    ctr,
+		Docs:             docs,
+		JwtMiddleware:    jwtMiddleware,
+		DbMiddleware:     dbMiddleware,
+		LoggerMiddleware: loggerMiddleware,
+		Controller:       ctr,
 	}
 }
 

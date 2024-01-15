@@ -9,7 +9,6 @@ import (
 )
 
 func (svc *CategoryServiceImpl) Delete(ctx *fiber.Ctx) (*appModel.Response, error) {
-	svc.Logger.WebLoggerResetOutput()
 	payload := new(model.FindCategoryRequest)
 	err := validatorhelper.ValidateQueryPayload(ctx, svc.Validate, payload)
 	if err != nil {

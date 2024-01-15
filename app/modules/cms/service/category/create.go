@@ -9,18 +9,18 @@ import (
 )
 
 func (svc *CategoryServiceImpl) Create(ctx *fiber.Ctx) (*appModel.Response, error) {
-	svc.Logger.WebLoggerResetOutput()
 	payload := new(model.UpsertCategoryRequest)
-	err := validatorhelper.ValidateQueryPayload(ctx, svc.Validate, payload)
+	err := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
 	if err != nil {
 		return nil, err
 	}
 
 	// TODO: implement me
+	svc.Logger.Info("halo bosku")
 
 	return &appModel.Response{
-		Code:    fiber.StatusOK,
-		Status:  utils.StatusMessage(fiber.StatusOK),
+		Code:    fiber.StatusCreated,
+		Status:  utils.StatusMessage(fiber.StatusCreated),
 		Message: "Unimplemented", // #marked: message
 	}, nil
 }
