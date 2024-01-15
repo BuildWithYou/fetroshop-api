@@ -20,6 +20,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/modules/cms"
 	controller2 "github.com/BuildWithYou/fetroshop-api/app/modules/cms/controller"
 	auth2 "github.com/BuildWithYou/fetroshop-api/app/modules/cms/service/auth"
+	category2 "github.com/BuildWithYou/fetroshop-api/app/modules/cms/service/category"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/docs"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/controller"
@@ -71,7 +72,10 @@ func InitializeCmsServer() *app.Fetroshop {
 	userRepo := postgres5.RepoProvider(connectionConnection)
 	authService := auth2.ServiceProvider(connectionConnection, viper, validate, userRepo, userAccessRepo)
 	authController := controller2.AuthControllerProvider(authService)
-	controllerController := controller2.CmsControllerProvider(authController)
+	categoryRepo := postgres4.RepoProvider(connectionConnection)
+	categoryService := category2.ServiceProvider(connectionConnection, viper, validate, categoryRepo)
+	categoryController := controller2.CategoryControllerProvider(validate, categoryService)
+	controllerController := controller2.CmsControllerProvider(authController, categoryController)
 	routerRouter := router.CmsRouterProvider(docsDocs, jwtMiddleware, dbMiddleware, controllerController)
 	serverConfig := cms.CmsServerConfigProvider(routerRouter)
 	fetroshop := app.CreateFiber(serverConfig)
@@ -92,8 +96,8 @@ var webControllerSet = wire.NewSet(controller.WebControllerProvider, controller.
 var webServiceSet = wire.NewSet(auth.ServiceProvider, category.ServiceProvider)
 
 // cms dependencies
-var cmsRepoSet = wire.NewSet(postgres5.RepoProvider)
+var cmsRepoSet = wire.NewSet(postgres5.RepoProvider, postgres4.RepoProvider)
 
-var cmsControllerSet = wire.NewSet(controller2.CmsControllerProvider, controller2.AuthControllerProvider)
+var cmsControllerSet = wire.NewSet(controller2.CmsControllerProvider, controller2.AuthControllerProvider, controller2.CategoryControllerProvider)
 
-var cmsServiceSet = wire.NewSet(auth2.ServiceProvider)
+var cmsServiceSet = wire.NewSet(auth2.ServiceProvider, category2.ServiceProvider)

@@ -6,14 +6,17 @@ import (
 )
 
 type Controller struct {
-	Auth AuthController
+	Auth     AuthController
+	Category CategoryController
 }
 
 func CmsControllerProvider(
 	authController AuthController,
+	categoryController CategoryController,
 ) *Controller {
 	return &Controller{
-		Auth: authController,
+		Auth:     authController,
+		Category: categoryController,
 	}
 }
 

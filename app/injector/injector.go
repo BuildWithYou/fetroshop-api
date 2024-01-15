@@ -17,6 +17,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/modules/cms"
 	cmsController "github.com/BuildWithYou/fetroshop-api/app/modules/cms/controller"
 	cmsAuthService "github.com/BuildWithYou/fetroshop-api/app/modules/cms/service/auth"
+	cmsCategoryService "github.com/BuildWithYou/fetroshop-api/app/modules/cms/service/category"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/docs"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web"
 	webController "github.com/BuildWithYou/fetroshop-api/app/modules/web/controller"
@@ -73,15 +74,18 @@ func InitializeWebServer() *app.Fetroshop {
 // cms dependencies
 var cmsRepoSet = wire.NewSet(
 	userRepo.RepoProvider,
+	categoryRepo.RepoProvider,
 )
 
 var cmsControllerSet = wire.NewSet(
 	cmsController.CmsControllerProvider,
 	cmsController.AuthControllerProvider,
+	cmsController.CategoryControllerProvider,
 )
 
 var cmsServiceSet = wire.NewSet(
 	cmsAuthService.ServiceProvider,
+	cmsCategoryService.ServiceProvider,
 )
 
 func InitializeCmsServer() *app.Fetroshop {
