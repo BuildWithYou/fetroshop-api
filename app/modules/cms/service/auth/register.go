@@ -22,10 +22,10 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error)
 	payload := new(cmsModel.RegistrationRequest)
 	errorMap, err := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
 	if err != nil {
-		return responsehelper.Response500(constant.ERROR_GENERAL, nil, map[string]string{"message": err.Error()}), nil
+		return responsehelper.Response500(constant.ERROR_GENERAL, fiber.Map{"message": err.Error()}), nil
 	}
 	if errorMap != nil {
-		return responsehelper.Response400(constant.ERROR_VALIDATION, nil, errorMap), nil
+		return responsehelper.Response400(constant.ERROR_VALIDATION, fiber.Map{"messages": errorMap}), nil
 	}
 	/*
 			   TODO:
@@ -37,7 +37,7 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error)
 		         - Password : required, min 8
 	*/
 
-	result := svc.UserRepo.Find(&existingUsername, map[string]any{"username": payload.Username})
+	result := svc.UserRepo.Find(&existingUsername, fiber.Map{"username": payload.Username})
 	if result.Error != nil && !gormhelper.IsErrRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
@@ -45,7 +45,7 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error)
 		return nil, errorhelper.Error400("Username already used") // #marked: message
 	}
 
-	result = svc.UserRepo.Find(&existingPhone, map[string]any{"phone": payload.Phone})
+	result = svc.UserRepo.Find(&existingPhone, fiber.Map{"phone": payload.Phone})
 	if result.Error != nil && !gormhelper.IsErrRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
@@ -53,7 +53,7 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error)
 		return nil, errorhelper.Error400("Phone already used") // #marked: message
 	}
 
-	result = svc.UserRepo.Find(&existingEmail, map[string]any{"email": payload.Email})
+	result = svc.UserRepo.Find(&existingEmail, fiber.Map{"email": payload.Email})
 	if result.Error != nil && !gormhelper.IsErrRecordNotFound(result.Error) {
 		return nil, result.Error
 	}

@@ -29,11 +29,11 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*appModel.Response, error) {
 
 	errorMap, err := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
 	if err != nil {
-		return responsehelper.Response400(constant.ERROR_VALIDATION, nil, errorMap), nil
+		return responsehelper.Response400(constant.ERROR_VALIDATION, fiber.Map{"messages": errorMap}), nil
 	}
 
 	// check is customer exist
-	result := svc.CustomerRepo.Find(&customer, map[string]any{"username": payload.Username})
+	result := svc.CustomerRepo.Find(&customer, fiber.Map{"username": payload.Username})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
 		svc.Logger.Error(result.Error.Error())
 		return nil, errorhelper.Error500("Something went wrong") // #marked: message
@@ -65,7 +65,7 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*appModel.Response, error) {
 		UserAgent:  ctx.Get("User-Agent"),
 		ExpiredAt:  expiredAt,
 	},
-		map[string]any{
+		fiber.Map{
 			"customer_id": customer.ID,
 			"platform":    ctx.Get("Sec-Ch-Ua-Platform"),
 			"user_agent":  ctx.Get("User-Agent"),
@@ -89,7 +89,7 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*appModel.Response, error) {
 		Code:    fiber.StatusOK,
 		Status:  utils.StatusMessage(fiber.StatusOK),
 		Message: "Login success", // #marked: message
-		Data: map[string]string{
+		Data: fiber.Map{
 			"token":     generatedJwt.Token,
 			"createdAt": time.Now().Format("2006-01-02 15:04:05"),
 			"expiredAt": generatedJwt.ExpiredAt.Format("2006-01-02 15:04:05"),

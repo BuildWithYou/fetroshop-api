@@ -26,32 +26,29 @@ func Response201(msg string, data interface{}, meta interface{}) *appModel.Respo
 	}
 }
 
-func Response400(msg string, data interface{}, meta interface{}) *appModel.Response {
+func Response400(msg string, meta interface{}) *appModel.Response {
 	return &appModel.Response{
 		Code:    fiber.StatusBadRequest,
 		Status:  utils.StatusMessage(fiber.StatusBadRequest),
 		Message: msg,
-		Data:    data,
 		Meta:    meta,
 	}
 }
 
-func Response401(msg string, data interface{}, meta interface{}) *appModel.Response {
+func Response401(msg string, meta interface{}) *appModel.Response {
 	return &appModel.Response{
 		Code:    fiber.StatusUnauthorized,
 		Status:  utils.StatusMessage(fiber.StatusUnauthorized),
 		Message: msg,
-		Data:    data,
 		Meta:    meta,
 	}
 }
 
-func Response500(msg string, data interface{}, meta interface{}) *appModel.Response {
+func Response500(msg string, meta interface{}) *appModel.Response {
 	return &appModel.Response{
 		Code:    fiber.StatusInternalServerError,
 		Status:  utils.StatusMessage(fiber.StatusInternalServerError),
 		Message: msg,
-		Data:    data,
 		Meta:    meta,
 	}
 }

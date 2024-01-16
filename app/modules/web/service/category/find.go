@@ -18,14 +18,14 @@ func (svc *CategoryServiceImpl) Find(ctx *fiber.Ctx) (*appModel.Response, error)
 	payload := new(model.FindCategoryRequest)
 	errorMap, err := validatorhelper.ValidateQueryPayload(ctx, svc.Validate, payload)
 	if err != nil {
-		return responsehelper.Response500(constant.ERROR_GENERAL, nil, map[string]string{"message": err.Error()}), nil
+		return responsehelper.Response500(constant.ERROR_GENERAL, fiber.Map{"message": err.Error()}), nil
 	}
 	if errorMap != nil {
-		return responsehelper.Response400(constant.ERROR_VALIDATION, nil, errorMap), nil
+		return responsehelper.Response400(constant.ERROR_VALIDATION, fiber.Map{"messages": errorMap}), nil
 	}
 
 	category := new(ctEty.Category)
-	result := svc.CategoryRepo.Find(category, map[string]any{
+	result := svc.CategoryRepo.Find(category, fiber.Map{
 		"code": payload.Code,
 	})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {

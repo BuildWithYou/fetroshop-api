@@ -47,7 +47,7 @@ func (svc *AuthServiceImpl) Refresh(ctx *fiber.Ctx) (*appModel.Response, error) 
 			UserID:    userID,
 			ExpiredAt: expiredAt,
 		},
-		map[string]any{
+		fiber.Map{
 			"key":     identifier,
 			"user_id": userID,
 		},
@@ -60,7 +60,7 @@ func (svc *AuthServiceImpl) Refresh(ctx *fiber.Ctx) (*appModel.Response, error) 
 		Code:    fiber.StatusOK,
 		Status:  utils.StatusMessage(fiber.StatusOK),
 		Message: "Refresh success", // #marked: message
-		Data: map[string]string{
+		Data: fiber.Map{
 			"token":     generatedJwt.Token,
 			"createdAt": time.Now().Format("2006-01-02 15:04:05"),
 			"expiredAt": generatedJwt.ExpiredAt.Format("2006-01-02 15:04:05"),

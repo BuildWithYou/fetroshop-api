@@ -3,10 +3,11 @@ package postgres
 import (
 	"github.com/BuildWithYou/fetroshop-api/app/domain/customer_accesses"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
+	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
 
-func (p *PostgreSQL) UpdateOrCreate(data *customer_accesses.CustomerAccess, condition map[string]any) *gorm.DB {
+func (p *PostgreSQL) UpdateOrCreate(data *customer_accesses.CustomerAccess, condition fiber.Map) *gorm.DB {
 	var result *gorm.DB
 	updateResult := p.DB.Where(condition).Updates(data)
 	if gormhelper.HasAffectedRows(updateResult) {

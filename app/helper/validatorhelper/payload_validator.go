@@ -9,9 +9,9 @@ import (
 
 // TODO: handle proper message here
 
-func generateErrorMessage(err error) map[string]string {
+func generateErrorMessage(err error) fiber.Map {
 	// make error map
-	errorMap := make(map[string]string)
+	errorMap := make(fiber.Map)
 	validationErrors := err.(validator.ValidationErrors)
 	for _, fieldError := range validationErrors {
 		key := fieldError.Field()
@@ -32,25 +32,22 @@ func generateErrorMessage(err error) map[string]string {
 
 }
 
-func ValidateBodyPayload(ctx *fiber.Ctx, vld *validator.Validate, payload interface{}) (errorMap map[string]string, err error) {
-	fmt.Println("payload==nil : ", payload == nil)
+func ValidateBodyPayload(ctx *fiber.Ctx, vld *validator.Validate, payload interface{}) (errorMap fiber.Map, err error) {
 	err = ctx.BodyParser(payload)
 	if err != nil {
 		return nil, err
 	}
 
 	err = vld.Struct(payload)
-	fmt.Println("errorMap err : ", err)
 	if err != nil {
 		errorMap := generateErrorMessage(err)
-		fmt.Println("errorMap : ", errorMap)
 		return errorMap, nil
 	}
 
 	return nil, nil
 }
 
-func ValidateQueryPayload(ctx *fiber.Ctx, vld *validator.Validate, payload interface{}) (errorMap map[string]string, err error) {
+func ValidateQueryPayload(ctx *fiber.Ctx, vld *validator.Validate, payload interface{}) (errorMap fiber.Map, err error) {
 	err = ctx.QueryParser(payload)
 	if err != nil {
 		return nil, err
@@ -65,7 +62,7 @@ func ValidateQueryPayload(ctx *fiber.Ctx, vld *validator.Validate, payload inter
 	return nil, nil
 }
 
-func ValidateParamPayload(ctx *fiber.Ctx, vld *validator.Validate, payload interface{}) (errorMap map[string]string, err error) {
+func ValidateParamPayload(ctx *fiber.Ctx, vld *validator.Validate, payload interface{}) (errorMap fiber.Map, err error) {
 	err = ctx.ParamsParser(payload)
 	if err != nil {
 		return nil, err
@@ -80,7 +77,7 @@ func ValidateParamPayload(ctx *fiber.Ctx, vld *validator.Validate, payload inter
 	return nil, nil
 }
 
-func ValidateCookiePayload(ctx *fiber.Ctx, vld *validator.Validate, payload interface{}) (errorMap map[string]string, err error) {
+func ValidateCookiePayload(ctx *fiber.Ctx, vld *validator.Validate, payload interface{}) (errorMap fiber.Map, err error) {
 	err = ctx.CookieParser(payload)
 	if err != nil {
 		return nil, err

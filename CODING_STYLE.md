@@ -14,3 +14,12 @@ Coding Preference
 
 ### Data Processing Rules
 1. Identifier: ID used inside system, username/code used outside system
+
+### Error response
+1. If the message is single string:
+   - Send constant string in 'message' field
+   - Send detail message in 'meta.message'
+2. If the message is array of strings:
+   - Send constant string in 'message' field
+   - Send detail message in 'meta.messages'
+

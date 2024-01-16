@@ -24,17 +24,17 @@ func (svc *CategoryServiceImpl) List(ctx *fiber.Ctx) (*appModel.Response, error)
 	payload := new(model.ListCategoriesRequest)
 	errorMap, err := validatorhelper.ValidateQueryPayload(ctx, svc.Validate, payload)
 	if err != nil {
-		return responsehelper.Response500(constant.ERROR_GENERAL, nil, map[string]string{"message": err.Error()}), nil
+		return responsehelper.Response500(constant.ERROR_GENERAL, fiber.Map{"message": err.Error()}), nil
 	}
 	if errorMap != nil {
-		return responsehelper.Response400(constant.ERROR_VALIDATION, nil, errorMap), nil
+		return responsehelper.Response400(constant.ERROR_VALIDATION, fiber.Map{"messages": errorMap}), nil
 	}
 
 	if payload.ParentCode == "" {
 		parentID = null.NewInt(0, false)
 	} else {
 		parent := new(ctEty.Category)
-		result := svc.CategoryRepo.Find(parent, map[string]any{
+		result := svc.CategoryRepo.Find(parent, fiber.Map{
 			"code": payload.ParentCode,
 		})
 		if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
@@ -48,7 +48,7 @@ func (svc *CategoryServiceImpl) List(ctx *fiber.Ctx) (*appModel.Response, error)
 	}
 
 	orderBy := fmt.Sprintf("%s %s", payload.OrderBy, payload.OrderDirection)
-	result := svc.CategoryRepo.List(&categories, map[string]any{
+	result := svc.CategoryRepo.List(&categories, fiber.Map{
 		"parent_id": parentID,
 	}, int(payload.Limit), int(payload.Offset), orderBy)
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {

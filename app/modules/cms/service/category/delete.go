@@ -14,10 +14,10 @@ func (svc *CategoryServiceImpl) Delete(ctx *fiber.Ctx) (*appModel.Response, erro
 	payload := new(model.FindCategoryRequest)
 	errorMap, err := validatorhelper.ValidateQueryPayload(ctx, svc.Validate, payload)
 	if err != nil {
-		return responsehelper.Response500(constant.ERROR_GENERAL, nil, map[string]string{"message": err.Error()}), nil
+		return responsehelper.Response500(constant.ERROR_GENERAL, fiber.Map{"message": err.Error()}), nil
 	}
 	if errorMap != nil {
-		return responsehelper.Response400(constant.ERROR_VALIDATION, nil, errorMap), nil
+		return responsehelper.Response400(constant.ERROR_VALIDATION, fiber.Map{"messages": errorMap}), nil
 	}
 
 	// TODO: implement me

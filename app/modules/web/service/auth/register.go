@@ -23,7 +23,7 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error)
 	payload := new(webModel.RegistrationRequest)
 	errorMap, err := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
 	if err != nil {
-		return responsehelper.Response400(constant.ERROR_VALIDATION, nil, errorMap), nil
+		return responsehelper.Response400(constant.ERROR_VALIDATION, fiber.Map{"messages": errorMap}), nil
 	}
 	/*
 			   TODO:
@@ -35,7 +35,7 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error)
 		         - Password : required, min 8
 	*/
 
-	result := svc.CustomerRepo.Find(&existingUsername, map[string]any{"username": payload.Username})
+	result := svc.CustomerRepo.Find(&existingUsername, fiber.Map{"username": payload.Username})
 	if result.Error != nil && !gormhelper.IsErrRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
@@ -43,7 +43,7 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error)
 		return nil, errorhelper.Error400("Username already used") // #marked: message
 	}
 
-	result = svc.CustomerRepo.Find(&existingPhone, map[string]any{"phone": payload.Phone})
+	result = svc.CustomerRepo.Find(&existingPhone, fiber.Map{"phone": payload.Phone})
 	if result.Error != nil && !gormhelper.IsErrRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
@@ -51,7 +51,7 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error)
 		return nil, errorhelper.Error400("Phone already used") // #marked: message
 	}
 
-	result = svc.CustomerRepo.Find(&existingEmail, map[string]any{"email": payload.Email})
+	result = svc.CustomerRepo.Find(&existingEmail, fiber.Map{"email": payload.Email})
 	if result.Error != nil && !gormhelper.IsErrRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
