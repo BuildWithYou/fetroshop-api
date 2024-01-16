@@ -222,6 +222,7 @@ alter table user_roles
          icon = EXCLUDED.icon,
          display_order = EXCLUDED.display_order,
          updated_at = EXCLUDED.updated_at;
+      SELECT setval('categories_id_seq', (SELECT MAX(id) FROM categories));
 
 /* brands table data init */
    INSERT INTO brands (id, code, name, is_active, icon, created_at, updated_at) VALUES
@@ -1230,3 +1231,4 @@ alter table user_roles
          is_active = EXCLUDED.is_active,
          icon = EXCLUDED.icon,
          updated_at = EXCLUDED.updated_at;
+      SELECT setval('brands_id_seq', (SELECT MAX(id) FROM brands));

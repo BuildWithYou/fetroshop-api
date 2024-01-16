@@ -20,7 +20,7 @@ type CategoryResponse struct {
 	Name         string      ` json:"name"`
 	IsActive     bool        ` json:"isActive"`
 	Icon         null.String ` json:"icon"`
-	DisplayOrder null.Int    ` json:"displayOrder"`
+	DisplayOrder int64       ` json:"displayOrder"`
 	CreatedAt    time.Time   ` json:"createdAt"`
 	UpdatedAt    time.Time   ` json:"updatedAt"`
 }

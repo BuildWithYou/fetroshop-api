@@ -34,7 +34,7 @@ func (svc *CategoryServiceImpl) List(ctx *fiber.Ctx) (*appModel.Response, error)
 		parentID = null.NewInt(0, false)
 	} else {
 		parent := new(ctEty.Category)
-		result := svc.CategoryRepo.Find(parent, fiber.Map{
+		result := svc.CategoryRepo.Find(parent, map[string]any{
 			"code": payload.ParentCode,
 		})
 		if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {

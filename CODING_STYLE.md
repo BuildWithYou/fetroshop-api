@@ -15,11 +15,21 @@ Coding Preference
 ### Data Processing Rules
 1. Identifier: ID used inside system, username/code used outside system
 
-### Error response
-1. If the message is single string:
+### Responses
+1. After create some entity:
+   - Send code 201
+   - Send status 'Created'
+   - Send message '{entity} created successfully'
+   - Send detail entity in 'data' field
+0. After update some entity:
+   - Send code 200
+   - Send status 'OK'
+   - Send message '{entity} updated successfully'
+   - Send detail entity in 'data' field
+0. If the message is single string:
    - Send constant string in 'message' field
    - Send detail message in 'meta.message'
-2. If the message is array of strings:
+0. If the message is array of strings:
    - Send constant string in 'message' field
    - Send detail message in 'meta.messages'
 

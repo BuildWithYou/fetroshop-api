@@ -25,9 +25,7 @@ func (svc *CategoryServiceImpl) Find(ctx *fiber.Ctx) (*appModel.Response, error)
 	}
 
 	category := new(ctEty.Category)
-	result := svc.CategoryRepo.Find(category, fiber.Map{
-		"code": payload.Code,
-	})
+	result := svc.CategoryRepo.Find(category, map[string]any{"code": payload.Code})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
 		svc.Logger.Error(result.Error.Error())
 		return nil, errorhelper.Error500("Something went wrong") // #marked: message
