@@ -16,9 +16,8 @@ import (
 //	@name						Authorization
 //	@description			Use format 'Bearer YOUR_TOKEN'
 
-func WebServerConfigProvider(webRouter router.Router) *app.ServerConfig {
+func WebServerConfigProvider(webRouter router.Router, logger *logger.Logger) *app.ServerConfig {
 	config := confighelper.GetConfig()
-	logger := logger.NewWebLogger(config)
 	logger.Info("Starting web server...")
 	return &app.ServerConfig{
 		Config: config,

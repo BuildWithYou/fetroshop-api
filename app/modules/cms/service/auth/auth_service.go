@@ -35,10 +35,10 @@ func ServiceProvider(
 	conn *connection.Connection,
 	config *viper.Viper,
 	validate *validator.Validate,
+	logger *logger.Logger,
 	userRepo users.UserRepo,
 	userAccessRepo user_accesses.UserAccessRepo,
 ) AuthService {
-	logger := logger.NewCmsLogger(config)
 	return &AuthServiceImpl{
 		Err:            conn.Err,
 		DB:             conn.DB,

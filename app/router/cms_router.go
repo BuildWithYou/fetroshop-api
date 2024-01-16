@@ -53,8 +53,8 @@ func CmsRouterProvider(
 	jwtMiddleware *middleware.JwtMiddleware,
 	dbMiddleware *middleware.DbMiddleware,
 	ctr *controller.Controller,
+	logger *logger.Logger,
 ) Router {
-	logger := logger.NewCmsLogger(docs.Config)
 	loggerMiddleware := middleware.LoggerMiddlewareProvider(logger)
 	return &CmsRouter{
 		Docs:             docs,

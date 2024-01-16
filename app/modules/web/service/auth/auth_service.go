@@ -35,10 +35,10 @@ func ServiceProvider(
 	conn *connection.Connection,
 	config *viper.Viper,
 	validate *validator.Validate,
+	logger *logger.Logger,
 	customerRepo customers.CustomerRepo,
 	customerAccessRepo customer_accesses.CustomerAccessRepo,
 ) AuthService {
-	logger := logger.NewWebLogger(config)
 	return &AuthServiceImpl{
 		Err:                conn.Err,
 		DB:                 conn.DB,

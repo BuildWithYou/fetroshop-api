@@ -16,9 +16,8 @@ import (
 //	@name						Authorization
 //	@description				Use format 'Bearer YOUR_TOKEN'
 
-func CmsServerConfigProvider(webRouter router.Router) *app.ServerConfig {
+func CmsServerConfigProvider(webRouter router.Router, logger *logger.Logger) *app.ServerConfig {
 	config := confighelper.GetConfig()
-	logger := logger.NewCmsLogger(config)
 	logger.Info("Starting cms server...")
 	return &app.ServerConfig{
 		Config: config,

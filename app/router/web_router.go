@@ -52,8 +52,8 @@ func WebRouterProvider(
 	jwtMiddleware *middleware.JwtMiddleware,
 	dbMiddleware *middleware.DbMiddleware,
 	ctr *controller.Controller,
+	logger *logger.Logger,
 ) Router {
-	logger := logger.NewWebLogger(docs.Config)
 	loggerMiddleware := middleware.LoggerMiddlewareProvider(logger)
 	return &WebRouter{
 		Docs:             docs,

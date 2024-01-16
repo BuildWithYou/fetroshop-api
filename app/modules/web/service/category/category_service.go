@@ -29,9 +29,9 @@ func ServiceProvider(
 	conn *connection.Connection,
 	config *viper.Viper,
 	validate *validator.Validate,
+	logger *logger.Logger,
 	categoryRepo categories.CategoryRepo,
 ) CategoryService {
-	logger := logger.NewWebLogger(config)
 	return &CategoryServiceImpl{
 		Err:          conn.Err,
 		DB:           conn.DB,
