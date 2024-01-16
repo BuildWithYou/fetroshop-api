@@ -12,6 +12,7 @@ import (
 	userAccessRepo "github.com/BuildWithYou/fetroshop-api/app/domain/user_accesses/postgres"
 	userRepo "github.com/BuildWithYou/fetroshop-api/app/domain/users/postgres"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/middleware"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/cms"
@@ -61,6 +62,7 @@ var webServiceSet = wire.NewSet(
 
 func InitializeWebServer() *app.Fetroshop {
 	wire.Build(
+		logger.NewWebLogger,
 		serverSet,
 		webRepoSet,
 		webControllerSet,
@@ -90,6 +92,7 @@ var cmsServiceSet = wire.NewSet(
 
 func InitializeCmsServer() *app.Fetroshop {
 	wire.Build(
+		logger.NewCmsLogger,
 		serverSet,
 		cmsRepoSet,
 		cmsControllerSet,

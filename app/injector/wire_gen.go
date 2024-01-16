@@ -15,6 +15,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/domain/user_accesses/postgres"
 	postgres5 "github.com/BuildWithYou/fetroshop-api/app/domain/users/postgres"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/middleware"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/cms"
@@ -36,7 +37,8 @@ func InitializeWebServer() *app.Fetroshop {
 	viper := confighelper.GetConfig()
 	docsDocs := docs.DocsProvider(viper)
 	connectionDBType := _wireDBTypeValue
-	connectionConnection := connection.OpenDBConnection(connectionDBType, viper)
+	loggerLogger := logger.NewWebLogger(viper)
+	connectionConnection := connection.OpenDBConnection(connectionDBType, viper, loggerLogger)
 	userAccessRepo := postgres.RepoProvider(connectionConnection)
 	customerAccessRepo := postgres2.RepoProvider(connectionConnection)
 	jwtMiddleware := middleware.JwtMiddlewareProvider(viper, userAccessRepo, customerAccessRepo)
@@ -63,7 +65,8 @@ func InitializeCmsServer() *app.Fetroshop {
 	viper := confighelper.GetConfig()
 	docsDocs := docs.DocsProvider(viper)
 	connectionDBType := _wireDBTypeValue
-	connectionConnection := connection.OpenDBConnection(connectionDBType, viper)
+	loggerLogger := logger.NewCmsLogger(viper)
+	connectionConnection := connection.OpenDBConnection(connectionDBType, viper, loggerLogger)
 	userAccessRepo := postgres.RepoProvider(connectionConnection)
 	customerAccessRepo := postgres2.RepoProvider(connectionConnection)
 	jwtMiddleware := middleware.JwtMiddlewareProvider(viper, userAccessRepo, customerAccessRepo)

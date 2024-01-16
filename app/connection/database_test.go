@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 )
@@ -14,6 +15,7 @@ func TestOpenDBConnection(t *testing.T) {
 		config *viper.Viper
 	}
 	config := confighelper.GetConfig()
+	logger := logger.NewFrameworkLogger()
 	tests := []struct {
 		name string
 		args args
@@ -42,7 +44,7 @@ func TestOpenDBConnection(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			conn := OpenDBConnection(tt.args.dbType, tt.args.config)
+			conn := OpenDBConnection(tt.args.dbType, tt.args.config, logger)
 			got := conn.DB
 			err := conn.Err
 			switch tt.name {

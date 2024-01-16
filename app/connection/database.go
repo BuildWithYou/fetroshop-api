@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
+	loggerHelper "github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -20,7 +21,7 @@ type Connection struct {
 	Err error
 }
 
-func OpenDBConnection(dbType DBType, config *viper.Viper) *Connection {
+func OpenDBConnection(dbType DBType, config *viper.Viper, lg *loggerHelper.Logger) *Connection {
 	var (
 		gormLogger logger.Interface
 		dialect    gorm.Dialector
@@ -36,6 +37,7 @@ func OpenDBConnection(dbType DBType, config *viper.Viper) *Connection {
 		}
 	default:
 		{
+			lg.Error("Invalid database type")
 			return &Connection{
 				Err: errorhelper.ErrorCustom(500, "Invalid database type"),
 			}
@@ -57,6 +59,7 @@ func OpenDBConnection(dbType DBType, config *viper.Viper) *Connection {
 		Logger: gormLogger,
 	})
 	if err != nil {
+		lg.Error(err.Error())
 		return &Connection{
 			Err: err,
 		}
