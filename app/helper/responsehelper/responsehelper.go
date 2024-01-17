@@ -1,6 +1,7 @@
 package responsehelper
 
 import (
+	"github.com/BuildWithYou/fetroshop-api/app/helper/constant"
 	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/utils"
@@ -53,21 +54,22 @@ func Response500(msg string, meta interface{}) *appModel.Response {
 	}
 }
 
-/* func ResponseErrorGeneral(meta interface{}) *appModel.Response {
-	return &appModel.Response{
-		Code:    fiber.StatusInternalServerError,
-		Status:  utils.StatusMessage(fiber.StatusInternalServerError),
-		Message: constant.ERROR_GENERAL,
-		Meta:    meta,
+/*
+	 func ResponseErrorGeneral(meta interface{}) *appModel.Response {
+		return &appModel.Response{
+			Code:    fiber.StatusInternalServerError,
+			Status:  utils.StatusMessage(fiber.StatusInternalServerError),
+			Message: constant.ERROR_GENERAL,
+			Meta:    meta,
+		}
 	}
-}
+*/
 
-func ResponseErrorValidation(meta interface{}) *appModel.Response {
+func ResponseErrorValidation(errValidation fiber.Map) *appModel.Response {
 	return &appModel.Response{
 		Code:    fiber.StatusBadRequest,
 		Status:  utils.StatusMessage(fiber.StatusBadRequest),
 		Message: constant.ERROR_VALIDATION,
-		Meta:    meta,
+		Errors:  errValidation,
 	}
 }
-*/

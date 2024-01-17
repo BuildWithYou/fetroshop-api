@@ -57,7 +57,7 @@ func CreateFiber(serverConfig *ServerConfig) *Fetroshop {
 				code = e.Code
 				status = utils.StatusMessage(e.Code)
 
-				if serverConfig.Config.GetString("app.environment") != "production" {
+				if serverConfig.Config.GetString("environment") != "production" {
 					message = e.Error()
 				}
 			}
