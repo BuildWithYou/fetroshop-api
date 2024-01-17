@@ -9,6 +9,7 @@ app:
       port: 3000
       env: development
       url: http://localhost:3000
+      logLevel: trace
    cms:
       name: Fetroshop Web API
       version: 1.0.0
@@ -16,6 +17,7 @@ app:
       port: 3001
       env: development
       url: http://localhost:3001
+      logLevel: trace
 fiber:
    # The maximum amount of time (second) to wait for the next request when keep-alive is enabled. If IdleTimeout is zero, the value of ReadTimeout is used.
    #
@@ -46,6 +48,9 @@ fiber:
    #
    # Optional. Default: false
    enableStackTrace: true
+
+   # SetLevel sets the logger level.
+   logLevel: trace
 database:
    main:
       dbName: fetroshop

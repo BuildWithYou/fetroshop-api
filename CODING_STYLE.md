@@ -35,8 +35,6 @@ Coding Preference
 
 ### Error Handling
 1. If error is system error:
-   - Return error general as response
-   - Log the detail
-2. If error need to send `meta`, use `responsehelper`, otherwise use `errorhelper`
-3. If error triggered by user input, return `message` "VALIDATION ERROR"
-4. If error triggered by developer implementation, return error 401 or custom message
+   - Return error and let it handled by default error handler if need to log the error
+   - Return response 500 if don't need to log the error
+2. If error triggered by user input, return `message` "VALIDATION ERROR" and put the errors in `errors` field
