@@ -3,15 +3,19 @@ package category
 import (
 	"github.com/BuildWithYou/fetroshop-api/app/connection"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/categories"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/constant"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/utils"
 	"github.com/spf13/viper"
 	"gorm.io/gorm"
 )
 
 type CategoryService interface {
+	responseErrorGeneral(meta interface{}) *appModel.Response
+	responseErrorValidation(meta interface{}) *appModel.Response
 	Create(ctx *fiber.Ctx) (*appModel.Response, error)
 	Update(ctx *fiber.Ctx) (*appModel.Response, error)
 	Delete(ctx *fiber.Ctx) (*appModel.Response, error)
@@ -40,5 +44,24 @@ func ServiceProvider(
 		Validate:     validate,
 		CategoryRepo: categoryRepo,
 		Logger:       logger,
+	}
+}
+
+func (svc *CategoryServiceImpl) responseErrorGeneral(meta interface{}) *appModel.Response {
+	svc.Logger.Error(meta)
+	return &appModel.Response{
+		Code:    fiber.StatusInternalServerError,
+		Status:  utils.StatusMessage(fiber.StatusInternalServerError),
+		Message: constant.ERROR_GENERAL,
+		Meta:    meta,
+	}
+}
+
+func (svc *CategoryServiceImpl) responseErrorValidation(meta interface{}) *appModel.Response {
+	return &appModel.Response{
+		Code:    fiber.StatusBadRequest,
+		Status:  utils.StatusMessage(fiber.StatusBadRequest),
+		Message: constant.ERROR_VALIDATION,
+		Meta:    meta,
 	}
 }

@@ -2,14 +2,12 @@ package category
 
 import (
 	"github.com/BuildWithYou/fetroshop-api/app/domain/categories"
-	"github.com/BuildWithYou/fetroshop-api/app/helper/constant"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/responsehelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/cms/model"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/utils"
 	"github.com/gosimple/slug"
 	"gopkg.in/guregu/null.v3"
 )
@@ -18,10 +16,10 @@ func (svc *CategoryServiceImpl) Create(ctx *fiber.Ctx) (*appModel.Response, erro
 	payload := new(model.UpsertCategoryRequest)
 	errorMap, err := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
 	if err != nil {
-		return responsehelper.Response500(constant.ERROR_GENERAL, fiber.Map{"message": err.Error()}), nil
+		return svc.responseErrorGeneral(fiber.Map{"message": err.Error()}), nil
 	}
 	if errorMap != nil {
-		return responsehelper.Response400(constant.ERROR_VALIDATION, fiber.Map{"messages": errorMap}), nil
+		return svc.responseErrorValidation(fiber.Map{"messages": errorMap}), nil
 	}
 
 	var (
@@ -47,10 +45,10 @@ func (svc *CategoryServiceImpl) Create(ctx *fiber.Ctx) (*appModel.Response, erro
 		parentCategory := new(categories.Category)
 		result := svc.CategoryRepo.Find(parentCategory, map[string]any{"code": payload.ParentCode})
 		if result.Error != nil && !gormhelper.IsErrRecordNotFound(result.Error) {
-			return nil, result.Error
+			return svc.responseErrorGeneral(fiber.Map{"message": result.Error.Error()}), nil
 		}
 		if gormhelper.IsErrRecordNotFound(result.Error) {
-			return responsehelper.Response400(constant.ERROR_VALIDATION, fiber.Map{"message": "Parent category not found"}), nil
+			return svc.responseErrorValidation(fiber.Map{"message": "Parent category not found"}), nil
 		}
 		parentID = null.IntFrom(parentCategory.ID)
 	}
@@ -59,20 +57,20 @@ func (svc *CategoryServiceImpl) Create(ctx *fiber.Ctx) (*appModel.Response, erro
 	categoryByDisplayOrder := new(categories.Category)
 	result := svc.CategoryRepo.Find(categoryByDisplayOrder, map[string]any{"display_order": displayOrder})
 	if result.Error != nil && !gormhelper.IsErrRecordNotFound(result.Error) {
-		return nil, result.Error
+		return svc.responseErrorGeneral(fiber.Map{"message": result.Error.Error()}), nil
 	}
 	if !gormhelper.IsErrRecordNotFound(result.Error) {
-		return responsehelper.Response400(constant.ERROR_VALIDATION, fiber.Map{"message": "Display order has been taken"}), nil
+		return svc.responseErrorValidation(fiber.Map{"message": "Display order has been taken"}), nil
 	}
 
 	// check code is unique
 	categoryByCode := new(categories.Category)
 	result = svc.CategoryRepo.Find(categoryByCode, map[string]any{"code": code})
 	if result.Error != nil && !gormhelper.IsErrRecordNotFound(result.Error) {
-		return nil, result.Error
+		return svc.responseErrorGeneral(fiber.Map{"message": result.Error.Error()}), nil
 	}
 	if !gormhelper.IsErrRecordNotFound(result.Error) {
-		return responsehelper.Response400(constant.ERROR_VALIDATION, fiber.Map{"message": "Code has been taken"}), nil
+		return svc.responseErrorValidation(fiber.Map{"message": "Code has been taken"}), nil
 	}
 
 	createdCategory := &categories.Category{
@@ -84,20 +82,13 @@ func (svc *CategoryServiceImpl) Create(ctx *fiber.Ctx) (*appModel.Response, erro
 		DisplayOrder: displayOrder,
 	}
 	result = svc.CategoryRepo.Create(createdCategory)
+	if result.Error != nil {
+		return svc.responseErrorGeneral(fiber.Map{"message": result.Error.Error()}), nil
+	}
 	if gormhelper.HasAffectedRows(result) {
-		return &appModel.Response{
-			Code:    fiber.StatusCreated,
-			Status:  utils.StatusMessage(fiber.StatusCreated),
-			Message: "Category created successfully",
-			Data:    createdCategory,
-		}, nil
+		return responsehelper.Response201("Category created successfully", createdCategory, nil), nil
 	} else {
-		return &appModel.Response{
-			Code:    fiber.StatusInternalServerError,
-			Status:  utils.StatusMessage(fiber.StatusInternalServerError),
-			Message: "Failed to create category",
-			Data:    createdCategory,
-		}, nil
+		return responsehelper.Response500("Failed to create category", nil), nil
 	}
 
 }

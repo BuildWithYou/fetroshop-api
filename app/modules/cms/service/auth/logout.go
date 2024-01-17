@@ -16,6 +16,9 @@ func (svc *AuthServiceImpl) Logout(ctx *fiber.Ctx) (*appModel.Response, error) {
 	result := svc.UserAccessRepo.Delete(&user_accesses.UserAccess{
 		Key:    identifier,
 		UserID: userID})
+	if result.Error != nil {
+		return svc.responseErrorGeneral(fiber.Map{"message": result.Error.Error()}), nil
+	}
 	if !gormhelper.HasAffectedRows(result) {
 		return nil, errorhelper.Error500("Failed to logout") // #marked: message
 	}

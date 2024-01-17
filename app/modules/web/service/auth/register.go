@@ -2,11 +2,9 @@ package auth
 
 import (
 	"github.com/BuildWithYou/fetroshop-api/app/domain/customers"
-	"github.com/BuildWithYou/fetroshop-api/app/helper/constant"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/password"
-	"github.com/BuildWithYou/fetroshop-api/app/helper/responsehelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
 	webModel "github.com/BuildWithYou/fetroshop-api/app/modules/web/model"
@@ -23,7 +21,7 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error)
 	payload := new(webModel.RegistrationRequest)
 	errorMap, err := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
 	if err != nil {
-		return responsehelper.Response400(constant.ERROR_VALIDATION, fiber.Map{"messages": errorMap}), nil
+		return svc.responseErrorValidation(fiber.Map{"messages": errorMap}), nil
 	}
 	/*
 			   TODO:

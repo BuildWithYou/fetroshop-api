@@ -7,8 +7,6 @@ import (
 
 	"github.com/BuildWithYou/fetroshop-api/app/domain/user_accesses"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/users"
-	"github.com/BuildWithYou/fetroshop-api/app/helper/constant"
-	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/jwt"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/password"
@@ -29,23 +27,22 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*appModel.Response, error) {
 
 	errorMap, err := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
 	if err != nil {
-		return responsehelper.Response500(constant.ERROR_GENERAL, fiber.Map{"message": err.Error()}), nil
+		return svc.responseErrorGeneral(fiber.Map{"message": err.Error()}), nil
 	}
 	if errorMap != nil {
-		return responsehelper.Response400(constant.ERROR_VALIDATION, fiber.Map{"messages": errorMap}), nil
+		return svc.responseErrorValidation(fiber.Map{"messages": errorMap}), nil
 	}
 
 	// check is customer exist
 	result := svc.UserRepo.Find(&user, fiber.Map{"username": payload.Username})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
-		svc.Logger.Error(result.Error.Error())
-		return nil, errorhelper.Error500("Something went wrong") // #marked: message
+		return svc.responseErrorGeneral(result.Error.Error()), nil
 	}
 	if gormhelper.IsErrRecordNotFound(result.Error) {
-		return nil, errorhelper.Error401("Invalid email or password") // #marked: message
+		return svc.responseErrorValidation(fiber.Map{"message": "Invalid email or password"}), nil // #marked: message
 	}
 	if err := password.Verify(user.Password, payload.Password); err != nil {
-		return nil, errorhelper.Error401("Invalid email or password") // #marked: message
+		return svc.responseErrorValidation(fiber.Map{"message": "Invalid email or password"}), nil // #marked: message
 	}
 
 	accessToken := password.Generate(fmt.Sprintf(
@@ -57,7 +54,7 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*appModel.Response, error) {
 
 	additionalDuration, err := time.ParseDuration(jwtExpiration)
 	if err != nil {
-		panic("Invalid time duration. Should be time.ParseDuration string")
+		svc.Logger.Panic("Invalid time duration. Should be time.ParseDuration string")
 	}
 	expiredAt := time.Now().Add(additionalDuration)
 
@@ -75,10 +72,10 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*appModel.Response, error) {
 		},
 	)
 	if result.Error != nil && !gormhelper.HasAffectedRows(result) {
-		return nil, result.Error
+		return svc.responseErrorGeneral(fiber.Map{"message": result.Error.Error()}), nil
 	}
 	if !gormhelper.HasAffectedRows(result) {
-		return nil, errorhelper.Error500("Failed to record user access") // #marked: message
+		return responsehelper.Response500("Failed to record user access", nil), nil // #marked: message
 	}
 
 	generatedJwt := jwt.Generate(&jwt.TokenPayload{

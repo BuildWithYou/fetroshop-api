@@ -2,9 +2,9 @@ package app
 
 import (
 	"errors"
-	"fmt"
 	"time"
 
+	"github.com/BuildWithYou/fetroshop-api/app/helper/constant"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/BuildWithYou/fetroshop-api/app/middleware"
 	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
@@ -49,6 +49,7 @@ func CreateFiber(serverConfig *ServerConfig) *Fetroshop {
 			// Status code defaults to 500
 			code := fiber.StatusInternalServerError
 			status := fiber.ErrInternalServerError.Message
+			message := constant.ERROR_GENERAL
 
 			// Retrieve the custom status code if it's a *fiber.Error
 			var e *fiber.Error
@@ -57,14 +58,14 @@ func CreateFiber(serverConfig *ServerConfig) *Fetroshop {
 				status = utils.StatusMessage(e.Code)
 			}
 
-			if code == fiber.StatusInternalServerError {
-				serverConfig.Logger.Error(fmt.Sprint("Error : ", err.Error()))
+			if code >= 500 {
+				serverConfig.Logger.Error(err.Error())
 			}
 
 			return ctx.Status(code).JSON(appModel.Response{
 				Code:    code,
 				Status:  status,
-				Message: err.Error(),
+				Message: message,
 			})
 		},
 	})

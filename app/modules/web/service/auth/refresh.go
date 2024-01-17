@@ -23,7 +23,7 @@ func (svc *AuthServiceImpl) Refresh(ctx *fiber.Ctx) (*appModel.Response, error) 
 
 	additionalDuration, err := time.ParseDuration(jwtExpiration)
 	if err != nil {
-		panic("Invalid time duration. Should be time.ParseDuration string")
+		svc.Logger.Panic("Invalid time duration. Should be time.ParseDuration string")
 	}
 	expiredAt := time.Now().Add(additionalDuration)
 
@@ -53,8 +53,7 @@ func (svc *AuthServiceImpl) Refresh(ctx *fiber.Ctx) (*appModel.Response, error) 
 		},
 	)
 	if result.Error != nil {
-		svc.Logger.Error(result.Error.Error())
-		return nil, errorhelper.Error500("Something went wrong")
+		return svc.responseErrorGeneral(result.Error.Error()), nil
 	}
 	if !gormhelper.HasAffectedRows(result) {
 		return nil, errorhelper.Error500("Failed to refresh token") // #marked: message

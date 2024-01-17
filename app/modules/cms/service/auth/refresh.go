@@ -52,6 +52,9 @@ func (svc *AuthServiceImpl) Refresh(ctx *fiber.Ctx) (*appModel.Response, error) 
 			"user_id": userID,
 		},
 	)
+	if result.Error != nil {
+		return svc.responseErrorGeneral(fiber.Map{"message": result.Error.Error()}), nil
+	}
 	if !gormhelper.HasAffectedRows(result) {
 		return nil, errorhelper.Error500("Failed to refresh token") // #marked: message
 	}
