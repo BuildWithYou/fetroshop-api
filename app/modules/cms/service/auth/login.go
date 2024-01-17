@@ -7,6 +7,7 @@ import (
 
 	"github.com/BuildWithYou/fetroshop-api/app/domain/user_accesses"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/users"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/jwt"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/password"
@@ -25,24 +26,28 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*appModel.Response, error) {
 	jwtTokenKey := svc.Config.GetString("security.jwt.tokenKey")
 	jwtExpiration := svc.Config.GetString("security.jwt.expiration")
 
-	errorMap, err := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
-	if err != nil {
-		return svc.responseErrorGeneral(fiber.Map{"message": err.Error()}), nil
+	errValidation, errParsing := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
+	if errParsing != nil {
+		return nil, errParsing
 	}
-	if errorMap != nil {
-		return svc.responseErrorValidation(fiber.Map{"messages": errorMap}), nil
+	if errValidation != nil {
+		return responsehelper.ResponseErrorValidation(errValidation), nil
 	}
 
 	// check is customer exist
 	result := svc.UserRepo.Find(&user, fiber.Map{"username": payload.Username})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
-		return svc.responseErrorGeneral(result.Error.Error()), nil
+		return nil, result.Error
 	}
+	invalidEmailPasswordMsg := fiber.Map{
+		"username": "Invalid username or password",
+		"password": "Invalid username or password",
+	} // #marked: message
 	if gormhelper.IsErrRecordNotFound(result.Error) {
-		return svc.responseErrorValidation(fiber.Map{"message": "Invalid email or password"}), nil // #marked: message
+		return responsehelper.ResponseErrorValidation(invalidEmailPasswordMsg), nil
 	}
 	if err := password.Verify(user.Password, payload.Password); err != nil {
-		return svc.responseErrorValidation(fiber.Map{"message": "Invalid email or password"}), nil // #marked: message
+		return responsehelper.ResponseErrorValidation(invalidEmailPasswordMsg), nil
 	}
 
 	accessToken := password.Generate(fmt.Sprintf(
@@ -72,10 +77,10 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*appModel.Response, error) {
 		},
 	)
 	if result.Error != nil && !gormhelper.HasAffectedRows(result) {
-		return svc.responseErrorGeneral(fiber.Map{"message": result.Error.Error()}), nil
+		return nil, result.Error
 	}
 	if !gormhelper.HasAffectedRows(result) {
-		return responsehelper.Response500("Failed to record user access", nil), nil // #marked: message
+		return nil, errorhelper.Error500("Failed to record user access") // #marked: message
 	}
 
 	generatedJwt := jwt.Generate(&jwt.TokenPayload{
