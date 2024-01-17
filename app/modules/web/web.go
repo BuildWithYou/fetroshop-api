@@ -18,7 +18,7 @@ import (
 
 func WebServerConfigProvider(webRouter router.Router, logger *logger.Logger) *app.ServerConfig {
 	config := confighelper.GetConfig()
-	logger.Info("Starting web server...")
+	logger.Info("Initializing web server")
 	return &app.ServerConfig{
 		Config: config,
 		Host:   config.GetString("app.web.host"),

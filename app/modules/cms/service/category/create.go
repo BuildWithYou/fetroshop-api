@@ -84,7 +84,7 @@ func (svc *CategoryServiceImpl) Create(ctx *fiber.Ctx) (*appModel.Response, erro
 		DisplayOrder: displayOrder,
 	}
 	result = svc.CategoryRepo.Create(createdCategory)
-	if result.RowsAffected > 0 {
+	if gormhelper.HasAffectedRows(result) {
 		return &appModel.Response{
 			Code:    fiber.StatusCreated,
 			Status:  utils.StatusMessage(fiber.StatusCreated),

@@ -67,6 +67,7 @@ func OpenDBConnection(dbType DBType, config *viper.Viper, lg *loggerHelper.Logge
 
 	sqlDB, err := db.DB()
 	if err != nil {
+		lg.Error(err.Error())
 		return &Connection{
 			Err: err,
 		}

@@ -72,7 +72,7 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error)
 		return nil, result.Error
 	}
 
-	if result.RowsAffected > 0 {
+	if gormhelper.HasAffectedRows(result) {
 		message = "User created successfully" // #marked: message
 	}
 

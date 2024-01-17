@@ -32,4 +32,7 @@ Coding Preference
 0. If the message is array of strings:
    - Send constant string in 'message' field
    - Send detail message in 'meta.messages'
+0. If error is system error:
+   - Return error general as response
+   - Log the detail
 

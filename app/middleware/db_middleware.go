@@ -1,24 +1,25 @@
 package middleware
 
 import (
-	"fmt"
-
 	"github.com/BuildWithYou/fetroshop-api/app/connection"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/constant"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
 
 type DbMiddleware struct {
-	DB  *gorm.DB
-	Err error
+	DB     *gorm.DB
+	Err    error
+	Logger *logger.Logger
 }
 
-func DBMiddlewareProvider(conn *connection.Connection) *DbMiddleware {
+func DBMiddlewareProvider(conn *connection.Connection, logger *logger.Logger) *DbMiddleware {
 	return &DbMiddleware{
-		DB:  conn.DB,
-		Err: conn.Err,
+		DB:     conn.DB,
+		Err:    conn.Err,
+		Logger: logger,
 	}
 }
 
@@ -27,7 +28,7 @@ func DBMiddlewareProvider(conn *connection.Connection) *DbMiddleware {
 // It takes a *fiber.Ctx object as a parameter and returns an error.
 func (dbMid *DbMiddleware) Authenticate(ctx *fiber.Ctx) error {
 	if dbMid.Err != nil {
-		fwLogger.Error(fmt.Sprintf("\nError: %s\n", dbMid.Err.Error()))
+		dbMid.Logger.Error(dbMid.Err.Error())
 		return errorhelper.Error500(constant.ERROR_GENERAL)
 	}
 

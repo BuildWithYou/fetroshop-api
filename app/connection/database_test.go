@@ -15,7 +15,7 @@ func TestOpenDBConnection(t *testing.T) {
 		config *viper.Viper
 	}
 	config := confighelper.GetConfig()
-	logger := logger.NewFrameworkLogger()
+	logger := logger.NewWebLogger(config)
 	tests := []struct {
 		name string
 		args args

@@ -10,6 +10,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/jwt"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	cmsAuthSvc "github.com/BuildWithYou/fetroshop-api/app/modules/cms/service/auth"
 	webAuthSvc "github.com/BuildWithYou/fetroshop-api/app/modules/web/service/auth"
 	"github.com/gofiber/fiber/v2"
@@ -20,6 +21,7 @@ type JwtMiddleware struct {
 	Config             *viper.Viper
 	UserAccessRepo     user_accesses.UserAccessRepo
 	CustomerAccessRepo customer_accesses.CustomerAccessRepo
+	Logger             *logger.Logger
 }
 
 // NewJwtMiddleware creates a new JwtMiddleware instance.
@@ -66,9 +68,9 @@ func (jwtMid *JwtMiddleware) Authenticate(ctx *fiber.Ctx) error {
 	}
 
 	// Verify the token which is in the chunks
-	reversedToken, err := jwt.Reverse(jwtMid.Config.GetString("security.jwt.tokenKey"), chunks[1])
+	reversedToken, err := jwt.Reverse(jwtMid.Config.GetString("security.jwt.tokenKey"), chunks[1], jwtMid.Logger)
 	if err != nil {
-		fwLogger.Error(fmt.Sprintln("Error on reverse jwt token : ", err.Error()))
+		jwtMid.Logger.Error(fmt.Sprintln("Error on reverse jwt token : ", err.Error()))
 		return fiber.ErrUnauthorized
 	}
 
