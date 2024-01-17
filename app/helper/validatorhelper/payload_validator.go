@@ -2,6 +2,7 @@ package validatorhelper
 
 import (
 	"fmt"
+	"reflect"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -14,15 +15,27 @@ func generateErrorMessage(err error) (errValidation fiber.Map) {
 	errValidation = make(fiber.Map)
 	validationErrors := err.(validator.ValidationErrors)
 	for _, fieldError := range validationErrors {
-		key := fieldError.Field()
+		fieldName := fieldError.Field()
 		switch fieldError.Tag() {
 		case "required":
 			{
-				errValidation[key] = fmt.Sprint(fieldError.Field(), " is required")
+				errValidation[fieldName] = fmt.Sprint(fieldName, " field is required")
+			}
+		case "email":
+			{
+				errValidation[fieldName] = fmt.Sprint(fieldName, " field must be valid email format")
+			}
+		case "min":
+			{
+				if fieldError.Kind() == reflect.String {
+					errValidation[fieldName] = fmt.Sprint(fieldName, " field must be longer than ", fieldError.Param(), " characters")
+				} else {
+					errValidation[fieldName] = fmt.Sprint(fieldName, " field must be greater than ", fieldError.Param())
+				}
 			}
 		default:
 			{
-				errValidation[key] = fmt.Sprint("Error on tag ", fieldError.Tag(), " on field ", fieldError.Field(), " with error ", fieldError.Error())
+				errValidation[fieldName] = fmt.Sprint("Error on tag ", fieldError.Tag(), " on field ", fieldName, " with error ", fieldError.Error())
 			}
 		}
 
