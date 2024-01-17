@@ -2,8 +2,8 @@ package category
 
 import (
 	ctEty "github.com/BuildWithYou/fetroshop-api/app/domain/categories"
-	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/responsehelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/model"
@@ -14,22 +14,21 @@ import (
 
 func (svc *CategoryServiceImpl) Find(ctx *fiber.Ctx) (*appModel.Response, error) {
 	payload := new(model.FindCategoryRequest)
-	errorMap, err := validatorhelper.ValidateQueryPayload(ctx, svc.Validate, payload)
-	if err != nil {
-		return svc.responseErrorGeneral(fiber.Map{"message": err.Error()}), nil
+	errValidation, errParsing := validatorhelper.ValidateQueryPayload(ctx, svc.Validate, payload)
+	if errParsing != nil {
+		return nil, errParsing
 	}
-	if errorMap != nil {
-		return svc.responseErrorValidation(fiber.Map{"messages": errorMap}), nil
+	if errValidation != nil {
+		return responsehelper.ResponseErrorValidation(errValidation), nil
 	}
 
 	category := new(ctEty.Category)
 	result := svc.CategoryRepo.Find(category, map[string]any{"code": payload.Code})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
-		svc.Logger.Error(result.Error.Error())
-		return nil, errorhelper.Error500("Something went wrong") // #marked: message
+		return nil, result.Error
 	}
 	if gormhelper.IsErrRecordNotFound(result.Error) {
-		return nil, errorhelper.Error400("Invalid category code") // #marked: message
+		return responsehelper.ResponseErrorValidation(fiber.Map{"code": "Invalid category code"}), nil // #marked: message
 	}
 
 	parentCode := ""
