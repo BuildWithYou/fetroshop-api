@@ -43,8 +43,8 @@ func (router *CmsRouter) Init(app *fiber.App) {
 	// Category
 	category := api.Group("/category")
 	category.Post("/create", contentTypeMiddleware, router.Controller.Category.Create)
-	category.Put("/:categoryCode", contentTypeMiddleware, router.Controller.Category.Update)
-	category.Delete("/:categoryCode", contentTypeMiddleware, router.Controller.Category.Delete)
+	category.Put("/:code", contentTypeMiddleware, router.Controller.Category.Update)
+	category.Delete("/:code", contentTypeMiddleware, router.Controller.Category.Delete)
 
 }
 

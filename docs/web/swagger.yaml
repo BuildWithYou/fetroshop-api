@@ -2,12 +2,21 @@ definitions:
   model.Response:
     properties:
       code:
+        description: http status code
         type: integer
-      data: {}
+      data:
+        description: main data
+      errors:
+        additionalProperties: {}
+        description: error data
+        type: object
       message:
+        description: message from system
         type: string
-      meta: {}
+      meta:
+        description: support data
       status:
+        description: http status message
         type: string
     type: object
 info:
@@ -122,6 +131,7 @@ paths:
         required: true
         type: string
       - in: formData
+        minLength: 8
         name: password
         required: true
         type: string

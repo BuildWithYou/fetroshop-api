@@ -181,6 +181,7 @@ const docTemplate = `{
                         "required": true
                     },
                     {
+                        "minLength": 8,
                         "type": "string",
                         "name": "password",
                         "in": "formData",
@@ -261,7 +262,8 @@ const docTemplate = `{
                     {
                         "type": "boolean",
                         "name": "isActive",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     },
                     {
                         "type": "string",
@@ -303,7 +305,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/category/{categoryCode}": {
+        "/api/category/{code}": {
             "put": {
                 "consumes": [
                     "application/x-www-form-urlencoded",
@@ -320,7 +322,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Category Code",
-                        "name": "categoryCode",
+                        "name": "code",
                         "in": "path",
                         "required": true
                     },
@@ -344,7 +346,8 @@ const docTemplate = `{
                     {
                         "type": "boolean",
                         "name": "isActive",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     },
                     {
                         "type": "string",
@@ -401,8 +404,14 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Category Code",
-                        "name": "categoryCode",
+                        "name": "code",
                         "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "boolean",
+                        "name": "forceDelete",
+                        "in": "formData",
                         "required": true
                     }
                 ],
@@ -440,14 +449,26 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "code": {
+                    "description": "http status code",
                     "type": "integer"
                 },
-                "data": {},
+                "data": {
+                    "description": "main data"
+                },
+                "errors": {
+                    "description": "error data",
+                    "type": "object",
+                    "additionalProperties": {}
+                },
                 "message": {
+                    "description": "message from system",
                     "type": "string"
                 },
-                "meta": {},
+                "meta": {
+                    "description": "support data"
+                },
                 "status": {
+                    "description": "http status message",
                     "type": "string"
                 }
             }

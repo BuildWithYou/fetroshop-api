@@ -44,13 +44,13 @@ func (ctr *CategoryControllerImpl) Create(ctx *fiber.Ctx) (err error) {
 // @Tags         Categories
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
-// @Param        categoryCode path          string                    true  "Category Code"
-// @Param        data         formData      model.UpsertCategoryRequest  true  "Request"
-// @Success      200          {object}      model.Response
-// @Failure      400          {object}      model.Response
-// @Failure      404          {object}      model.Response
-// @Failure      500          {object}      model.Response
-// @Router       /api/category/{categoryCode} [put]
+// @Param        code   path      string                       true  "Category Code"
+// @Param        data   formData  model.UpsertCategoryRequest  true  "Request"
+// @Success      200    {object}  model.Response
+// @Failure      400    {object}  model.Response
+// @Failure      404    {object}  model.Response
+// @Failure      500    {object}  model.Response
+// @Router       /api/category/{code} [put]
 func (ctr *CategoryControllerImpl) Update(ctx *fiber.Ctx) (err error) {
 	return execute(ctx, ctr.CategoryService.Update)
 }
@@ -60,12 +60,13 @@ func (ctr *CategoryControllerImpl) Update(ctx *fiber.Ctx) (err error) {
 // @Tags         Categories
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
-// @Param        categoryCode path          string                    true  "Category Code"
-// @Success      200  {object}      model.Response
-// @Failure      400  {object}      model.Response
-// @Failure      404  {object}      model.Response
-// @Failure      500  {object}      model.Response
-// @Router       /api/category/{categoryCode} [delete]
+// @Param        code   path       string                         true  "Category Code"
+// @Param        data   formData   model.DeleteCategoryRequest    true  "Request"
+// @Success      200    {object}   model.Response
+// @Failure      400    {object}   model.Response
+// @Failure      404    {object}   model.Response
+// @Failure      500    {object}   model.Response
+// @Router       /api/category/{code} [delete]
 func (ctr *CategoryControllerImpl) Delete(ctx *fiber.Ctx) (err error) {
 	return execute(ctx, ctr.CategoryService.Delete)
 }

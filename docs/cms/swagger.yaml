@@ -2,12 +2,21 @@ definitions:
   model.Response:
     properties:
       code:
+        description: http status code
         type: integer
-      data: {}
+      data:
+        description: main data
+      errors:
+        additionalProperties: {}
+        description: error data
+        type: object
       message:
+        description: message from system
         type: string
-      meta: {}
+      meta:
+        description: support data
       status:
+        description: http status message
         type: string
     type: object
 info:
@@ -122,6 +131,7 @@ paths:
         required: true
         type: string
       - in: formData
+        minLength: 8
         name: password
         required: true
         type: string
@@ -155,7 +165,7 @@ paths:
       summary: Register new user
       tags:
       - Authentication
-  /api/category/{categoryCode}:
+  /api/category/{code}:
     delete:
       consumes:
       - application/x-www-form-urlencoded
@@ -163,9 +173,13 @@ paths:
       parameters:
       - description: Category Code
         in: path
-        name: categoryCode
+        name: code
         required: true
         type: string
+      - in: formData
+        name: forceDelete
+        required: true
+        type: boolean
       produces:
       - application/json
       responses:
@@ -195,7 +209,7 @@ paths:
       parameters:
       - description: Category Code
         in: path
-        name: categoryCode
+        name: code
         required: true
         type: string
       - in: formData
@@ -211,6 +225,7 @@ paths:
         type: string
       - in: formData
         name: isActive
+        required: true
         type: boolean
       - in: formData
         name: name
@@ -260,6 +275,7 @@ paths:
         type: string
       - in: formData
         name: isActive
+        required: true
         type: boolean
       - in: formData
         name: name
