@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	ctEty "github.com/BuildWithYou/fetroshop-api/app/domain/categories"
-	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/responsehelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/model"
@@ -20,12 +20,12 @@ func (svc *CategoryServiceImpl) List(ctx *fiber.Ctx) (*appModel.Response, error)
 		parentID   null.Int
 	)
 	payload := new(model.ListCategoriesRequest)
-	errorMap, err := validatorhelper.ValidateQueryPayload(ctx, svc.Validate, payload)
-	if err != nil {
-		return svc.responseErrorGeneral(fiber.Map{"message": err.Error()}), nil
+	errValidation, errParsing := validatorhelper.ValidateQueryPayload(ctx, svc.Validate, payload)
+	if errParsing != nil {
+		return nil, errParsing
 	}
-	if errorMap != nil {
-		return svc.responseErrorValidation(fiber.Map{"messages": errorMap}), nil
+	if errValidation != nil {
+		return responsehelper.ResponseErrorValidation(errValidation), nil
 	}
 
 	if payload.ParentCode == "" {
@@ -36,11 +36,10 @@ func (svc *CategoryServiceImpl) List(ctx *fiber.Ctx) (*appModel.Response, error)
 			"code": payload.ParentCode,
 		})
 		if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
-			svc.Logger.Error(result.Error.Error())
-			return nil, errorhelper.Error500("Something went wrong") // #marked: message
+			return nil, result.Error
 		}
 		if gormhelper.IsErrRecordNotFound(result.Error) {
-			return nil, errorhelper.Error400("Invalid parent code") // #marked: message
+			return responsehelper.ResponseErrorValidation(fiber.Map{"parentCode": "Invalid parent category code"}), nil // #marked: message
 		}
 		parentID = null.NewInt(parent.ID, parent.ID != 0)
 	}
@@ -50,8 +49,7 @@ func (svc *CategoryServiceImpl) List(ctx *fiber.Ctx) (*appModel.Response, error)
 		"parent_id": parentID,
 	}, int(payload.Limit), int(payload.Offset), orderBy)
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
-		svc.Logger.Error(result.Error.Error())
-		return nil, errorhelper.Error500("Something went wrong") // #marked: message
+		return nil, result.Error
 	}
 
 	var list []*model.CategoryResponse
