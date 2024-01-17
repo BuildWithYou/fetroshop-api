@@ -45,6 +45,14 @@ func Response401(msg string, meta interface{}) *appModel.Response {
 	}
 }
 
+// Response500 generates a response with a status code of 500 (Internal Server Error).
+// Usage: Use this when you want to return internal server error without logged
+// Parameters:
+// - msg: The error message to include in the response.
+// - meta: Additional metadata to include in the response.
+//
+// Returns:
+// - *appModel.Response: A pointer to a Response struct containing the generated response.
 func Response500(msg string, meta interface{}) *appModel.Response {
 	return &appModel.Response{
 		Code:    fiber.StatusInternalServerError,
@@ -53,17 +61,6 @@ func Response500(msg string, meta interface{}) *appModel.Response {
 		Meta:    meta,
 	}
 }
-
-/*
-	 func ResponseErrorGeneral(meta interface{}) *appModel.Response {
-		return &appModel.Response{
-			Code:    fiber.StatusInternalServerError,
-			Status:  utils.StatusMessage(fiber.StatusInternalServerError),
-			Message: constant.ERROR_GENERAL,
-			Meta:    meta,
-		}
-	}
-*/
 
 func ResponseErrorValidation(errValidation fiber.Map) *appModel.Response {
 	return &appModel.Response{
