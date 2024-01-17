@@ -33,7 +33,7 @@ func (svc *CategoryServiceImpl) Create(ctx *fiber.Ctx) (*appModel.Response, erro
 
 	code = slug.Make(payload.Code)
 	name = payload.Name
-	isActive = payload.IsActive
+	isActive = *payload.IsActive
 	displayOrder = payload.DisplayOrder
 
 	if payload.Icon != "" {
@@ -82,8 +82,11 @@ func (svc *CategoryServiceImpl) Create(ctx *fiber.Ctx) (*appModel.Response, erro
 		DisplayOrder: displayOrder,
 	}
 	result = svc.CategoryRepo.Create(newCategory)
-	if result.Error != nil {
+	if result.Error != nil && !gormhelper.IsErrDuplicatedKey(result.Error) {
 		return nil, result.Error
+	}
+	if gormhelper.IsErrDuplicatedKey(result.Error) {
+		return responsehelper.ResponseErrorValidation(fiber.Map{"code": "Category code has been taken"}), nil // #marked: message
 	}
 	if !gormhelper.HasAffectedRows(result) {
 		return responsehelper.Response500("Failed to create category", nil), nil // #marked: message
