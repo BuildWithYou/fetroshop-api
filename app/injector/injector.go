@@ -12,11 +12,13 @@ import (
 	userAccessRepo "github.com/BuildWithYou/fetroshop-api/app/domain/user_accesses/postgres"
 	userRepo "github.com/BuildWithYou/fetroshop-api/app/domain/users/postgres"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/middleware"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/cms"
 	cmsController "github.com/BuildWithYou/fetroshop-api/app/modules/cms/controller"
 	cmsAuthService "github.com/BuildWithYou/fetroshop-api/app/modules/cms/service/auth"
+	cmsCategoryService "github.com/BuildWithYou/fetroshop-api/app/modules/cms/service/category"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/docs"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web"
 	webController "github.com/BuildWithYou/fetroshop-api/app/modules/web/controller"
@@ -60,6 +62,7 @@ var webServiceSet = wire.NewSet(
 
 func InitializeWebServer() *app.Fetroshop {
 	wire.Build(
+		logger.NewWebLogger,
 		serverSet,
 		webRepoSet,
 		webControllerSet,
@@ -73,19 +76,23 @@ func InitializeWebServer() *app.Fetroshop {
 // cms dependencies
 var cmsRepoSet = wire.NewSet(
 	userRepo.RepoProvider,
+	categoryRepo.RepoProvider,
 )
 
 var cmsControllerSet = wire.NewSet(
 	cmsController.CmsControllerProvider,
 	cmsController.AuthControllerProvider,
+	cmsController.CategoryControllerProvider,
 )
 
 var cmsServiceSet = wire.NewSet(
 	cmsAuthService.ServiceProvider,
+	cmsCategoryService.ServiceProvider,
 )
 
 func InitializeCmsServer() *app.Fetroshop {
 	wire.Build(
+		logger.NewCmsLogger,
 		serverSet,
 		cmsRepoSet,
 		cmsControllerSet,

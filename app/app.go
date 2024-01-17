@@ -2,9 +2,10 @@ package app
 
 import (
 	"errors"
-	"fmt"
 	"time"
 
+	"github.com/BuildWithYou/fetroshop-api/app/helper/constant"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/BuildWithYou/fetroshop-api/app/middleware"
 	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/BuildWithYou/fetroshop-api/app/router"
@@ -19,6 +20,7 @@ type Fetroshop struct {
 	Host     string
 	Port     int
 	Err      error
+	Logger   *logger.Logger
 }
 
 type ServerConfig struct {
@@ -27,6 +29,7 @@ type ServerConfig struct {
 	Port   int
 	Router router.Router
 	Static map[string]string
+	Logger *logger.Logger
 }
 
 // CreateFiber initializes a Fiber app with the given server configuration and returns a Fetroshop instance.
@@ -46,22 +49,27 @@ func CreateFiber(serverConfig *ServerConfig) *Fetroshop {
 			// Status code defaults to 500
 			code := fiber.StatusInternalServerError
 			status := fiber.ErrInternalServerError.Message
+			message := constant.ERROR_GENERAL
 
 			// Retrieve the custom status code if it's a *fiber.Error
 			var e *fiber.Error
 			if errors.As(err, &e) {
 				code = e.Code
 				status = utils.StatusMessage(e.Code)
+
+				if serverConfig.Config.GetString("environment") != "production" {
+					message = e.Error()
+				}
 			}
 
-			if code == fiber.StatusInternalServerError {
-				fmt.Println("Error : ", err.Error()) // #marked: logging
+			if code >= 500 {
+				serverConfig.Logger.Error(err.Error())
 			}
 
 			return ctx.Status(code).JSON(appModel.Response{
 				Code:    code,
 				Status:  status,
-				Message: err.Error(),
+				Message: message,
 			})
 		},
 	})
@@ -92,5 +100,6 @@ func CreateFiber(serverConfig *ServerConfig) *Fetroshop {
 		FiberApp: fiberApp,
 		Host:     host,
 		Port:     port,
+		Logger:   serverConfig.Logger,
 	}
 }

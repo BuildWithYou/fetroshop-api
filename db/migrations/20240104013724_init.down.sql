@@ -5,3 +5,4 @@ drop table if exists roles;
 drop table if exists customers;
 drop table if exists users;
 drop table if exists categories;
+drop table if exists brands;

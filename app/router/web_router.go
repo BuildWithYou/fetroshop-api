@@ -1,6 +1,7 @@
 package router
 
 import (
+	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/BuildWithYou/fetroshop-api/app/middleware"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/docs"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/controller"
@@ -8,16 +9,19 @@ import (
 )
 
 type WebRouter struct {
-	Docs          *docs.Docs
-	JwtMiddleware *middleware.JwtMiddleware
-	DbMiddleware  *middleware.DbMiddleware
-	Controller    *controller.Controller
+	Docs             *docs.Docs
+	JwtMiddleware    *middleware.JwtMiddleware
+	DbMiddleware     *middleware.DbMiddleware
+	LoggerMiddleware *middleware.LoggerMiddleware
+	Controller       *controller.Controller
 }
 
 func (router *WebRouter) Init(app *fiber.App) {
 	// Middlewares
 	jwtMiddleware := router.JwtMiddleware.Authenticate
 	dbMiddleware := router.DbMiddleware.Authenticate
+	loggerMiddleware := router.LoggerMiddleware.WebLoggerResetOutput
+	contentTypeMiddleware := middleware.ContentTypeMiddleware
 
 	// root
 	app.Get("/", router.redirectToDocs)
@@ -27,12 +31,12 @@ func (router *WebRouter) Init(app *fiber.App) {
 	app.Get("/documentation/*", router.Docs.SwaggerWeb())
 
 	// api Group
-	api := app.Group("/api", dbMiddleware)
+	api := app.Group("/api", dbMiddleware, loggerMiddleware)
 
 	// Authentication
 	authentication := api.Group("/auth")
-	authentication.Post("/register", router.Controller.Auth.Register)
-	authentication.Post("/login", router.Controller.Auth.Login)
+	authentication.Post("/register", contentTypeMiddleware, router.Controller.Auth.Register)
+	authentication.Post("/login", contentTypeMiddleware, router.Controller.Auth.Login)
 	authentication.Post("/logout", jwtMiddleware, router.Controller.Auth.Logout)
 	authentication.Post("/refresh", jwtMiddleware, router.Controller.Auth.Refresh)
 
@@ -48,12 +52,15 @@ func WebRouterProvider(
 	jwtMiddleware *middleware.JwtMiddleware,
 	dbMiddleware *middleware.DbMiddleware,
 	ctr *controller.Controller,
+	logger *logger.Logger,
 ) Router {
+	loggerMiddleware := middleware.LoggerMiddlewareProvider(logger)
 	return &WebRouter{
-		Docs:          docs,
-		JwtMiddleware: jwtMiddleware,
-		DbMiddleware:  dbMiddleware,
-		Controller:    ctr,
+		Docs:             docs,
+		JwtMiddleware:    jwtMiddleware,
+		DbMiddleware:     dbMiddleware,
+		LoggerMiddleware: loggerMiddleware,
+		Controller:       ctr,
 	}
 }
 

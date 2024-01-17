@@ -5,6 +5,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/password"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/responsehelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
 	cmsModel "github.com/BuildWithYou/fetroshop-api/app/modules/cms/model"
@@ -13,38 +14,39 @@ import (
 )
 
 func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error) {
-	var (
-		message                                        string
-		existingUsername, existingPhone, existingEmail users.User
-	)
+	var existingUsername, existingPhone, existingEmail users.User
+
 	payload := new(cmsModel.RegistrationRequest)
-	err := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
-	if validatorhelper.IsNotNil(err) {
-		return nil, err
+	errValidation, errParsing := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
+	if errParsing != nil {
+		return nil, errParsing
+	}
+	if errValidation != nil {
+		return responsehelper.ResponseErrorValidation(errValidation), nil
 	}
 
-	result := svc.UserRepo.Find(&existingUsername, map[string]any{"username": payload.Username})
-	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsErrRecordNotFound(result.Error) {
+	result := svc.UserRepo.Find(&existingUsername, fiber.Map{"username": payload.Username})
+	if result.Error != nil && !gormhelper.IsErrRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
 	if !gormhelper.IsErrRecordNotFound(result.Error) {
-		return nil, errorhelper.Error400("Username already used") // #marked: message
+		return responsehelper.ResponseErrorValidation(fiber.Map{"username": "Username already used"}), nil // #marked: message
 	}
 
-	result = svc.UserRepo.Find(&existingPhone, map[string]any{"phone": payload.Phone})
-	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsErrRecordNotFound(result.Error) {
+	result = svc.UserRepo.Find(&existingPhone, fiber.Map{"phone": payload.Phone})
+	if result.Error != nil && !gormhelper.IsErrRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
 	if !gormhelper.IsErrRecordNotFound(result.Error) {
-		return nil, errorhelper.Error400("Phone already used") // #marked: message
+		return responsehelper.ResponseErrorValidation(fiber.Map{"phone": "Phone already used"}), nil // #marked: message
 	}
 
-	result = svc.UserRepo.Find(&existingEmail, map[string]any{"email": payload.Email})
-	if validatorhelper.IsNotNil(result.Error) && !gormhelper.IsErrRecordNotFound(result.Error) {
+	result = svc.UserRepo.Find(&existingEmail, fiber.Map{"email": payload.Email})
+	if result.Error != nil && !gormhelper.IsErrRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
 	if !gormhelper.IsErrRecordNotFound(result.Error) {
-		return nil, errorhelper.Error400("Email already used") // #marked: message
+		return responsehelper.ResponseErrorValidation(fiber.Map{"email": "Email already used"}), nil // #marked: message
 	}
 
 	hashedPassword := password.Generate(payload.Password)
@@ -56,17 +58,16 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error)
 		FullName: payload.FullName,
 		Password: hashedPassword,
 	})
-	if validatorhelper.IsNotNil(result.Error) {
+	if result.Error != nil {
 		return nil, result.Error
 	}
-
-	if gormhelper.HasAffectedRows(result) {
-		message = "User created successfully" // #marked: message
+	if !gormhelper.HasAffectedRows(result) {
+		return nil, errorhelper.Error500("Failed to create user") // #marked: message
 	}
 
 	return &appModel.Response{
 		Code:    fiber.StatusCreated,
 		Status:  utils.StatusMessage(fiber.StatusCreated),
-		Message: message,
+		Message: "User created successfully", // #marked: message
 	}, nil
 }

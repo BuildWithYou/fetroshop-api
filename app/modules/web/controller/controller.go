@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/gofiber/fiber/v2"
 )
@@ -23,8 +22,8 @@ func WebControllerProvider(
 
 func execute(ctx *fiber.Ctx, handler func(ctx *fiber.Ctx) (*appModel.Response, error)) (err error) {
 	response, err := handler(ctx)
-	if validatorhelper.IsNotNil(err) {
+	if err != nil {
 		return err
 	}
-	return ctx.JSON(response)
+	return ctx.Status(response.Code).JSON(response)
 }

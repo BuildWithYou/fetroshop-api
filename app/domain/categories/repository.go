@@ -1,6 +1,8 @@
 package categories
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type CategoryRepo interface {
 	Create(data *Category) *gorm.DB

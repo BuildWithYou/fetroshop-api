@@ -9,12 +9,15 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/BuildWithYou/fetroshop-api/app/injector"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/model"
 	"github.com/stretchr/testify/assert"
 )
 
 var fetroshopApp = injector.InitializeWebServer()
+var webLogger = logger.NewWebLogger(confighelper.GetConfig())
 
 func TestCategoryServiceList(t *testing.T) {
 	tests := []struct {
@@ -81,7 +84,7 @@ func TestCategoryServiceList(t *testing.T) {
 			assert.NotNil(t, bytes)
 
 			if response.StatusCode != tt.wantResponseCode {
-				fmt.Println("Response : ", string(bytes)) // #marked: logging
+				webLogger.LogConsole.Error(fmt.Sprintln("Response : ", string(bytes)))
 			}
 
 		})

@@ -10,7 +10,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/jwt"
-	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	cmsAuthSvc "github.com/BuildWithYou/fetroshop-api/app/modules/cms/service/auth"
 	webAuthSvc "github.com/BuildWithYou/fetroshop-api/app/modules/web/service/auth"
 	"github.com/gofiber/fiber/v2"
@@ -21,6 +21,7 @@ type JwtMiddleware struct {
 	Config             *viper.Viper
 	UserAccessRepo     user_accesses.UserAccessRepo
 	CustomerAccessRepo customer_accesses.CustomerAccessRepo
+	Logger             *logger.Logger
 }
 
 // NewJwtMiddleware creates a new JwtMiddleware instance.
@@ -67,9 +68,9 @@ func (jwtMid *JwtMiddleware) Authenticate(ctx *fiber.Ctx) error {
 	}
 
 	// Verify the token which is in the chunks
-	reversedToken, err := jwt.Reverse(jwtMid.Config.GetString("security.jwt.tokenKey"), chunks[1])
-	if validatorhelper.IsNotNil(err) {
-		fmt.Println("Error on reverse jwt token : ", err.Error()) // #marked: logging
+	reversedToken, err := jwt.Reverse(jwtMid.Config.GetString("security.jwt.tokenKey"), chunks[1], jwtMid.Logger)
+	if err != nil {
+		jwtMid.Logger.Error(fmt.Sprintln("Error on reverse jwt token : ", err.Error()))
 		return fiber.ErrUnauthorized
 	}
 
@@ -78,7 +79,7 @@ func (jwtMid *JwtMiddleware) Authenticate(ctx *fiber.Ctx) error {
 	case cmsAuthSvc.USER_TYPE:
 		{
 			userAccess := new(user_accesses.UserAccess)
-			result := jwtMid.UserAccessRepo.Find(userAccess, map[string]any{"key": reversedToken.AccessKey}) // TODO: implement redis caching to improve performance
+			result := jwtMid.UserAccessRepo.Find(userAccess, fiber.Map{"key": reversedToken.AccessKey}) // TODO: implement redis caching to improve performance
 			if gormhelper.IsErrRecordNotFound(result.Error) {
 				return fiber.ErrUnauthorized
 			}
@@ -91,7 +92,7 @@ func (jwtMid *JwtMiddleware) Authenticate(ctx *fiber.Ctx) error {
 	case webAuthSvc.CUSTOMER_TYPE:
 		{
 			customerAccess := new(customer_accesses.CustomerAccess)
-			result := jwtMid.CustomerAccessRepo.Find(customerAccess, map[string]any{"key": reversedToken.AccessKey}) // TODO: implement redis caching to improve performance
+			result := jwtMid.CustomerAccessRepo.Find(customerAccess, fiber.Map{"key": reversedToken.AccessKey}) // TODO: implement redis caching to improve performance
 			if gormhelper.IsErrRecordNotFound(result.Error) {
 				return fiber.ErrUnauthorized
 			}

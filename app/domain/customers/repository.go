@@ -1,6 +1,8 @@
 package customers
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type CustomerRepo interface {
 	Create(data *Customer) *gorm.DB

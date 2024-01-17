@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 
-	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/injector"
 )
 
@@ -12,12 +11,18 @@ func main() {
 	// Run cms server
 	go func() {
 		cmsApp := injector.InitializeCmsServer()
+		cmsApp.Logger.Info("Starting cms server...")
 		err := cmsApp.FiberApp.Listen(fmt.Sprintf("%s:%d", cmsApp.Host, cmsApp.Port))
-		errorhelper.PanicIfError(err)
+		if err != nil {
+			cmsApp.Logger.Panic(err.Error())
+		}
 	}()
 
 	// Run web server
 	webApp := injector.InitializeWebServer()
+	webApp.Logger.Info("Starting web server...")
 	err := webApp.FiberApp.Listen(fmt.Sprintf("%s:%d", webApp.Host, webApp.Port))
-	errorhelper.PanicIfError(err)
+	if err != nil {
+		webApp.Logger.Panic(err.Error())
+	}
 }

@@ -11,6 +11,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/jwt"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/password"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/responsehelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
 	webModel "github.com/BuildWithYou/fetroshop-api/app/modules/web/model"
@@ -25,21 +26,28 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*appModel.Response, error) {
 	jwtTokenKey := svc.Config.GetString("security.jwt.tokenKey")
 	jwtExpiration := svc.Config.GetString("security.jwt.expiration")
 
-	err := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
-	if validatorhelper.IsNotNil(err) {
-		return nil, err
+	errValidation, errParsing := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
+	if errParsing != nil {
+		return nil, errParsing
+	}
+	if errValidation != nil {
+		return responsehelper.ResponseErrorValidation(errValidation), nil
 	}
 
 	// check is customer exist
-	result := svc.CustomerRepo.Find(&customer, map[string]any{"username": payload.Username})
+	result := svc.CustomerRepo.Find(&customer, fiber.Map{"username": payload.Username})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
-		return nil, errorhelper.Error500("Something went wrong") // #marked: message
+		return nil, result.Error
 	}
+	invalidEmailPasswordMsg := fiber.Map{
+		"username": "Invalid username or password",
+		"password": "Invalid username or password",
+	} // #marked: message
 	if gormhelper.IsErrRecordNotFound(result.Error) {
-		return nil, errorhelper.Error401("Invalid email or password") // #marked: message
+		return responsehelper.ResponseErrorValidation(invalidEmailPasswordMsg), nil
 	}
-	if err := password.Verify(customer.Password, payload.Password); validatorhelper.IsNotNil(err) {
-		return nil, errorhelper.Error401("Invalid email or password")
+	if err := password.Verify(customer.Password, payload.Password); err != nil {
+		return responsehelper.ResponseErrorValidation(invalidEmailPasswordMsg), nil
 	}
 
 	accessToken := password.Generate(fmt.Sprintf(
@@ -51,7 +59,7 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*appModel.Response, error) {
 
 	additionalDuration, err := time.ParseDuration(jwtExpiration)
 	if err != nil {
-		panic("Invalid time duration. Should be time.ParseDuration string")
+		svc.Logger.Panic("Invalid time duration. Should be time.ParseDuration string")
 	}
 	expiredAt := time.Now().Add(additionalDuration)
 
@@ -62,13 +70,13 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*appModel.Response, error) {
 		UserAgent:  ctx.Get("User-Agent"),
 		ExpiredAt:  expiredAt,
 	},
-		map[string]any{
+		fiber.Map{
 			"customer_id": customer.ID,
 			"platform":    ctx.Get("Sec-Ch-Ua-Platform"),
 			"user_agent":  ctx.Get("User-Agent"),
 		},
 	)
-	if validatorhelper.IsNotNil(result.Error) && !gormhelper.HasAffectedRows(result) {
+	if result.Error != nil && !gormhelper.HasAffectedRows(result) {
 		return nil, result.Error
 	}
 	if !gormhelper.HasAffectedRows(result) {
@@ -86,7 +94,7 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*appModel.Response, error) {
 		Code:    fiber.StatusOK,
 		Status:  utils.StatusMessage(fiber.StatusOK),
 		Message: "Login success", // #marked: message
-		Data: map[string]string{
+		Data: fiber.Map{
 			"token":     generatedJwt.Token,
 			"createdAt": time.Now().Format("2006-01-02 15:04:05"),
 			"expiredAt": generatedJwt.ExpiredAt.Format("2006-01-02 15:04:05"),

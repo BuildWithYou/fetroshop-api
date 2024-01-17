@@ -1,6 +1,8 @@
 package users
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type UserRepo interface {
 	Create(data *User) *gorm.DB

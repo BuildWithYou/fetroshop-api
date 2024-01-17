@@ -4,6 +4,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/connection"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/user_accesses"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/users"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -27,12 +28,14 @@ type AuthServiceImpl struct {
 	Validate       *validator.Validate
 	UserRepo       users.UserRepo
 	UserAccessRepo user_accesses.UserAccessRepo
+	Logger         *logger.Logger
 }
 
 func ServiceProvider(
 	conn *connection.Connection,
 	config *viper.Viper,
 	validate *validator.Validate,
+	logger *logger.Logger,
 	userRepo users.UserRepo,
 	userAccessRepo user_accesses.UserAccessRepo,
 ) AuthService {
@@ -43,5 +46,6 @@ func ServiceProvider(
 		Validate:       validate,
 		UserRepo:       userRepo,
 		UserAccessRepo: userAccessRepo,
+		Logger:         logger,
 	}
 }

@@ -2,9 +2,7 @@ package gormhelper
 
 import (
 	"errors"
-	"fmt"
 
-	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	"gorm.io/gorm"
 )
 
@@ -14,10 +12,7 @@ func IsErrRecordNotFound(err error) bool {
 }
 
 func IsErrNotNilNotRecordNotFound(err error) bool {
-	isError := validatorhelper.IsNotNil(err) && !errors.Is(err, gorm.ErrRecordNotFound)
-	if isError {
-		fmt.Println("IsErrNotNilNotRecordNotFound : ", err.Error()) // #marked: logging
-	}
+	isError := err != nil && !errors.Is(err, gorm.ErrRecordNotFound)
 	return isError
 }
 

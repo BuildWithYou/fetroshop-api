@@ -6,6 +6,7 @@ definitions:
       data: {}
       message:
         type: string
+      meta: {}
       status:
         type: string
     type: object
@@ -21,6 +22,7 @@ paths:
   /api/auth/login:
     post:
       consumes:
+      - application/x-www-form-urlencoded
       - application/json
       parameters:
       - in: formData
@@ -108,6 +110,7 @@ paths:
   /api/auth/register:
     post:
       consumes:
+      - application/x-www-form-urlencoded
       - application/json
       parameters:
       - in: formData
@@ -152,6 +155,141 @@ paths:
       summary: Register new user
       tags:
       - Authentication
+  /api/category/{categoryCode}:
+    delete:
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      parameters:
+      - description: Category Code
+        in: path
+        name: categoryCode
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Response'
+      summary: Delete category
+      tags:
+      - Categories
+    put:
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      parameters:
+      - description: Category Code
+        in: path
+        name: categoryCode
+        required: true
+        type: string
+      - in: formData
+        name: code
+        required: true
+        type: string
+      - in: formData
+        name: displayOrder
+        required: true
+        type: integer
+      - in: formData
+        name: icon
+        type: string
+      - in: formData
+        name: isActive
+        type: boolean
+      - in: formData
+        name: name
+        required: true
+        type: string
+      - in: formData
+        name: parentCode
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Response'
+      summary: Update category
+      tags:
+      - Categories
+  /api/category/create:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      parameters:
+      - in: formData
+        name: code
+        required: true
+        type: string
+      - in: formData
+        name: displayOrder
+        required: true
+        type: integer
+      - in: formData
+        name: icon
+        type: string
+      - in: formData
+        name: isActive
+        type: boolean
+      - in: formData
+        name: name
+        required: true
+        type: string
+      - in: formData
+        name: parentCode
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Response'
+      summary: Create category
+      tags:
+      - Categories
 securityDefinitions:
   Bearer:
     description: Use format 'Bearer YOUR_TOKEN'

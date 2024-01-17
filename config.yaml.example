@@ -5,17 +5,19 @@ app:
    web:
       name: Fetroshop CMS API
       version: 1.0.0
-      host: localhost
+      host: 0.0.0.0
       port: 3000
       env: development
       url: http://localhost:3000
+      logLevel: trace
    cms:
       name: Fetroshop Web API
       version: 1.0.0
-      host: localhost
+      host: 0.0.0.0
       port: 3001
       env: development
       url: http://localhost:3001
+      logLevel: trace
 fiber:
    # The maximum amount of time (second) to wait for the next request when keep-alive is enabled. If IdleTimeout is zero, the value of ReadTimeout is used.
    #
@@ -46,28 +48,25 @@ fiber:
    #
    # Optional. Default: false
    enableStackTrace: true
-database:
-   # MIGRATION COMMAND TEMPLATE:
-   # migrate create -ext sql -dir db/migrations migration_file_name
-   # migrate -database "postgresql://{dbUsername}:{dbPassword}@{dbHost}:{dbPort}/{dbName}" -path db/migrations up
-   # migrate -database "postgresql://{dbUsername}:{dbPassword}@{dbHost}:{dbPort}/{dbName}" -path db/migrations down
 
+   # SetLevel sets the logger level.
+   logLevel: trace
+database:
    main:
       dbName: fetroshop
       dbUsername: postgres
       dbPassword: postgres
-      dbHost: localhost
+      dbHost: db
       dbPort: 5432
-      dbUrl: postgresql://{main.dbUsername}:{main.dbPassword}@{main.dbHost}:{main.dbPort}/{main.dbName}
+      dbUrl: postgresql://postgres:postgres@db:5432/fetroshop?sslmode=disable
 
    test:
       dbName: fetroshop_test
       dbUsername: postgres
       dbPassword: postgres
-      dbHost: localhost
+      dbHost: db
       dbPort: 5432
-      dbUrl: postgresql://{test.dbUsername}:{test.dbPassword}@{test.dbHost}:{test.dbPort}/{test.dbName}
-
+      dbUrl: postgresql://postgres:postgres@db:5432/fetroshop_test?sslmode=disable
 
    # (int) Maximum number of open connections to the database.
    dbMaxOpenConns: 100
@@ -84,13 +83,13 @@ database:
    # Database log mode
    # Options: silent, error, warn, info
    # Default: silent
-   logLevel: silent
+   logLevel: info
 security:
    cors:
       # AllowOrigin defines a list of origins that may access the resource.
       #
       # Optional. Default value "*"
-      allowOrigins: "*"
+      allowOrigins: "http://127.0.0.1:3000,http://127.0.0.1:3001"
 
       # AllowHeaders defines a list of request headers that can be used when making the actual request. This is in response to a preflight request.
       #
@@ -111,4 +110,4 @@ swagger:
    deepLinking: false
 
    # Controls the default expansion setting for the operations and tags. 'list' (default, expands only the tags), 'full' (expands the tags and operations), 'none' (expands nothing)
-   docExpansion: none
+   docExpansion: list

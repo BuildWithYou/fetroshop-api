@@ -15,6 +15,8 @@ WORKDIR /app
 COPY --from=build /app/api /app/api
 COPY config.yaml.docker config.yaml
 COPY docs docs
+COPY logs/cms/.gitignore logs/cms/.gitignore
+COPY logs/web/.gitignore logs/web/.gitignore
 
 
 # Update the package repository and install curl

@@ -23,7 +23,7 @@ func (svc *AuthServiceImpl) Refresh(ctx *fiber.Ctx) (*appModel.Response, error) 
 
 	additionalDuration, err := time.ParseDuration(jwtExpiration)
 	if err != nil {
-		panic("Invalid time duration. Should be time.ParseDuration string")
+		svc.Logger.Panic("Invalid time duration. Should be time.ParseDuration string")
 	}
 	expiredAt := time.Now().Add(additionalDuration)
 
@@ -47,11 +47,14 @@ func (svc *AuthServiceImpl) Refresh(ctx *fiber.Ctx) (*appModel.Response, error) 
 			CustomerID: customerID,
 			ExpiredAt:  expiredAt,
 		},
-		map[string]any{
+		fiber.Map{
 			"key":         identifier,
 			"customer_id": customerID,
 		},
 	)
+	if result.Error != nil {
+		return nil, result.Error
+	}
 	if !gormhelper.HasAffectedRows(result) {
 		return nil, errorhelper.Error500("Failed to refresh token") // #marked: message
 	}
@@ -60,7 +63,7 @@ func (svc *AuthServiceImpl) Refresh(ctx *fiber.Ctx) (*appModel.Response, error) 
 		Code:    fiber.StatusOK,
 		Status:  utils.StatusMessage(fiber.StatusOK),
 		Message: "Refresh success", // #marked: message
-		Data: map[string]string{
+		Data: fiber.Map{
 			"token":     generatedJwt.Token,
 			"createdAt": time.Now().Format("2006-01-02 15:04:05"),
 			"expiredAt": generatedJwt.ExpiredAt.Format("2006-01-02 15:04:05"),

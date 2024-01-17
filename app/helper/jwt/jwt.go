@@ -5,14 +5,17 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/BuildWithYou/fetroshop-api/app/helper/constant"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 )
 
+// TODO: include in struct
+
 const CMS_IDENTIFIER = "USER_ID"
 const WEB_IDENTIFIER = "CUSTOMER_ID"
 const ACCESS_IDENTIFIER = "ACCESS_IDENTIFIER"
-const errorMessage = "something went wrong"
 
 // TokenPayload defines the payload for the token
 type TokenPayload struct {
@@ -70,26 +73,26 @@ func parse(tokenKey string, jwtToken string) (*jwt.Token, error) {
 }
 
 // Verify verifies the jwt token against the secret
-func Reverse(tokenKey string, jwtToken string) (*TokenReversed, error) {
+func Reverse(tokenKey string, jwtToken string, lg *logger.Logger) (*TokenReversed, error) {
 	var expiredAt time.Time
 	parsed, err := parse(tokenKey, jwtToken)
 
 	if err != nil {
-		fmt.Println("Error from jwt.parse : ", err.Error()) // #marked: logging
+		lg.Error(fmt.Sprint("Error from jwt.parse : ", err.Error()))
 		return nil, err
 	}
 
 	// Parsing token claims
 	claims, ok := parsed.Claims.(jwt.MapClaims)
 	if !ok {
-		fmt.Println("Error from jwt.Reverse on parsed.Claims") // #marked: logging
+		lg.Error("Error from jwt.Reverse on parsed.Claims")
 		return nil, err
 	}
 
 	accessKey, ok := claims["accessKey"].(string)
 	if !ok {
-		fmt.Println("Error from jwt.Reverse when parsing accessKey") // #marked: logging
-		return nil, errors.New(errorMessage)                         // #marked: message
+		lg.Error("Error from jwt.Reverse when parsing accessKey")
+		return nil, errors.New(constant.ERROR_GENERAL) // #marked: message
 	}
 
 	expiredAtFloat, ok := claims["exp"].(float64)
@@ -97,14 +100,14 @@ func Reverse(tokenKey string, jwtToken string) (*TokenReversed, error) {
 		seconds := int64(expiredAtFloat)
 		expiredAt = time.Unix(seconds, 0)
 	} else {
-		fmt.Println("Error from jwt.Reverse when parsing exp") // #marked: logging
-		return nil, errors.New(errorMessage)                   // #marked: message
+		lg.Error("Error from jwt.Reverse when parsing exp")
+		return nil, errors.New(constant.ERROR_GENERAL) // #marked: message
 	}
 
 	tokenType, ok := claims["type"].(string)
 	if !ok {
-		fmt.Println("Error from jwt.Reverse when parsing type") // #marked: logging
-		return nil, errors.New(errorMessage)                    // #marked: message
+		lg.Error("Error from jwt.Reverse when parsing type")
+		return nil, errors.New(constant.ERROR_GENERAL) // #marked: message
 	}
 
 	return &TokenReversed{

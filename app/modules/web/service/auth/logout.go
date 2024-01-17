@@ -2,9 +2,9 @@ package auth
 
 import (
 	"github.com/BuildWithYou/fetroshop-api/app/domain/customer_accesses"
-	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/jwt"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/responsehelper"
 	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/utils"
@@ -16,8 +16,11 @@ func (svc *AuthServiceImpl) Logout(ctx *fiber.Ctx) (*appModel.Response, error) {
 	result := svc.CustomerAccessRepo.Delete(&customer_accesses.CustomerAccess{
 		Key:        identifier,
 		CustomerID: customerID})
+	if result.Error != nil {
+		return nil, result.Error
+	}
 	if !gormhelper.HasAffectedRows(result) {
-		return nil, errorhelper.Error500("Failed to logout") // #marked: message
+		return responsehelper.Response500("Failed to logout", nil), nil // #marked: message
 	}
 
 	return &appModel.Response{
