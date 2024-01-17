@@ -14,12 +14,12 @@ import (
 
 func (svc *CategoryServiceImpl) Create(ctx *fiber.Ctx) (*appModel.Response, error) {
 	payload := new(model.UpsertCategoryRequest)
-	errorMap, err := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
-	if err != nil {
-		return svc.responseErrorGeneral(fiber.Map{"message": err.Error()}), nil
+	errValidation, errParsing := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
+	if errParsing != nil {
+		return nil, errParsing
 	}
-	if errorMap != nil {
-		return svc.responseErrorValidation(fiber.Map{"messages": errorMap}), nil
+	if errValidation != nil {
+		return responsehelper.ResponseErrorValidation(errValidation), nil
 	}
 
 	var (
@@ -44,11 +44,11 @@ func (svc *CategoryServiceImpl) Create(ctx *fiber.Ctx) (*appModel.Response, erro
 	if payload.ParentCode != "" {
 		parentCategory := new(categories.Category)
 		result := svc.CategoryRepo.Find(parentCategory, map[string]any{"code": payload.ParentCode})
-		if result.Error != nil && !gormhelper.IsErrRecordNotFound(result.Error) {
-			return svc.responseErrorGeneral(fiber.Map{"message": result.Error.Error()}), nil
+		if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+			return nil, result.Error
 		}
 		if gormhelper.IsErrRecordNotFound(result.Error) {
-			return svc.responseErrorValidation(fiber.Map{"message": "Parent category not found"}), nil
+			return responsehelper.ResponseErrorValidation(fiber.Map{"parentCode": "Invalid parent category code"}), nil // #marked: message
 		}
 		parentID = null.IntFrom(parentCategory.ID)
 	}
@@ -56,24 +56,24 @@ func (svc *CategoryServiceImpl) Create(ctx *fiber.Ctx) (*appModel.Response, erro
 	// check display order is unique
 	categoryByDisplayOrder := new(categories.Category)
 	result := svc.CategoryRepo.Find(categoryByDisplayOrder, map[string]any{"display_order": displayOrder})
-	if result.Error != nil && !gormhelper.IsErrRecordNotFound(result.Error) {
-		return svc.responseErrorGeneral(fiber.Map{"message": result.Error.Error()}), nil
+	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+		return nil, result.Error
 	}
 	if !gormhelper.IsErrRecordNotFound(result.Error) {
-		return svc.responseErrorValidation(fiber.Map{"message": "Display order has been taken"}), nil
+		return responsehelper.ResponseErrorValidation(fiber.Map{"displayOrder": "Display order has been taken"}), nil // #marked: message
 	}
 
 	// check code is unique
 	categoryByCode := new(categories.Category)
 	result = svc.CategoryRepo.Find(categoryByCode, map[string]any{"code": code})
-	if result.Error != nil && !gormhelper.IsErrRecordNotFound(result.Error) {
-		return svc.responseErrorGeneral(fiber.Map{"message": result.Error.Error()}), nil
+	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+		return nil, result.Error
 	}
 	if !gormhelper.IsErrRecordNotFound(result.Error) {
-		return svc.responseErrorValidation(fiber.Map{"message": "Code has been taken"}), nil
+		return responsehelper.ResponseErrorValidation(fiber.Map{"code": "Category code has been taken"}), nil // #marked: message
 	}
 
-	createdCategory := &categories.Category{
+	newCategory := &categories.Category{
 		ParentID:     parentID,
 		Code:         code,
 		Name:         name,
@@ -81,14 +81,13 @@ func (svc *CategoryServiceImpl) Create(ctx *fiber.Ctx) (*appModel.Response, erro
 		Icon:         icon,
 		DisplayOrder: displayOrder,
 	}
-	result = svc.CategoryRepo.Create(createdCategory)
+	result = svc.CategoryRepo.Create(newCategory)
 	if result.Error != nil {
-		return svc.responseErrorGeneral(fiber.Map{"message": result.Error.Error()}), nil
+		return nil, result.Error
 	}
-	if gormhelper.HasAffectedRows(result) {
-		return responsehelper.Response201("Category created successfully", createdCategory, nil), nil
-	} else {
+	if !gormhelper.HasAffectedRows(result) {
 		return responsehelper.Response500("Failed to create category", nil), nil
 	}
+	return responsehelper.Response201("Category created successfully", newCategory, nil), nil // #marked: message
 
 }

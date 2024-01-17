@@ -26,7 +26,7 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error)
 	}
 
 	result := svc.CustomerRepo.Find(&existingUsername, fiber.Map{"username": payload.Username})
-	if result.Error != nil && !gormhelper.IsErrRecordNotFound(result.Error) {
+	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
 	if !gormhelper.IsErrRecordNotFound(result.Error) {
@@ -34,7 +34,7 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error)
 	}
 
 	result = svc.CustomerRepo.Find(&existingPhone, fiber.Map{"phone": payload.Phone})
-	if result.Error != nil && !gormhelper.IsErrRecordNotFound(result.Error) {
+	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
 	if !gormhelper.IsErrRecordNotFound(result.Error) {
@@ -42,7 +42,7 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error)
 	}
 
 	result = svc.CustomerRepo.Find(&existingEmail, fiber.Map{"email": payload.Email})
-	if result.Error != nil && !gormhelper.IsErrRecordNotFound(result.Error) {
+	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
 	if !gormhelper.IsErrRecordNotFound(result.Error) {

@@ -10,7 +10,6 @@ import (
 	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
 	cmsModel "github.com/BuildWithYou/fetroshop-api/app/modules/cms/model"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/utils"
 )
 
 func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error) {
@@ -26,7 +25,7 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error)
 	}
 
 	result := svc.UserRepo.Find(&existingUsername, fiber.Map{"username": payload.Username})
-	if result.Error != nil && !gormhelper.IsErrRecordNotFound(result.Error) {
+	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
 	if !gormhelper.IsErrRecordNotFound(result.Error) {
@@ -34,7 +33,7 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error)
 	}
 
 	result = svc.UserRepo.Find(&existingPhone, fiber.Map{"phone": payload.Phone})
-	if result.Error != nil && !gormhelper.IsErrRecordNotFound(result.Error) {
+	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
 	if !gormhelper.IsErrRecordNotFound(result.Error) {
@@ -42,7 +41,7 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error)
 	}
 
 	result = svc.UserRepo.Find(&existingEmail, fiber.Map{"email": payload.Email})
-	if result.Error != nil && !gormhelper.IsErrRecordNotFound(result.Error) {
+	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
 	if !gormhelper.IsErrRecordNotFound(result.Error) {
@@ -51,23 +50,19 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error)
 
 	hashedPassword := password.Generate(payload.Password)
 
-	result = svc.UserRepo.Create(&users.User{
+	newUser := &users.User{
 		Username: payload.Username,
 		Phone:    payload.Phone,
 		Email:    payload.Email,
 		FullName: payload.FullName,
 		Password: hashedPassword,
-	})
+	}
+	result = svc.UserRepo.Create(newUser)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 	if !gormhelper.HasAffectedRows(result) {
 		return nil, errorhelper.Error500("Failed to create user") // #marked: message
 	}
-
-	return &appModel.Response{
-		Code:    fiber.StatusCreated,
-		Status:  utils.StatusMessage(fiber.StatusCreated),
-		Message: "User created successfully", // #marked: message
-	}, nil
+	return responsehelper.Response201("User created successfully", newUser, nil), nil // #marked: message
 }
