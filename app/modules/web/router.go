@@ -1,6 +1,7 @@
-package router
+package web
 
 import (
+	"github.com/BuildWithYou/fetroshop-api/app"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/BuildWithYou/fetroshop-api/app/middleware"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/docs"
@@ -47,13 +48,13 @@ func (router *WebRouter) Init(app *fiber.App) {
 
 }
 
-func WebRouterProvider(
+func RouterProvider(
 	docs *docs.Docs,
 	jwtMiddleware *middleware.JwtMiddleware,
 	dbMiddleware *middleware.DbMiddleware,
 	ctr *controller.Controller,
 	logger *logger.Logger,
-) Router {
+) app.Router {
 	loggerMiddleware := middleware.LoggerMiddlewareProvider(logger)
 	return &WebRouter{
 		Docs:             docs,

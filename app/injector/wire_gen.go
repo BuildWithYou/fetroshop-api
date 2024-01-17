@@ -27,7 +27,6 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/controller"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/service/auth"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/service/category"
-	"github.com/BuildWithYou/fetroshop-api/app/router"
 	"github.com/google/wire"
 )
 
@@ -51,8 +50,8 @@ func InitializeWebServer() *app.Fetroshop {
 	categoryService := category.ServiceProvider(connectionConnection, viper, validate, loggerLogger, categoryRepo)
 	categoryController := controller.CategoryControllerProvider(validate, categoryService)
 	controllerController := controller.WebControllerProvider(authController, categoryController)
-	routerRouter := router.WebRouterProvider(docsDocs, jwtMiddleware, dbMiddleware, controllerController, loggerLogger)
-	serverConfig := web.WebServerConfigProvider(routerRouter, loggerLogger)
+	router := web.RouterProvider(docsDocs, jwtMiddleware, dbMiddleware, controllerController, loggerLogger)
+	serverConfig := web.WebServerConfigProvider(router, loggerLogger)
 	fetroshop := app.CreateFiber(serverConfig)
 	return fetroshop
 }
@@ -79,8 +78,8 @@ func InitializeCmsServer() *app.Fetroshop {
 	categoryService := category2.ServiceProvider(connectionConnection, viper, validate, loggerLogger, categoryRepo)
 	categoryController := controller2.CategoryControllerProvider(validate, categoryService)
 	controllerController := controller2.CmsControllerProvider(authController, categoryController)
-	routerRouter := router.CmsRouterProvider(docsDocs, jwtMiddleware, dbMiddleware, controllerController, loggerLogger)
-	serverConfig := cms.CmsServerConfigProvider(routerRouter, loggerLogger)
+	router := cms.RouterProvider(docsDocs, jwtMiddleware, dbMiddleware, controllerController, loggerLogger)
+	serverConfig := cms.CmsServerConfigProvider(router, loggerLogger)
 	fetroshop := app.CreateFiber(serverConfig)
 	return fetroshop
 }

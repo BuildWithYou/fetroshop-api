@@ -1,6 +1,7 @@
-package router
+package cms
 
 import (
+	"github.com/BuildWithYou/fetroshop-api/app"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/BuildWithYou/fetroshop-api/app/middleware"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/cms/controller"
@@ -48,13 +49,13 @@ func (router *CmsRouter) Init(app *fiber.App) {
 
 }
 
-func CmsRouterProvider(
+func RouterProvider(
 	docs *docs.Docs,
 	jwtMiddleware *middleware.JwtMiddleware,
 	dbMiddleware *middleware.DbMiddleware,
 	ctr *controller.Controller,
 	logger *logger.Logger,
-) Router {
+) app.Router {
 	loggerMiddleware := middleware.LoggerMiddlewareProvider(logger)
 	return &CmsRouter{
 		Docs:             docs,

@@ -4,7 +4,6 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
-	"github.com/BuildWithYou/fetroshop-api/app/router"
 )
 
 //	@title         Fetroshop Web API
@@ -16,7 +15,7 @@ import (
 //	@name						Authorization
 //	@description			Use format 'Bearer YOUR_TOKEN'
 
-func WebServerConfigProvider(webRouter router.Router, logger *logger.Logger) *app.ServerConfig {
+func WebServerConfigProvider(webRouter app.Router, logger *logger.Logger) *app.ServerConfig {
 	config := confighelper.GetConfig()
 	logger.Info("Initializing web server")
 	return &app.ServerConfig{

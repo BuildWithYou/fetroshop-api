@@ -8,7 +8,6 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/BuildWithYou/fetroshop-api/app/middleware"
 	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
-	"github.com/BuildWithYou/fetroshop-api/app/router"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/utils"
@@ -27,7 +26,7 @@ type ServerConfig struct {
 	Config *viper.Viper
 	Host   string
 	Port   int
-	Router router.Router
+	Router Router
 	Static map[string]string
 	Logger *logger.Logger
 }

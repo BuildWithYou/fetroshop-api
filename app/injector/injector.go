@@ -24,7 +24,6 @@ import (
 	webController "github.com/BuildWithYou/fetroshop-api/app/modules/web/controller"
 	webAuthService "github.com/BuildWithYou/fetroshop-api/app/modules/web/service/auth"
 	webCategoryService "github.com/BuildWithYou/fetroshop-api/app/modules/web/service/category"
-	"github.com/BuildWithYou/fetroshop-api/app/router"
 	"github.com/google/wire"
 )
 
@@ -67,7 +66,7 @@ func InitializeWebServer() *app.Fetroshop {
 		webRepoSet,
 		webControllerSet,
 		webServiceSet,
-		router.WebRouterProvider,
+		web.RouterProvider,
 		web.WebServerConfigProvider,
 	)
 	return nil
@@ -97,7 +96,7 @@ func InitializeCmsServer() *app.Fetroshop {
 		cmsRepoSet,
 		cmsControllerSet,
 		cmsServiceSet,
-		router.CmsRouterProvider,
+		cms.RouterProvider,
 		cms.CmsServerConfigProvider,
 	)
 	return nil
