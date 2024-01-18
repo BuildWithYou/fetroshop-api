@@ -10,7 +10,7 @@ import (
 )
 
 func (svc *categoryService) Delete(ctx *fiber.Ctx) (*model.Response, error) {
-	pathPayload := new(model.CategoryPathRequest)
+	pathPayload := new(model.FindCategoryRequest)
 	errValidation, errParsing := validatorhelper.ValidateParamPayload(ctx, svc.Validate, pathPayload)
 	if errParsing != nil {
 		return nil, errParsing

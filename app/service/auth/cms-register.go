@@ -14,7 +14,7 @@ import (
 func (svc *authService) CmsRegister(ctx *fiber.Ctx) (*model.Response, error) {
 	var existingUsername, existingPhone, existingEmail users.User
 
-	payload := new(model.CmsRegistrationRequest)
+	payload := new(model.RegistrationRequest)
 	errValidation, errParsing := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
 	if errParsing != nil {
 		return nil, errParsing
@@ -66,6 +66,11 @@ func (svc *authService) CmsRegister(ctx *fiber.Ctx) (*model.Response, error) {
 
 	return responsehelper.Response201(
 		"User created successfully", // #marked: message
-		newUser,                     // TODO: data return must be filtered
+		model.RegistrationResponseData{
+			Username: newUser.Username,
+			Phone:    newUser.Phone,
+			Email:    newUser.Email,
+			FullName: newUser.FullName,
+		},
 		nil), nil
 }

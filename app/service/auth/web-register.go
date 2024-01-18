@@ -14,7 +14,7 @@ import (
 func (svc *authService) WebRegister(ctx *fiber.Ctx) (*model.Response, error) {
 	var existingUsername, existingPhone, existingEmail customers.Customer
 
-	payload := new(model.WebRegistrationRequest)
+	payload := new(model.RegistrationRequest)
 	errValidation, errParsing := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
 	if errParsing != nil {
 		return nil, errParsing
@@ -66,6 +66,11 @@ func (svc *authService) WebRegister(ctx *fiber.Ctx) (*model.Response, error) {
 
 	return responsehelper.Response201(
 		"Customer created successfully", // #marked: message
-		newCustomer,                     // TODO: data return must be filtered
+		model.RegistrationResponseData{
+			Username: newCustomer.Username,
+			Phone:    newCustomer.Phone,
+			Email:    newCustomer.Email,
+			FullName: newCustomer.FullName,
+		},
 		nil), nil
 }

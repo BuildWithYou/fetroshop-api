@@ -20,7 +20,7 @@ import (
 func (svc *authService) WebLogin(ctx *fiber.Ctx) (*model.Response, error) {
 	var customer customers.Customer
 
-	payload := new(model.WebLoginRequest)
+	payload := new(model.LoginRequest)
 	jwtTokenKey := svc.Config.GetString("security.jwt.tokenKey")
 	jwtExpiration := svc.Config.GetString("security.jwt.expiration")
 

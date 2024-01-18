@@ -20,7 +20,7 @@ import (
 func (svc *authService) CmsLogin(ctx *fiber.Ctx) (*model.Response, error) {
 	var user users.User
 
-	payload := new(model.CmsLoginRequest)
+	payload := new(model.LoginRequest)
 	jwtTokenKey := svc.Config.GetString("security.jwt.tokenKey")
 	jwtExpiration := svc.Config.GetString("security.jwt.expiration")
 

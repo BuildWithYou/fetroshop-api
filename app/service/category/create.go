@@ -12,6 +12,7 @@ import (
 )
 
 func (svc *categoryService) Create(ctx *fiber.Ctx) (*model.Response, error) {
+	// parse body
 	payload := new(model.UpsertCategoryRequest)
 	errValidation, errParsing := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
 	if errParsing != nil {
@@ -23,6 +24,7 @@ func (svc *categoryService) Create(ctx *fiber.Ctx) (*model.Response, error) {
 
 	var (
 		parentID     null.Int
+		parentCode   null.String
 		code         string
 		name         string
 		isActive     bool
@@ -34,10 +36,7 @@ func (svc *categoryService) Create(ctx *fiber.Ctx) (*model.Response, error) {
 	name = payload.Name
 	isActive = *payload.IsActive
 	displayOrder = payload.DisplayOrder
-
-	if payload.Icon != "" {
-		icon = null.StringFrom(payload.Icon)
-	}
+	icon = null.NewString(payload.Icon, payload.Icon != "")
 
 	// check parent category exists
 	if payload.ParentCode != "" {
@@ -50,6 +49,7 @@ func (svc *categoryService) Create(ctx *fiber.Ctx) (*model.Response, error) {
 			return responsehelper.ResponseErrorValidation(fiber.Map{"parentCode": "Invalid parent category code"}), nil // #marked: message
 		}
 		parentID = null.IntFrom(parentCategory.ID)
+		parentCode = null.StringFrom(parentCategory.Code)
 	}
 
 	// check display order is unique
@@ -72,6 +72,7 @@ func (svc *categoryService) Create(ctx *fiber.Ctx) (*model.Response, error) {
 		return responsehelper.ResponseErrorValidation(fiber.Map{"code": "Category code has been taken"}), nil // #marked: message
 	}
 
+	// create new category
 	newCategory := &categories.Category{
 		ParentID:     parentID,
 		Code:         code,
@@ -93,7 +94,16 @@ func (svc *categoryService) Create(ctx *fiber.Ctx) (*model.Response, error) {
 
 	return responsehelper.Response201(
 		"Category created successfully", // #marked: message
-		newCategory,                     // TODO: data return must be filtered
+		model.CategoryResponse{
+			Code:         newCategory.Code,
+			ParentCode:   parentCode,
+			Name:         newCategory.Name,
+			IsActive:     newCategory.IsActive,
+			Icon:         newCategory.Icon,
+			DisplayOrder: newCategory.DisplayOrder,
+			CreatedAt:    newCategory.CreatedAt,
+			UpdatedAt:    newCategory.UpdatedAt,
+		},
 		nil), nil
 
 }

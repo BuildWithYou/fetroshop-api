@@ -35,10 +35,7 @@ func (svc *brandService) Create(ctx *fiber.Ctx) (*model.Response, error) {
 	name = payload.Name
 	isActive = *payload.IsActive
 	displayOrder = payload.DisplayOrder
-
-	if payload.Icon != "" {
-		icon = null.StringFrom(payload.Icon)
-	}
+	icon = null.NewString(payload.Icon, payload.Icon != "")
 
 	// check parent category exists
 	if payload.ParentCode != "" {

@@ -29,7 +29,7 @@ func AuthControllerProvider(vld *validator.Validate, regSvc auth.AuthService) Au
 // @Tags         Authentication
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
-// @Param        req  formData  model.WebRegistrationRequest  true  "Registration Request"
+// @Param        req  formData  model.RegistrationRequest  true  "Registration Request"
 // @Success      200  {object}  model.Response
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response
@@ -44,7 +44,7 @@ func (ctr *authController) Register(ctx *fiber.Ctx) (err error) {
 // @Tags         Authentication
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
-// @Param        req  formData  model.WebLoginRequest  true  "Login Request"
+// @Param        req  formData  model.LoginRequest  true  "Login Request"
 // @Success      200  {object}  model.Response
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response

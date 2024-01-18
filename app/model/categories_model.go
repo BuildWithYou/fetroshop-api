@@ -15,10 +15,6 @@ type UpsertCategoryRequest struct {
 	DisplayOrder int64  `json:"displayOrder" form:"displayOrder" validate:"required"`
 }
 
-type CategoryPathRequest struct {
-	Code string `json:"code" form:"code" validate:"required"`
-}
-
 type DeleteCategoryRequest struct {
 	ForceDelete *bool `json:"forceDelete" form:"forceDelete" validate:"required"`
 }
