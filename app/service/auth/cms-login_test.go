@@ -27,8 +27,8 @@ func TestCmsServiceLogin(t *testing.T) {
 		{
 			name: "Login200",
 			args: args{
-				username:  "string",
-				password:  "string",
+				username:  "tester",
+				password:  "testertester",
 				platform:  "string",
 				userAgent: "string",
 			},
