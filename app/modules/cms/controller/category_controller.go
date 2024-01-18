@@ -14,13 +14,13 @@ type CategoryController interface {
 	Find(ctx *fiber.Ctx) (err error)
 }
 
-type CategoryControllerImpl struct {
+type categoryController struct {
 	Validate        *validator.Validate
 	CategoryService category.CategoryService
 }
 
 func CategoryControllerProvider(vld *validator.Validate, catSvc category.CategoryService) CategoryController {
-	return &CategoryControllerImpl{
+	return &categoryController{
 		Validate:        vld,
 		CategoryService: catSvc,
 	}
@@ -38,7 +38,7 @@ func CategoryControllerProvider(vld *validator.Validate, catSvc category.Categor
 // @Failure      500     {object}    model.Response
 // @Router       /api/category/create  [post]
 // @Security Bearer
-func (ctr *CategoryControllerImpl) Create(ctx *fiber.Ctx) (err error) {
+func (ctr *categoryController) Create(ctx *fiber.Ctx) (err error) {
 	return execute(ctx, ctr.CategoryService.Create)
 }
 
@@ -55,7 +55,7 @@ func (ctr *CategoryControllerImpl) Create(ctx *fiber.Ctx) (err error) {
 // @Failure      500    {object}  model.Response
 // @Router       /api/category/{code} [put]
 // @Security Bearer
-func (ctr *CategoryControllerImpl) Update(ctx *fiber.Ctx) (err error) {
+func (ctr *categoryController) Update(ctx *fiber.Ctx) (err error) {
 	return execute(ctx, ctr.CategoryService.Update)
 }
 
@@ -72,7 +72,7 @@ func (ctr *CategoryControllerImpl) Update(ctx *fiber.Ctx) (err error) {
 // @Failure      500    {object}   model.Response
 // @Router       /api/category/{code} [delete]
 // @Security Bearer
-func (ctr *CategoryControllerImpl) Delete(ctx *fiber.Ctx) (err error) {
+func (ctr *categoryController) Delete(ctx *fiber.Ctx) (err error) {
 	return execute(ctx, ctr.CategoryService.Delete)
 }
 
@@ -87,7 +87,7 @@ func (ctr *CategoryControllerImpl) Delete(ctx *fiber.Ctx) (err error) {
 // @Failure      404  {object}  model.Response
 // @Failure      500  {object}  model.Response
 // @Router       /api/category/list [get]
-func (ctr *CategoryControllerImpl) List(ctx *fiber.Ctx) (err error) {
+func (ctr *categoryController) List(ctx *fiber.Ctx) (err error) {
 	return execute(ctx, ctr.CategoryService.List)
 }
 
@@ -102,6 +102,6 @@ func (ctr *CategoryControllerImpl) List(ctx *fiber.Ctx) (err error) {
 // @Failure      404  {object}  model.Response
 // @Failure      500  {object}  model.Response
 // @Router       /api/category/find [get]
-func (ctr *CategoryControllerImpl) Find(ctx *fiber.Ctx) (err error) {
+func (ctr *categoryController) Find(ctx *fiber.Ctx) (err error) {
 	return execute(ctx, ctr.CategoryService.Find)
 }

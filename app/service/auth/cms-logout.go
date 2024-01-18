@@ -10,7 +10,7 @@ import (
 	"github.com/gofiber/utils"
 )
 
-func (svc *AuthServiceImpl) CmsLogout(ctx *fiber.Ctx) (*appModel.Response, error) {
+func (svc *authService) CmsLogout(ctx *fiber.Ctx) (*appModel.Response, error) {
 	userID := jwt.GetUserID(ctx)
 	identifier := jwt.GetAccessIdentifier(ctx)
 	result := svc.UserAccessRepo.Delete(&user_accesses.UserAccess{

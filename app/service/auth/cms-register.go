@@ -11,7 +11,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func (svc *AuthServiceImpl) CmsRegister(ctx *fiber.Ctx) (*model.Response, error) {
+func (svc *authService) CmsRegister(ctx *fiber.Ctx) (*model.Response, error) {
 	var existingUsername, existingPhone, existingEmail users.User
 
 	payload := new(model.CmsRegistrationRequest)

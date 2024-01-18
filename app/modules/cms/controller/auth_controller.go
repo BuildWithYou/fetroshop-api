@@ -13,12 +13,12 @@ type AuthController interface {
 	Refresh(ctx *fiber.Ctx) (err error)
 }
 
-type AuthControllerImpl struct {
+type authController struct {
 	AuthService auth.AuthService
 }
 
 func AuthControllerProvider(regSvc auth.AuthService) AuthController {
-	return &AuthControllerImpl{
+	return &authController{
 		AuthService: regSvc,
 	}
 }
@@ -34,7 +34,7 @@ func AuthControllerProvider(regSvc auth.AuthService) AuthController {
 // @Failure      404  {object}  model.Response
 // @Failure      500  {object}  model.Response
 // @Router       /api/auth/register [post]
-func (ctr *AuthControllerImpl) Register(ctx *fiber.Ctx) (err error) {
+func (ctr *authController) Register(ctx *fiber.Ctx) (err error) {
 	return execute(ctx, ctr.AuthService.CmsRegister)
 }
 
@@ -49,7 +49,7 @@ func (ctr *AuthControllerImpl) Register(ctx *fiber.Ctx) (err error) {
 // @Failure      404  {object}  model.Response
 // @Failure      500  {object}  model.Response
 // @Router       /api/auth/login [post]
-func (ctr *AuthControllerImpl) Login(ctx *fiber.Ctx) (err error) {
+func (ctr *authController) Login(ctx *fiber.Ctx) (err error) {
 	return execute(ctx, ctr.AuthService.CmsLogin)
 }
 
@@ -63,7 +63,7 @@ func (ctr *AuthControllerImpl) Login(ctx *fiber.Ctx) (err error) {
 // @Failure      500  {object}  model.Response
 // @Router       /api/auth/logout [post]
 // @Security Bearer
-func (ctr *AuthControllerImpl) Logout(ctx *fiber.Ctx) (err error) {
+func (ctr *authController) Logout(ctx *fiber.Ctx) (err error) {
 	return execute(ctx, ctr.AuthService.CmsLogout)
 }
 
@@ -77,6 +77,6 @@ func (ctr *AuthControllerImpl) Logout(ctx *fiber.Ctx) (err error) {
 // @Failure      500  {object}  model.Response
 // @Router       /api/auth/refresh [post]
 // @Security Bearer
-func (ctr *AuthControllerImpl) Refresh(ctx *fiber.Ctx) (err error) {
+func (ctr *authController) Refresh(ctx *fiber.Ctx) (err error) {
 	return execute(ctx, ctr.AuthService.CmsRefresh)
 }

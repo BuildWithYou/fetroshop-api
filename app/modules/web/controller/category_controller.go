@@ -11,13 +11,13 @@ type CategoryController interface {
 	Find(ctx *fiber.Ctx) (err error)
 }
 
-type CategoryControllerImpl struct {
+type categoryController struct {
 	Validate        *validator.Validate
 	CategoryService category.CategoryService
 }
 
 func CategoryControllerProvider(vld *validator.Validate, catSvc category.CategoryService) CategoryController {
-	return &CategoryControllerImpl{
+	return &categoryController{
 		Validate:        vld,
 		CategoryService: catSvc,
 	}
@@ -34,7 +34,7 @@ func CategoryControllerProvider(vld *validator.Validate, catSvc category.Categor
 // @Failure      404  {object}  model.Response
 // @Failure      500  {object}  model.Response
 // @Router       /api/category/list [get]
-func (ctr *CategoryControllerImpl) List(ctx *fiber.Ctx) (err error) {
+func (ctr *categoryController) List(ctx *fiber.Ctx) (err error) {
 	return execute(ctx, ctr.CategoryService.List)
 }
 
@@ -49,6 +49,6 @@ func (ctr *CategoryControllerImpl) List(ctx *fiber.Ctx) (err error) {
 // @Failure      404  {object}  model.Response
 // @Failure      500  {object}  model.Response
 // @Router       /api/category/find [get]
-func (ctr *CategoryControllerImpl) Find(ctx *fiber.Ctx) (err error) {
+func (ctr *categoryController) Find(ctx *fiber.Ctx) (err error) {
 	return execute(ctx, ctr.CategoryService.Find)
 }

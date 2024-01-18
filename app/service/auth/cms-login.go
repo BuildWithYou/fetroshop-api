@@ -18,7 +18,7 @@ import (
 	"github.com/gofiber/utils"
 )
 
-func (svc *AuthServiceImpl) CmsLogin(ctx *fiber.Ctx) (*model.Response, error) {
+func (svc *authService) CmsLogin(ctx *fiber.Ctx) (*model.Response, error) {
 	var user users.User
 
 	payload := new(model.CmsLoginRequest)

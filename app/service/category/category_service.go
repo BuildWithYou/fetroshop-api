@@ -19,7 +19,7 @@ type CategoryService interface {
 	Find(ctx *fiber.Ctx) (*appModel.Response, error)
 }
 
-type CategoryServiceImpl struct {
+type categoryService struct {
 	Err          error
 	DB           *gorm.DB
 	Config       *viper.Viper
@@ -35,7 +35,7 @@ func ServiceProvider(
 	logger *logger.Logger,
 	categoryRepo categories.CategoryRepo,
 ) CategoryService {
-	return &CategoryServiceImpl{
+	return &categoryService{
 		Err:          conn.Err,
 		DB:           conn.DB,
 		Config:       config,

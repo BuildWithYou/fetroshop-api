@@ -11,7 +11,7 @@ import (
 	"gopkg.in/guregu/null.v3"
 )
 
-func (svc *CategoryServiceImpl) Find(ctx *fiber.Ctx) (*model.Response, error) {
+func (svc *categoryService) Find(ctx *fiber.Ctx) (*model.Response, error) {
 	payload := new(model.FindCategoryRequest)
 	errValidation, errParsing := validatorhelper.ValidateQueryPayload(ctx, svc.Validate, payload)
 	if errParsing != nil {

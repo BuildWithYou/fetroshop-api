@@ -10,7 +10,7 @@ import (
 	"gopkg.in/guregu/null.v3"
 )
 
-func (svc *CategoryServiceImpl) Update(ctx *fiber.Ctx) (*model.Response, error) {
+func (svc *categoryService) Update(ctx *fiber.Ctx) (*model.Response, error) {
 	// parse param
 	pathPayload := new(model.CategoryPathRequest)
 	errValidation, errParsing := validatorhelper.ValidateParamPayload(ctx, svc.Validate, pathPayload)

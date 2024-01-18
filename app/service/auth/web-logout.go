@@ -10,7 +10,7 @@ import (
 	"github.com/gofiber/utils"
 )
 
-func (svc *AuthServiceImpl) WebLogout(ctx *fiber.Ctx) (*appModel.Response, error) {
+func (svc *authService) WebLogout(ctx *fiber.Ctx) (*appModel.Response, error) {
 	customerID := jwt.GetCustomerID(ctx)
 	identifier := jwt.GetAccessIdentifier(ctx)
 	result := svc.CustomerAccessRepo.Delete(&customer_accesses.CustomerAccess{

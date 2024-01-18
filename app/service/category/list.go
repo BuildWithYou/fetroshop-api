@@ -13,7 +13,7 @@ import (
 	"gopkg.in/guregu/null.v3"
 )
 
-func (svc *CategoryServiceImpl) List(ctx *fiber.Ctx) (*model.Response, error) {
+func (svc *categoryService) List(ctx *fiber.Ctx) (*model.Response, error) {
 	var (
 		categories []ctEty.Category
 		parentID   null.Int

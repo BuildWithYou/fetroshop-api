@@ -12,7 +12,7 @@ import (
 	"github.com/gofiber/utils"
 )
 
-func (svc *AuthServiceImpl) WebRegister(ctx *fiber.Ctx) (*model.Response, error) {
+func (svc *authService) WebRegister(ctx *fiber.Ctx) (*model.Response, error) {
 	var existingUsername, existingPhone, existingEmail customers.Customer
 
 	payload := new(model.WebRegistrationRequest)

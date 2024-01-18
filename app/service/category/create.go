@@ -11,7 +11,7 @@ import (
 	"gopkg.in/guregu/null.v3"
 )
 
-func (svc *CategoryServiceImpl) Create(ctx *fiber.Ctx) (*model.Response, error) {
+func (svc *categoryService) Create(ctx *fiber.Ctx) (*model.Response, error) {
 	payload := new(model.UpsertCategoryRequest)
 	errValidation, errParsing := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
 	if errParsing != nil {
