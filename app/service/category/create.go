@@ -90,6 +90,10 @@ func (svc *categoryService) Create(ctx *fiber.Ctx) (*model.Response, error) {
 	if !gormhelper.HasAffectedRows(result) {
 		return responsehelper.Response500("Failed to create category", nil), nil // #marked: message
 	}
-	return responsehelper.Response201("Category created successfully", newCategory, nil), nil // #marked: message
+
+	return responsehelper.Response201(
+		"Category created successfully", // #marked: message
+		newCategory,                     // TODO: data return must be filtered
+		nil), nil
 
 }

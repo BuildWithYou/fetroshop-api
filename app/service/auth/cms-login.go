@@ -15,7 +15,6 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/utils"
 )
 
 func (svc *authService) CmsLogin(ctx *fiber.Ctx) (*model.Response, error) {
@@ -89,14 +88,11 @@ func (svc *authService) CmsLogin(ctx *fiber.Ctx) (*model.Response, error) {
 		Type:       USER_TYPE,
 	})
 
-	return &model.Response{
-		Code:    fiber.StatusOK,
-		Status:  utils.StatusMessage(fiber.StatusOK),
-		Message: "Login success", // #marked: message
-		Data: fiber.Map{
+	return responsehelper.Response200(
+		"Login success", // #marked: message
+		fiber.Map{
 			"token":     generatedJwt.Token,
 			"createdAt": time.Now().Format("2006-01-02 15:04:05"),
 			"expiredAt": generatedJwt.ExpiredAt.Format("2006-01-02 15:04:05"),
-		},
-	}, nil
+		}, nil), nil
 }

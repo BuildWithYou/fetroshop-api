@@ -7,7 +7,6 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/utils"
 	"gopkg.in/guregu/null.v3"
 )
 
@@ -35,11 +34,9 @@ func (svc *categoryService) Find(ctx *fiber.Ctx) (*model.Response, error) {
 		parentCode = category.Parent.Code
 	}
 
-	return &model.Response{
-		Code:    fiber.StatusOK,
-		Status:  utils.StatusMessage(fiber.StatusOK),
-		Message: "Successfuly got category", // #marked: message
-		Data: &model.CategoryResponse{
+	return responsehelper.Response200(
+		"Successfuly got category", // #marked: message
+		&model.CategoryResponse{
 			Code:         category.Code,
 			ParentCode:   null.NewString(parentCode, parentCode != ""),
 			Name:         category.Name,
@@ -48,6 +45,5 @@ func (svc *categoryService) Find(ctx *fiber.Ctx) (*model.Response, error) {
 			DisplayOrder: category.DisplayOrder,
 			CreatedAt:    category.CreatedAt,
 			UpdatedAt:    category.UpdatedAt,
-		},
-	}, nil
+		}, nil), nil
 }

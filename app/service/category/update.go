@@ -54,13 +54,12 @@ func (svc *categoryService) Update(ctx *fiber.Ctx) (*model.Response, error) {
 	}
 
 	// update category
-	result = svc.CategoryRepo.Update(&categories.Category{
-		Code:         bodyPayload.Code,
-		Name:         bodyPayload.Name,
-		Icon:         null.NewString(bodyPayload.Icon, bodyPayload.Icon != ""),
-		IsActive:     *bodyPayload.IsActive,
-		DisplayOrder: bodyPayload.DisplayOrder,
-	},
+	category.Code = bodyPayload.Code
+	category.Name = bodyPayload.Name
+	category.Icon = null.NewString(bodyPayload.Icon, bodyPayload.Icon != "")
+	category.IsActive = *bodyPayload.IsActive
+	category.DisplayOrder = bodyPayload.DisplayOrder
+	result = svc.CategoryRepo.Update(category,
 		fiber.Map{"id": category.ID},
 	)
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
@@ -70,5 +69,8 @@ func (svc *categoryService) Update(ctx *fiber.Ctx) (*model.Response, error) {
 		return responsehelper.Response500("Failed to update category", nil), nil // #marked: message
 	}
 
-	return responsehelper.Response200("Category updated successfully", nil, nil), nil // #marked: message
+	return responsehelper.Response201(
+		"Category updated successfully", // #marked: message
+		category,                        // TODO: data return must be filtered
+		nil), nil
 }

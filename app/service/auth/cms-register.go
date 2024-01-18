@@ -63,5 +63,9 @@ func (svc *authService) CmsRegister(ctx *fiber.Ctx) (*model.Response, error) {
 	if !gormhelper.HasAffectedRows(result) {
 		return nil, errorhelper.Error500("Failed to create user") // #marked: message
 	}
-	return responsehelper.Response201("User created successfully", newUser, nil), nil // #marked: message TODO: data return must be filtered
+
+	return responsehelper.Response201(
+		"User created successfully", // #marked: message
+		newUser,                     // TODO: data return must be filtered
+		nil), nil
 }

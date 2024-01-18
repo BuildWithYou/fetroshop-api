@@ -9,7 +9,6 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/utils"
 	"gopkg.in/guregu/null.v3"
 )
 
@@ -71,10 +70,9 @@ func (svc *categoryService) List(ctx *fiber.Ctx) (*model.Response, error) {
 		list = append(list, category)
 	}
 
-	return &model.Response{
-		Code:    fiber.StatusOK,
-		Status:  utils.StatusMessage(fiber.StatusOK),
-		Message: "Successfuly got list of categories", // #marked: message
-		Data:    list,
-	}, nil
+	return responsehelper.Response200(
+		"Successfuly got list of categories", // #marked: message
+		list,
+		fiber.Map{"total": result.RowsAffected},
+	), nil
 }

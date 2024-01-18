@@ -7,7 +7,6 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/responsehelper"
 	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/utils"
 )
 
 func (svc *authService) CmsLogout(ctx *fiber.Ctx) (*appModel.Response, error) {
@@ -23,9 +22,5 @@ func (svc *authService) CmsLogout(ctx *fiber.Ctx) (*appModel.Response, error) {
 		return responsehelper.Response500("Failed to logout", nil), nil // #marked: message
 	}
 
-	return &appModel.Response{
-		Code:    fiber.StatusOK,
-		Status:  utils.StatusMessage(fiber.StatusOK),
-		Message: "Logout success", // #marked: message
-	}, nil
+	return responsehelper.Response200("Logout success", nil, nil), nil // #marked: message
 }
