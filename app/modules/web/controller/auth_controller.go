@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/BuildWithYou/fetroshop-api/app/modules/web/service/auth"
+	"github.com/BuildWithYou/fetroshop-api/app/service/auth"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )
@@ -29,14 +29,14 @@ func AuthControllerProvider(vld *validator.Validate, regSvc auth.AuthService) Au
 // @Tags         Authentication
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
-// @Param        req  formData  model.RegistrationRequest  true  "Registration Request"
+// @Param        req  formData  model.WebRegistrationRequest  true  "Registration Request"
 // @Success      200  {object}  model.Response
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response
 // @Failure      500  {object}  model.Response
 // @Router       /api/auth/register [post]
 func (ctr *AuthControllerImpl) Register(ctx *fiber.Ctx) (err error) {
-	return execute(ctx, ctr.AuthService.Register)
+	return execute(ctx, ctr.AuthService.WebRegister)
 }
 
 // @Summary      Login for customers
@@ -44,14 +44,14 @@ func (ctr *AuthControllerImpl) Register(ctx *fiber.Ctx) (err error) {
 // @Tags         Authentication
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
-// @Param        req  formData  model.LoginRequest  true  "Login Request"
+// @Param        req  formData  model.WebLoginRequest  true  "Login Request"
 // @Success      200  {object}  model.Response
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response
 // @Failure      500  {object}  model.Response
 // @Router       /api/auth/login [post]
 func (ctr *AuthControllerImpl) Login(ctx *fiber.Ctx) (err error) {
-	return execute(ctx, ctr.AuthService.Login)
+	return execute(ctx, ctr.AuthService.WebLogin)
 }
 
 // @Summary      Logout for customers
@@ -65,7 +65,7 @@ func (ctr *AuthControllerImpl) Login(ctx *fiber.Ctx) (err error) {
 // @Router       /api/auth/logout [post]
 // @Security Bearer
 func (ctr *AuthControllerImpl) Logout(ctx *fiber.Ctx) (err error) {
-	return execute(ctx, ctr.AuthService.Logout)
+	return execute(ctx, ctr.AuthService.WebLogout)
 }
 
 // @Summary      Refresh for customers
@@ -79,5 +79,5 @@ func (ctr *AuthControllerImpl) Logout(ctx *fiber.Ctx) (err error) {
 // @Router       /api/auth/refresh [post]
 // @Security Bearer
 func (ctr *AuthControllerImpl) Refresh(ctx *fiber.Ctx) (err error) {
-	return execute(ctx, ctr.AuthService.Refresh)
+	return execute(ctx, ctr.AuthService.WebRefresh)
 }

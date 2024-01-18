@@ -10,7 +10,7 @@ import (
 type Category struct {
 	ID           int64          `gorm:"column:id;primaryKey;autoIncrement;<-:create"`
 	ParentID     null.Int       `gorm:"column:parent_id"`
-	Code         string         `gorm:"column:code"`
+	Code         string         `gorm:"column:code;unique"`
 	Name         string         `gorm:"column:name"`
 	IsActive     bool           `gorm:"column:is_active"`
 	Icon         null.String    `gorm:"column:icon"`

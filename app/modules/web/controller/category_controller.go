@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/BuildWithYou/fetroshop-api/app/modules/web/service/category"
+	"github.com/BuildWithYou/fetroshop-api/app/service/category"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )
@@ -38,7 +38,7 @@ func (ctr *CategoryControllerImpl) List(ctx *fiber.Ctx) (err error) {
 	return execute(ctx, ctr.CategoryService.List)
 }
 
-// @Summary      Get category
+// @Summary      Get detail category
 // @Description  Retrieve categories detail
 // @Tags         Categories
 // @Accept       x-www-form-urlencoded,json

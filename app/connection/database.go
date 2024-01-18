@@ -56,7 +56,8 @@ func OpenDBConnection(dbType DBType, config *viper.Viper, lg *loggerHelper.Logge
 	}
 
 	db, err := gorm.Open(dialect, &gorm.Config{
-		Logger: gormLogger,
+		Logger:         gormLogger,
+		TranslateError: true,
 	})
 	if err != nil {
 		lg.Error(err.Error())

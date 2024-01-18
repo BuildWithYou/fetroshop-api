@@ -2,12 +2,21 @@ definitions:
   model.Response:
     properties:
       code:
+        description: http status code
         type: integer
-      data: {}
+      data:
+        description: main data
+      errors:
+        additionalProperties: {}
+        description: error data
+        type: object
       message:
+        description: message from system
         type: string
-      meta: {}
+      meta:
+        description: support data
       status:
+        description: http status message
         type: string
     type: object
 info:
@@ -122,6 +131,7 @@ paths:
         required: true
         type: string
       - in: formData
+        minLength: 8
         name: password
         required: true
         type: string
@@ -155,7 +165,7 @@ paths:
       summary: Register new user
       tags:
       - Authentication
-  /api/category/{categoryCode}:
+  /api/category/{code}:
     delete:
       consumes:
       - application/x-www-form-urlencoded
@@ -163,9 +173,13 @@ paths:
       parameters:
       - description: Category Code
         in: path
-        name: categoryCode
+        name: code
         required: true
         type: string
+      - in: formData
+        name: forceDelete
+        required: true
+        type: boolean
       produces:
       - application/json
       responses:
@@ -185,6 +199,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/model.Response'
+      security:
+      - Bearer: []
       summary: Delete category
       tags:
       - Categories
@@ -195,7 +211,7 @@ paths:
       parameters:
       - description: Category Code
         in: path
-        name: categoryCode
+        name: code
         required: true
         type: string
       - in: formData
@@ -211,6 +227,7 @@ paths:
         type: string
       - in: formData
         name: isActive
+        required: true
         type: boolean
       - in: formData
         name: name
@@ -238,6 +255,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/model.Response'
+      security:
+      - Bearer: []
       summary: Update category
       tags:
       - Categories
@@ -260,6 +279,7 @@ paths:
         type: string
       - in: formData
         name: isActive
+        required: true
         type: boolean
       - in: formData
         name: name
@@ -287,7 +307,97 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/model.Response'
+      security:
+      - Bearer: []
       summary: Create category
+      tags:
+      - Categories
+  /api/category/find:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      description: Retrieve categories detail
+      parameters:
+      - in: query
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Response'
+      summary: Get detail category
+      tags:
+      - Categories
+  /api/category/list:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      description: Retrieve categories list
+      parameters:
+      - default: 10
+        in: query
+        name: limit
+        type: integer
+      - default: 0
+        in: query
+        name: offset
+        type: integer
+      - enum:
+        - display_order
+        - code
+        - name
+        in: query
+        name: orderBy
+        required: true
+        type: string
+      - enum:
+        - ASC
+        - DESC
+        in: query
+        name: orderDirection
+        required: true
+        type: string
+      - in: query
+        name: parentCode
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Response'
+      summary: List categories
       tags:
       - Categories
 securityDefinitions:

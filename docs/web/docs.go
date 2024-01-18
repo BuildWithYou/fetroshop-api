@@ -181,6 +181,7 @@ const docTemplate = `{
                         "required": true
                     },
                     {
+                        "minLength": 8,
                         "type": "string",
                         "name": "password",
                         "in": "formData",
@@ -240,7 +241,7 @@ const docTemplate = `{
                 "tags": [
                     "Categories"
                 ],
-                "summary": "Get category",
+                "summary": "Get detail category",
                 "parameters": [
                     {
                         "type": "string",
@@ -365,14 +366,26 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "code": {
+                    "description": "http status code",
                     "type": "integer"
                 },
-                "data": {},
+                "data": {
+                    "description": "main data"
+                },
+                "errors": {
+                    "description": "error data",
+                    "type": "object",
+                    "additionalProperties": {}
+                },
                 "message": {
+                    "description": "message from system",
                     "type": "string"
                 },
-                "meta": {},
+                "meta": {
+                    "description": "support data"
+                },
                 "status": {
+                    "description": "http status message",
                     "type": "string"
                 }
             }
