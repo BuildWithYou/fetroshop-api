@@ -8,6 +8,7 @@ import (
 type Controller struct {
 	Auth     AuthController
 	Category CategoryController
+	Brand    brandController
 }
 
 func CmsControllerProvider(
