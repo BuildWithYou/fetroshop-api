@@ -27,10 +27,10 @@ func TestWebServiceLogin(t *testing.T) {
 		{
 			name: "Login200",
 			args: args{
-				username:  "string",
-				password:  "string",
-				platform:  "string",
-				userAgent: "string",
+				username:  "testerwebapi",
+				password:  "testertester",
+				platform:  "tester-platform",
+				userAgent: "tester-userAgent",
 			},
 			wantResponseCode: 200,
 		},
@@ -45,7 +45,7 @@ func TestWebServiceLogin(t *testing.T) {
 			request.Header.Set("Content-Type", "application/json")
 			request.Header.Set("Sec-Ch-Ua-Platform", "sec-ch-ua-platform-test")
 			request.Header.Set("User-Agent", "user-agent-test")
-			response, err := fetroshopApp.FiberApp.Test(request)
+			response, err := webServer.FiberApp.Test(request)
 			assert.Nil(t, err)
 			assert.Equal(t, tt.wantResponseCode, response.StatusCode)
 
