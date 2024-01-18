@@ -27,10 +27,10 @@ func TestCmsServiceLogin(t *testing.T) {
 		{
 			name: "Login200",
 			args: args{
-				username:  "string",
-				password:  "string",
-				platform:  "string",
-				userAgent: "string",
+				username:  "testercmsapi",
+				password:  "testertester",
+				platform:  "tester-platform",
+				userAgent: "tester-userAgent",
 			},
 			wantResponseCode: 200,
 		},
@@ -45,7 +45,7 @@ func TestCmsServiceLogin(t *testing.T) {
 			request.Header.Set("Content-Type", "application/json")
 			request.Header.Set("Sec-Ch-Ua-Platform", "sec-ch-ua-platform-test")
 			request.Header.Set("User-Agent", "user-agent-test")
-			response, err := fetroshopApp.FiberApp.Test(request)
+			response, err := cmsServer.FiberApp.Test(request)
 			assert.Nil(t, err)
 			assert.Equal(t, tt.wantResponseCode, response.StatusCode)
 

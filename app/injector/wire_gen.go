@@ -9,9 +9,9 @@ package injector
 import (
 	"github.com/BuildWithYou/fetroshop-api/app"
 	"github.com/BuildWithYou/fetroshop-api/app/connection"
-	postgres4 "github.com/BuildWithYou/fetroshop-api/app/domain/categories/postgres"
+	postgres5 "github.com/BuildWithYou/fetroshop-api/app/domain/categories/postgres"
 	postgres2 "github.com/BuildWithYou/fetroshop-api/app/domain/customer_accesses/postgres"
-	postgres5 "github.com/BuildWithYou/fetroshop-api/app/domain/customers/postgres"
+	postgres4 "github.com/BuildWithYou/fetroshop-api/app/domain/customers/postgres"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/user_accesses/postgres"
 	postgres3 "github.com/BuildWithYou/fetroshop-api/app/domain/users/postgres"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
@@ -42,9 +42,10 @@ func InitializeWebServer() *app.Fetroshop {
 	dbMiddleware := middleware.DBMiddlewareProvider(connectionConnection, loggerLogger)
 	validate := validatorhelper.GetValidator()
 	userRepo := postgres3.RepoProvider(connectionConnection)
-	authService := auth.ServiceProvider(connectionConnection, viper, validate, loggerLogger, userRepo, userAccessRepo)
+	customerRepo := postgres4.RepoProvider(connectionConnection)
+	authService := auth.ServiceProvider(connectionConnection, viper, validate, userRepo, userAccessRepo, customerRepo, customerAccessRepo, loggerLogger)
 	authController := controller.AuthControllerProvider(validate, authService)
-	categoryRepo := postgres4.RepoProvider(connectionConnection)
+	categoryRepo := postgres5.RepoProvider(connectionConnection)
 	categoryService := category.ServiceProvider(connectionConnection, viper, validate, loggerLogger, categoryRepo)
 	categoryController := controller.CategoryControllerProvider(validate, categoryService)
 	controllerController := controller.WebControllerProvider(authController, categoryController)
@@ -70,9 +71,10 @@ func InitializeCmsServer() *app.Fetroshop {
 	dbMiddleware := middleware.DBMiddlewareProvider(connectionConnection, loggerLogger)
 	validate := validatorhelper.GetValidator()
 	userRepo := postgres3.RepoProvider(connectionConnection)
-	authService := auth.ServiceProvider(connectionConnection, viper, validate, loggerLogger, userRepo, userAccessRepo)
+	customerRepo := postgres4.RepoProvider(connectionConnection)
+	authService := auth.ServiceProvider(connectionConnection, viper, validate, userRepo, userAccessRepo, customerRepo, customerAccessRepo, loggerLogger)
 	authController := controller2.AuthControllerProvider(authService)
-	categoryRepo := postgres4.RepoProvider(connectionConnection)
+	categoryRepo := postgres5.RepoProvider(connectionConnection)
 	categoryService := category.ServiceProvider(connectionConnection, viper, validate, loggerLogger, categoryRepo)
 	categoryController := controller2.CategoryControllerProvider(validate, categoryService)
 	controllerController := controller2.CmsControllerProvider(authController, categoryController)
@@ -86,7 +88,7 @@ func InitializeCmsServer() *app.Fetroshop {
 
 var dbType connection.DBType = connection.DB_MAIN
 
-var repoSet = wire.NewSet(postgres5.RepoProvider, postgres2.RepoProvider, postgres3.RepoProvider, postgres.RepoProvider, postgres4.RepoProvider)
+var repoSet = wire.NewSet(postgres4.RepoProvider, postgres2.RepoProvider, postgres3.RepoProvider, postgres.RepoProvider, postgres5.RepoProvider)
 
 var serviceSet = wire.NewSet(auth.ServiceProvider, category.ServiceProvider)
 

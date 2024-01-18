@@ -6,6 +6,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/injector"
 )
 
-var fetroshopApp = injector.InitializeCmsServer()
+var cmsServer = injector.InitializeCmsServer()
+var webServer = injector.InitializeWebServer()
 var cmsLogger = logger.NewCmsLogger(confighelper.GetConfig())
 var webLogger = logger.NewWebLogger(confighelper.GetConfig())

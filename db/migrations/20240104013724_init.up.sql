@@ -151,6 +151,15 @@ alter table user_roles
 
 
 -- data initialization
+/* users table data init */
+   INSERT INTO users VALUES (2, 'testercmsapi', '081234567890', 'tester@mail.com', 'Tester CMS API', '$2a$10$x.S5GJvGqw4L5366USju6.I2fISEOEyqPFswmYQiX/fF.ZjOcYChO', '2024-01-18 09:46:46.743833', '2024-01-18 09:46:46.743833', NULL);
+   SELECT setval('users_id_seq', (SELECT MAX(id) FROM users));
+
+/* customers table data init */
+   INSERT INTO customers VALUES (1, 'testerwebapi', '081234567890', 'tester@mail.com', 'Tester Web API', '$2a$10$UQy61eWcNaOfzrINghwLO.DHmIsTTgWidWKmDziberHOVUi4NLV4W', '2024-01-18 09:45:12.736703', '2024-01-18 09:45:12.736703', NULL);
+   SELECT setval('customers_id_seq', (SELECT MAX(id) FROM customers));
+
+
 /* categories table data init */
    INSERT INTO categories (id, parent_id, code, name, is_active, icon, display_order, created_at, updated_at) VALUES
       (1, null, 'kebutuhan-dapur', 'Kebutuhan Dapur', true, null, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
