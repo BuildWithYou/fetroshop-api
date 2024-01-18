@@ -3,13 +3,12 @@ package category
 import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/responsehelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
-	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
-	"github.com/BuildWithYou/fetroshop-api/app/modules/cms/model"
+	"github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/utils"
 )
 
-func (svc *CategoryServiceImpl) Update(ctx *fiber.Ctx) (*appModel.Response, error) {
+func (svc *CategoryServiceImpl) Update(ctx *fiber.Ctx) (*model.Response, error) {
 	pathPayload := new(model.CategoryPathRequest)
 	errValidation, errParsing := validatorhelper.ValidateParamPayload(ctx, svc.Validate, pathPayload)
 	if errParsing != nil {
@@ -30,7 +29,7 @@ func (svc *CategoryServiceImpl) Update(ctx *fiber.Ctx) (*appModel.Response, erro
 
 	// TODO: implement me
 
-	return &appModel.Response{
+	return &model.Response{
 		Code:    fiber.StatusOK,
 		Status:  utils.StatusMessage(fiber.StatusOK),
 		Message: "Unimplemented", // #marked: message

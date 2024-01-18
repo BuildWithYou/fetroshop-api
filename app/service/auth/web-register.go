@@ -7,16 +7,15 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/password"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/responsehelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
-	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
-	webModel "github.com/BuildWithYou/fetroshop-api/app/modules/web/model"
+	"github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/utils"
 )
 
-func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error) {
+func (svc *AuthServiceImpl) WebRegister(ctx *fiber.Ctx) (*model.Response, error) {
 	var existingUsername, existingPhone, existingEmail customers.Customer
 
-	payload := new(webModel.RegistrationRequest)
+	payload := new(model.WebRegistrationRequest)
 	errValidation, errParsing := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
 	if errParsing != nil {
 		return nil, errParsing
@@ -65,7 +64,7 @@ func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error)
 		return nil, errorhelper.Error500("Failed to create user") // #marked: message
 	}
 
-	return &appModel.Response{
+	return &model.Response{
 		Code:    fiber.StatusCreated,
 		Status:  utils.StatusMessage(fiber.StatusCreated),
 		Message: "User created successfully", // #marked: message

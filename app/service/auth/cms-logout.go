@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"github.com/BuildWithYou/fetroshop-api/app/domain/customer_accesses"
+	"github.com/BuildWithYou/fetroshop-api/app/domain/user_accesses"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/jwt"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/responsehelper"
@@ -10,12 +10,12 @@ import (
 	"github.com/gofiber/utils"
 )
 
-func (svc *AuthServiceImpl) Logout(ctx *fiber.Ctx) (*appModel.Response, error) {
-	customerID := jwt.GetCustomerID(ctx)
+func (svc *AuthServiceImpl) CmsLogout(ctx *fiber.Ctx) (*appModel.Response, error) {
+	userID := jwt.GetUserID(ctx)
 	identifier := jwt.GetAccessIdentifier(ctx)
-	result := svc.CustomerAccessRepo.Delete(&customer_accesses.CustomerAccess{
-		Key:        identifier,
-		CustomerID: customerID})
+	result := svc.UserAccessRepo.Delete(&user_accesses.UserAccess{
+		Key:    identifier,
+		UserID: userID})
 	if result.Error != nil {
 		return nil, result.Error
 	}

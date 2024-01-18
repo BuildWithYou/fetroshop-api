@@ -7,15 +7,14 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/password"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/responsehelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
-	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
-	cmsModel "github.com/BuildWithYou/fetroshop-api/app/modules/cms/model"
+	"github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/gofiber/fiber/v2"
 )
 
-func (svc *AuthServiceImpl) Register(ctx *fiber.Ctx) (*appModel.Response, error) {
+func (svc *AuthServiceImpl) CmsRegister(ctx *fiber.Ctx) (*model.Response, error) {
 	var existingUsername, existingPhone, existingEmail users.User
 
-	payload := new(cmsModel.RegistrationRequest)
+	payload := new(model.CmsRegistrationRequest)
 	errValidation, errParsing := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
 	if errParsing != nil {
 		return nil, errParsing

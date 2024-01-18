@@ -241,7 +241,7 @@ const docTemplate = `{
                 "tags": [
                     "Categories"
                 ],
-                "summary": "Get category",
+                "summary": "Get detail category",
                 "parameters": [
                     {
                         "type": "string",

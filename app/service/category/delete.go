@@ -5,12 +5,11 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/responsehelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
-	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
-	"github.com/BuildWithYou/fetroshop-api/app/modules/cms/model"
+	"github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/gofiber/fiber/v2"
 )
 
-func (svc *CategoryServiceImpl) Delete(ctx *fiber.Ctx) (*appModel.Response, error) {
+func (svc *CategoryServiceImpl) Delete(ctx *fiber.Ctx) (*model.Response, error) {
 	pathPayload := new(model.CategoryPathRequest)
 	errValidation, errParsing := validatorhelper.ValidateParamPayload(ctx, svc.Validate, pathPayload)
 	if errParsing != nil {

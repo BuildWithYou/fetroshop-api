@@ -13,16 +13,15 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/password"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/responsehelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
-	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
-	webModel "github.com/BuildWithYou/fetroshop-api/app/modules/web/model"
+	"github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/utils"
 )
 
-func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*appModel.Response, error) {
+func (svc *AuthServiceImpl) WebLogin(ctx *fiber.Ctx) (*model.Response, error) {
 	var customer customers.Customer
 
-	payload := new(webModel.LoginRequest)
+	payload := new(model.WebLoginRequest)
 	jwtTokenKey := svc.Config.GetString("security.jwt.tokenKey")
 	jwtExpiration := svc.Config.GetString("security.jwt.expiration")
 
@@ -90,7 +89,7 @@ func (svc *AuthServiceImpl) Login(ctx *fiber.Ctx) (*appModel.Response, error) {
 		Type:       CUSTOMER_TYPE,
 	})
 
-	return &appModel.Response{
+	return &model.Response{
 		Code:    fiber.StatusOK,
 		Status:  utils.StatusMessage(fiber.StatusOK),
 		Message: "Login success", // #marked: message

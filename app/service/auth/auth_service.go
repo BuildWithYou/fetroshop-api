@@ -4,6 +4,8 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/connection"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/customer_accesses"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/customers"
+	"github.com/BuildWithYou/fetroshop-api/app/domain/user_accesses"
+	"github.com/BuildWithYou/fetroshop-api/app/domain/users"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/go-playground/validator/v10"
@@ -12,13 +14,21 @@ import (
 	"gorm.io/gorm"
 )
 
+const USER_TYPE = "user"
 const CUSTOMER_TYPE = "customer"
 
 type AuthService interface {
-	Register(ctx *fiber.Ctx) (*appModel.Response, error)
-	Login(ctx *fiber.Ctx) (*appModel.Response, error)
-	Logout(ctx *fiber.Ctx) (*appModel.Response, error)
-	Refresh(ctx *fiber.Ctx) (*appModel.Response, error)
+	// Cms Modules
+	CmsRegister(ctx *fiber.Ctx) (*appModel.Response, error)
+	CmsLogin(ctx *fiber.Ctx) (*appModel.Response, error)
+	CmsLogout(ctx *fiber.Ctx) (*appModel.Response, error)
+	CmsRefresh(ctx *fiber.Ctx) (*appModel.Response, error)
+
+	// Web Modules
+	WebRegister(ctx *fiber.Ctx) (*appModel.Response, error)
+	WebLogin(ctx *fiber.Ctx) (*appModel.Response, error)
+	WebLogout(ctx *fiber.Ctx) (*appModel.Response, error)
+	WebRefresh(ctx *fiber.Ctx) (*appModel.Response, error)
 }
 
 type AuthServiceImpl struct {
@@ -26,6 +36,8 @@ type AuthServiceImpl struct {
 	DB                 *gorm.DB
 	Config             *viper.Viper
 	Validate           *validator.Validate
+	UserRepo           users.UserRepo
+	UserAccessRepo     user_accesses.UserAccessRepo
 	CustomerRepo       customers.CustomerRepo
 	CustomerAccessRepo customer_accesses.CustomerAccessRepo
 	Logger             *logger.Logger
@@ -36,16 +48,16 @@ func ServiceProvider(
 	config *viper.Viper,
 	validate *validator.Validate,
 	logger *logger.Logger,
-	customerRepo customers.CustomerRepo,
-	customerAccessRepo customer_accesses.CustomerAccessRepo,
+	userRepo users.UserRepo,
+	userAccessRepo user_accesses.UserAccessRepo,
 ) AuthService {
 	return &AuthServiceImpl{
-		Err:                conn.Err,
-		DB:                 conn.DB,
-		Config:             config,
-		Validate:           validate,
-		CustomerRepo:       customerRepo,
-		CustomerAccessRepo: customerAccessRepo,
-		Logger:             logger,
+		Err:            conn.Err,
+		DB:             conn.DB,
+		Config:         config,
+		Validate:       validate,
+		UserRepo:       userRepo,
+		UserAccessRepo: userAccessRepo,
+		Logger:         logger,
 	}
 }

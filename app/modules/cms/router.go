@@ -46,6 +46,8 @@ func (router *CmsRouter) Init(app *fiber.App) {
 	category.Post("/create", contentTypeMiddleware, router.Controller.Category.Create)
 	category.Put("/:code", contentTypeMiddleware, router.Controller.Category.Update)
 	category.Delete("/:code", contentTypeMiddleware, router.Controller.Category.Delete)
+	category.Get("/list", router.Controller.Category.List)
+	category.Get("/find", router.Controller.Category.Find)
 
 }
 

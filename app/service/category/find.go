@@ -5,14 +5,13 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/responsehelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
-	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
-	"github.com/BuildWithYou/fetroshop-api/app/modules/web/model"
+	"github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/utils"
 	"gopkg.in/guregu/null.v3"
 )
 
-func (svc *CategoryServiceImpl) Find(ctx *fiber.Ctx) (*appModel.Response, error) {
+func (svc *CategoryServiceImpl) Find(ctx *fiber.Ctx) (*model.Response, error) {
 	payload := new(model.FindCategoryRequest)
 	errValidation, errParsing := validatorhelper.ValidateQueryPayload(ctx, svc.Validate, payload)
 	if errParsing != nil {
@@ -36,7 +35,7 @@ func (svc *CategoryServiceImpl) Find(ctx *fiber.Ctx) (*appModel.Response, error)
 		parentCode = category.Parent.Code
 	}
 
-	return &appModel.Response{
+	return &model.Response{
 		Code:    fiber.StatusOK,
 		Status:  utils.StatusMessage(fiber.StatusOK),
 		Message: "Successfuly got category", // #marked: message

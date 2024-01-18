@@ -15,6 +15,8 @@ type CategoryService interface {
 	Create(ctx *fiber.Ctx) (*appModel.Response, error)
 	Update(ctx *fiber.Ctx) (*appModel.Response, error)
 	Delete(ctx *fiber.Ctx) (*appModel.Response, error)
+	List(ctx *fiber.Ctx) (*appModel.Response, error)
+	Find(ctx *fiber.Ctx) (*appModel.Response, error)
 }
 
 type CategoryServiceImpl struct {

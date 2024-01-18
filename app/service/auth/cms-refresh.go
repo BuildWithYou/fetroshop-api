@@ -15,7 +15,7 @@ import (
 	"github.com/gofiber/utils"
 )
 
-func (svc *AuthServiceImpl) Refresh(ctx *fiber.Ctx) (*appModel.Response, error) {
+func (svc *AuthServiceImpl) CmsRefresh(ctx *fiber.Ctx) (*appModel.Response, error) {
 	userID := jwt.GetUserID(ctx)
 	identifier := jwt.GetAccessIdentifier(ctx)
 	jwtTokenKey := svc.Config.GetString("security.jwt.tokenKey")

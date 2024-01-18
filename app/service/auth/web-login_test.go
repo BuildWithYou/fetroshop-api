@@ -8,16 +8,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
-	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
-	"github.com/BuildWithYou/fetroshop-api/app/injector"
 	"github.com/stretchr/testify/assert"
 )
 
-var fetroshopApp = injector.InitializeCmsServer()
-var cmsLogger = logger.NewCmsLogger(confighelper.GetConfig())
-
-func TestCmsServiceLogin(t *testing.T) {
+func TestWebServiceLogin(t *testing.T) {
 	type args struct {
 		username  string
 		password  string
@@ -60,8 +54,7 @@ func TestCmsServiceLogin(t *testing.T) {
 			assert.NotNil(t, bytes)
 
 			if response.StatusCode != tt.wantResponseCode {
-				fmt.Println("cmsLogger : ", cmsLogger)
-				cmsLogger.LogConsole.Error(fmt.Sprintln("Response : ", string(bytes)))
+				webLogger.LogConsole.Error(fmt.Sprintln("Response : ", string(bytes)))
 			}
 
 		})

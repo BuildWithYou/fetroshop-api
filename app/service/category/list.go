@@ -7,14 +7,13 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/responsehelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
-	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
-	"github.com/BuildWithYou/fetroshop-api/app/modules/web/model"
+	"github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/utils"
 	"gopkg.in/guregu/null.v3"
 )
 
-func (svc *CategoryServiceImpl) List(ctx *fiber.Ctx) (*appModel.Response, error) {
+func (svc *CategoryServiceImpl) List(ctx *fiber.Ctx) (*model.Response, error) {
 	var (
 		categories []ctEty.Category
 		parentID   null.Int
@@ -72,7 +71,7 @@ func (svc *CategoryServiceImpl) List(ctx *fiber.Ctx) (*appModel.Response, error)
 		list = append(list, category)
 	}
 
-	return &appModel.Response{
+	return &model.Response{
 		Code:    fiber.StatusOK,
 		Status:  utils.StatusMessage(fiber.StatusOK),
 		Message: "Successfuly got list of categories", // #marked: message

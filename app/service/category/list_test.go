@@ -12,7 +12,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/BuildWithYou/fetroshop-api/app/injector"
-	"github.com/BuildWithYou/fetroshop-api/app/modules/web/model"
+	"github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/stretchr/testify/assert"
 )
 

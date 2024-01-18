@@ -11,8 +11,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/jwt"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
-	cmsAuthSvc "github.com/BuildWithYou/fetroshop-api/app/modules/cms/service/auth"
-	webAuthSvc "github.com/BuildWithYou/fetroshop-api/app/modules/web/service/auth"
+	"github.com/BuildWithYou/fetroshop-api/app/service/auth"
 	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/viper"
 )
@@ -76,7 +75,7 @@ func (jwtMid *JwtMiddleware) Authenticate(ctx *fiber.Ctx) error {
 
 	ctx.Locals(jwt.ACCESS_IDENTIFIER, reversedToken.AccessKey)
 	switch reversedToken.Type {
-	case cmsAuthSvc.USER_TYPE:
+	case auth.USER_TYPE:
 		{
 			userAccess := new(user_accesses.UserAccess)
 			result := jwtMid.UserAccessRepo.Find(userAccess, fiber.Map{"key": reversedToken.AccessKey}) // TODO: implement redis caching to improve performance
@@ -89,7 +88,7 @@ func (jwtMid *JwtMiddleware) Authenticate(ctx *fiber.Ctx) error {
 			}
 			ctx.Locals(jwt.CMS_IDENTIFIER, userAccess.UserID)
 		}
-	case webAuthSvc.CUSTOMER_TYPE:
+	case auth.CUSTOMER_TYPE:
 		{
 			customerAccess := new(customer_accesses.CustomerAccess)
 			result := jwtMid.CustomerAccessRepo.Find(customerAccess, fiber.Map{"key": reversedToken.AccessKey}) // TODO: implement redis caching to improve performance
