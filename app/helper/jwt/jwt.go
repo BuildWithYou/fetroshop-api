@@ -78,7 +78,9 @@ func Reverse(tokenKey string, jwtToken string, lg *logger.Logger) (*TokenReverse
 	parsed, err := parse(tokenKey, jwtToken)
 
 	if err != nil {
-		lg.Error(fmt.Sprint("Error from jwt.parse : ", err.Error()))
+		if !errors.Is(err, jwt.ErrTokenExpired) {
+			lg.Error(fmt.Sprint("Error from jwt.parse : ", err.Error()))
+		}
 		return nil, err
 	}
 

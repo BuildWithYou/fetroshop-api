@@ -60,7 +60,7 @@ func OpenDBConnection(dbType DBType, config *viper.Viper, lg *loggerHelper.Logge
 		TranslateError: true,
 	})
 	if err != nil {
-		lg.Error(err.Error())
+		lg.UseError(err)
 		return &Connection{
 			Err: err,
 		}
@@ -68,7 +68,7 @@ func OpenDBConnection(dbType DBType, config *viper.Viper, lg *loggerHelper.Logge
 
 	sqlDB, err := db.DB()
 	if err != nil {
-		lg.Error(err.Error())
+		lg.UseError(err)
 		return &Connection{
 			Err: err,
 		}

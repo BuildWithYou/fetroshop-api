@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -9,10 +10,11 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/domain/user_accesses"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
-	"github.com/BuildWithYou/fetroshop-api/app/helper/jwt"
+	jwtHelper "github.com/BuildWithYou/fetroshop-api/app/helper/jwt"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/BuildWithYou/fetroshop-api/app/service/auth"
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/spf13/viper"
 )
 
@@ -30,11 +32,13 @@ func JwtMiddlewareProvider(
 	config *viper.Viper,
 	userAccessRepo user_accesses.UserAccessRepo,
 	customerAccessRepo customer_accesses.CustomerAccessRepo,
+	logger *logger.Logger,
 ) *JwtMiddleware {
 	return &JwtMiddleware{
 		Config:             config,
 		UserAccessRepo:     userAccessRepo,
 		CustomerAccessRepo: customerAccessRepo,
+		Logger:             logger,
 	}
 }
 
@@ -67,13 +71,15 @@ func (jwtMid *JwtMiddleware) Authenticate(ctx *fiber.Ctx) error {
 	}
 
 	// Verify the token which is in the chunks
-	reversedToken, err := jwt.Reverse(jwtMid.Config.GetString("security.jwt.tokenKey"), chunks[1], jwtMid.Logger)
+	reversedToken, err := jwtHelper.Reverse(jwtMid.Config.GetString("security.jwt.tokenKey"), chunks[1], jwtMid.Logger)
 	if err != nil {
-		jwtMid.Logger.Error(fmt.Sprintln("Error on reverse jwt token : ", err.Error()))
+		if !errors.Is(err, jwt.ErrTokenExpired) {
+			jwtMid.Logger.Error(fmt.Sprintln("Error on reverse jwt token : ", err.Error()))
+		}
 		return fiber.ErrUnauthorized
 	}
 
-	ctx.Locals(jwt.ACCESS_IDENTIFIER, reversedToken.AccessKey)
+	ctx.Locals(jwtHelper.ACCESS_IDENTIFIER, reversedToken.AccessKey)
 	switch reversedToken.Type {
 	case auth.USER_TYPE:
 		{
@@ -86,7 +92,7 @@ func (jwtMid *JwtMiddleware) Authenticate(ctx *fiber.Ctx) error {
 				jwtMid.UserAccessRepo.Delete(userAccess)
 				return fiber.ErrUnauthorized
 			}
-			ctx.Locals(jwt.CMS_IDENTIFIER, userAccess.UserID)
+			ctx.Locals(jwtHelper.CMS_IDENTIFIER, userAccess.UserID)
 		}
 	case auth.CUSTOMER_TYPE:
 		{
@@ -99,7 +105,7 @@ func (jwtMid *JwtMiddleware) Authenticate(ctx *fiber.Ctx) error {
 				jwtMid.CustomerAccessRepo.Delete(customerAccess)
 				return fiber.ErrUnauthorized
 			}
-			ctx.Locals(jwt.WEB_IDENTIFIER, customerAccess.CustomerID)
+			ctx.Locals(jwtHelper.WEB_IDENTIFIER, customerAccess.CustomerID)
 		}
 	default:
 		return errorhelper.Error500("Invalid token type") // #marked: message

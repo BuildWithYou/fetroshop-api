@@ -28,7 +28,7 @@ func DBMiddlewareProvider(conn *connection.Connection, logger *logger.Logger) *D
 // It takes a *fiber.Ctx object as a parameter and returns an error.
 func (dbMid *DbMiddleware) Authenticate(ctx *fiber.Ctx) error {
 	if dbMid.Err != nil {
-		dbMid.Logger.Error(dbMid.Err.Error())
+		dbMid.Logger.UseError(dbMid.Err)
 		return errorhelper.Error500(constant.ERROR_GENERAL)
 	}
 
