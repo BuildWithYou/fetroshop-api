@@ -1,7 +1,7 @@
 package brand
 
 import (
-	"github.com/BuildWithYou/fetroshop-api/app/domain/categories"
+	"github.com/BuildWithYou/fetroshop-api/app/domain/brands"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/responsehelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
@@ -12,8 +12,7 @@ import (
 )
 
 func (svc *brandService) Create(ctx *fiber.Ctx) (*model.Response, error) {
-	//  TODO: implement me
-	payload := new(model.UpsertCategoryRequest)
+	payload := new(model.UpsertBrandRequest)
 	errValidation, errParsing := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
 	if errParsing != nil {
 		return nil, errParsing
@@ -23,46 +22,20 @@ func (svc *brandService) Create(ctx *fiber.Ctx) (*model.Response, error) {
 	}
 
 	var (
-		parentID     null.Int
-		code         string
-		name         string
-		isActive     bool
-		icon         null.String
-		displayOrder int64
+		code     string
+		name     string
+		isActive bool
+		icon     null.String
 	)
 
 	code = slug.Make(payload.Code)
 	name = payload.Name
 	isActive = *payload.IsActive
-	displayOrder = payload.DisplayOrder
 	icon = null.NewString(payload.Icon, payload.Icon != "")
 
-	// check parent category exists
-	if payload.ParentCode != "" {
-		parentCategory := new(categories.Category)
-		result := svc.CategoryRepo.Find(parentCategory, map[string]any{"code": payload.ParentCode})
-		if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
-			return nil, result.Error
-		}
-		if gormhelper.IsErrRecordNotFound(result.Error) {
-			return responsehelper.ResponseErrorValidation(fiber.Map{"parentCode": "Invalid parent category code"}), nil // #marked: message
-		}
-		parentID = null.IntFrom(parentCategory.ID)
-	}
-
-	// check display order is unique
-	categoryByDisplayOrder := new(categories.Category)
-	result := svc.CategoryRepo.Find(categoryByDisplayOrder, map[string]any{"display_order": displayOrder})
-	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
-		return nil, result.Error
-	}
-	if !gormhelper.IsErrRecordNotFound(result.Error) {
-		return responsehelper.ResponseErrorValidation(fiber.Map{"displayOrder": "Display order has been taken"}), nil // #marked: message
-	}
-
 	// check code is unique
-	categoryByCode := new(categories.Category)
-	result = svc.CategoryRepo.Find(categoryByCode, map[string]any{"code": code})
+	brandByCode := new(brands.Brand)
+	result := svc.BrandRepo.Find(brandByCode, map[string]any{"code": code})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
@@ -70,24 +43,32 @@ func (svc *brandService) Create(ctx *fiber.Ctx) (*model.Response, error) {
 		return responsehelper.ResponseErrorValidation(fiber.Map{"code": "Category code has been taken"}), nil // #marked: message
 	}
 
-	newCategory := &categories.Category{
-		ParentID:     parentID,
-		Code:         code,
-		Name:         name,
-		IsActive:     isActive,
-		Icon:         icon,
-		DisplayOrder: displayOrder,
+	// create new brand
+	newBrand := &brands.Brand{
+		Code:     code,
+		Name:     name,
+		IsActive: isActive,
+		Icon:     icon,
 	}
-	result = svc.CategoryRepo.Create(newCategory)
+	result = svc.BrandRepo.Create(newBrand)
 	if result.Error != nil && !gormhelper.IsErrDuplicatedKey(result.Error) {
 		return nil, result.Error
 	}
 	if gormhelper.IsErrDuplicatedKey(result.Error) {
-		return responsehelper.ResponseErrorValidation(fiber.Map{"code": "Category code has been taken"}), nil // #marked: message
+		return responsehelper.ResponseErrorValidation(fiber.Map{"code": "Brand code has been taken"}), nil // #marked: message
 	}
 	if !gormhelper.HasAffectedRows(result) {
-		return responsehelper.Response500("Failed to create category", nil), nil // #marked: message
+		return responsehelper.Response500("Failed to create brand", nil), nil // #marked: message
 	}
-	return responsehelper.Response201("Category created successfully", newCategory, nil), nil // #marked: message
-
+	return responsehelper.Response201(
+		"Brand created successfully", // #marked: message
+		model.BrandResponse{
+			Code:      newBrand.Code,
+			Name:      newBrand.Name,
+			IsActive:  newBrand.IsActive,
+			Icon:      newBrand.Icon,
+			CreatedAt: newBrand.CreatedAt,
+			UpdatedAt: newBrand.UpdatedAt,
+		},
+		nil), nil
 }

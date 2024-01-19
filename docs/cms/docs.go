@@ -254,12 +254,6 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "type": "integer",
-                        "name": "displayOrder",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
                         "type": "string",
                         "name": "icon",
                         "in": "formData"
@@ -275,11 +269,6 @@ const docTemplate = `{
                         "name": "name",
                         "in": "formData",
                         "required": true
-                    },
-                    {
-                        "type": "string",
-                        "name": "parentCode",
-                        "in": "formData"
                     }
                 ],
                 "responses": {
@@ -362,7 +351,7 @@ const docTemplate = `{
         },
         "/api/brand/list": {
             "get": {
-                "description": "Retrieve categories list",
+                "description": "Retrieve brands list",
                 "consumes": [
                     "application/x-www-form-urlencoded",
                     "application/json"
@@ -373,7 +362,7 @@ const docTemplate = `{
                 "tags": [
                     "Brands"
                 ],
-                "summary": "List categories",
+                "summary": "List brands",
                 "parameters": [
                     {
                         "type": "integer",
@@ -389,9 +378,10 @@ const docTemplate = `{
                     },
                     {
                         "enum": [
-                            "display_order",
                             "code",
-                            "name"
+                            "name",
+                            "updated_at",
+                            "created_at"
                         ],
                         "type": "string",
                         "name": "orderBy",
@@ -407,11 +397,6 @@ const docTemplate = `{
                         "name": "orderDirection",
                         "in": "query",
                         "required": true
-                    },
-                    {
-                        "type": "string",
-                        "name": "parentCode",
-                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -475,12 +460,6 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "type": "integer",
-                        "name": "displayOrder",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
                         "type": "string",
                         "name": "icon",
                         "in": "formData"
@@ -496,11 +475,6 @@ const docTemplate = `{
                         "name": "name",
                         "in": "formData",
                         "required": true
-                    },
-                    {
-                        "type": "string",
-                        "name": "parentCode",
-                        "in": "formData"
                     }
                 ],
                 "responses": {
@@ -753,7 +727,9 @@ const docTemplate = `{
                         "enum": [
                             "display_order",
                             "code",
-                            "name"
+                            "name",
+                            "updated_at",
+                            "created_at"
                         ],
                         "type": "string",
                         "name": "orderBy",

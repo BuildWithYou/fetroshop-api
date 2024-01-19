@@ -1,7 +1,7 @@
 package brand
 
 import (
-	"github.com/BuildWithYou/fetroshop-api/app/domain/categories"
+	"github.com/BuildWithYou/fetroshop-api/app/domain/brands"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/responsehelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
@@ -11,9 +11,8 @@ import (
 )
 
 func (svc *brandService) Update(ctx *fiber.Ctx) (*model.Response, error) {
-	//  TODO: implement me
 	// parse param
-	pathPayload := new(model.FindCategoryRequest)
+	pathPayload := new(model.FindByCodeRequest)
 	errValidation, errParsing := validatorhelper.ValidateParamPayload(ctx, svc.Validate, pathPayload)
 	if errParsing != nil {
 		return nil, errParsing
@@ -23,7 +22,7 @@ func (svc *brandService) Update(ctx *fiber.Ctx) (*model.Response, error) {
 	}
 
 	// parse body
-	bodyPayload := new(model.UpsertCategoryRequest)
+	bodyPayload := new(model.UpsertBrandRequest)
 	errValidation, errParsing = validatorhelper.ValidateBodyPayload(ctx, svc.Validate, bodyPayload)
 	if errParsing != nil {
 		return nil, errParsing
@@ -32,46 +31,52 @@ func (svc *brandService) Update(ctx *fiber.Ctx) (*model.Response, error) {
 		return responsehelper.ResponseErrorValidation(errValidation), nil
 	}
 
-	// check category exists
-	category := new(categories.Category)
-	result := svc.CategoryRepo.Find(category, fiber.Map{"code": pathPayload.Code})
+	// check brand exists
+	brand := new(brands.Brand)
+	result := svc.BrandRepo.Find(brand, fiber.Map{"code": pathPayload.Code})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
 	if gormhelper.IsErrRecordNotFound(result.Error) {
-		return responsehelper.ResponseErrorValidation(fiber.Map{"code": "Category not found"}), nil // #marked: message
+		return responsehelper.ResponseErrorValidation(fiber.Map{"code": "Brand not found"}), nil // #marked: message
 	}
 
 	// check code is unique
-	result = svc.CategoryRepo.Find(&categories.Category{}, fiber.Map{
+	result = svc.BrandRepo.Find(&brands.Brand{}, fiber.Map{
 		"code": bodyPayload.Code,
-		"id":   []any{"!=", category.ID},
+		"id":   []any{"!=", brand.ID},
 	})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
 	if !gormhelper.IsErrRecordNotFound(result.Error) {
-		return responsehelper.ResponseErrorValidation(fiber.Map{"code": "Category code already used"}), nil // #marked: message
+		return responsehelper.ResponseErrorValidation(fiber.Map{"code": "Brand code already used"}), nil // #marked: message
 	}
 
-	// update category
-	category.Code = bodyPayload.Code
-	category.Name = bodyPayload.Name
-	category.Icon = null.NewString(bodyPayload.Icon, bodyPayload.Icon != "")
-	category.IsActive = *bodyPayload.IsActive
-	category.DisplayOrder = bodyPayload.DisplayOrder
-	result = svc.CategoryRepo.Update(category,
-		fiber.Map{"id": category.ID},
+	// update brand
+	brand.Code = bodyPayload.Code
+	brand.Name = bodyPayload.Name
+	brand.Icon = null.NewString(bodyPayload.Icon, bodyPayload.Icon != "")
+	brand.IsActive = *bodyPayload.IsActive
+	result = svc.BrandRepo.Update(brand,
+		fiber.Map{"id": brand.ID},
 	)
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
 	if !gormhelper.HasAffectedRows(result) {
-		return responsehelper.Response500("Failed to update category", nil), nil // #marked: message
+		return responsehelper.Response500("Failed to update brand", nil), nil // #marked: message
 	}
 
 	return responsehelper.Response201(
-		"Category updated successfully", // #marked: message
-		category,                        // TODO: data return must be filtered
+		"Brand updated successfully", // #marked: message
+		model.BrandResponse{
+			Code:      brand.Code,
+			Name:      brand.Name,
+			IsActive:  brand.IsActive,
+			Icon:      brand.Icon,
+			CreatedAt: brand.CreatedAt,
+			UpdatedAt: brand.UpdatedAt,
+		},
 		nil), nil
 }

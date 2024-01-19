@@ -1,7 +1,7 @@
 package brand
 
 import (
-	"github.com/BuildWithYou/fetroshop-api/app/domain/categories"
+	"github.com/BuildWithYou/fetroshop-api/app/domain/brands"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/responsehelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
@@ -10,8 +10,7 @@ import (
 )
 
 func (svc *brandService) Delete(ctx *fiber.Ctx) (*model.Response, error) {
-	//  TODO: implement me
-	pathPayload := new(model.FindCategoryRequest)
+	pathPayload := new(model.FindByCodeRequest)
 	errValidation, errParsing := validatorhelper.ValidateParamPayload(ctx, svc.Validate, pathPayload)
 	if errParsing != nil {
 		return nil, errParsing
@@ -20,7 +19,7 @@ func (svc *brandService) Delete(ctx *fiber.Ctx) (*model.Response, error) {
 		return responsehelper.ResponseErrorValidation(errValidation), nil
 	}
 
-	bodyPayload := new(model.DeleteCategoryRequest)
+	bodyPayload := new(model.DeleteRequest)
 	errValidation, errParsing = validatorhelper.ValidateBodyPayload(ctx, svc.Validate, bodyPayload)
 	if errParsing != nil {
 		return nil, errParsing
@@ -29,42 +28,26 @@ func (svc *brandService) Delete(ctx *fiber.Ctx) (*model.Response, error) {
 		return responsehelper.ResponseErrorValidation(errValidation), nil
 	}
 
-	forceDelete := *bodyPayload.ForceDelete
-	category := new(categories.Category)
-	result := svc.CategoryRepo.Find(category, fiber.Map{"code": pathPayload.Code})
+	// find brand
+	_ = *bodyPayload.ForceDelete // TODO: implement force delete in case brands has products
+	brand := new(brands.Brand)
+	result := svc.BrandRepo.Find(brand, fiber.Map{"code": pathPayload.Code})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
 	if gormhelper.IsErrRecordNotFound(result.Error) {
-		return responsehelper.ResponseErrorValidation(fiber.Map{"code": "Category not found"}), nil // #marked: message
+		return responsehelper.ResponseErrorValidation(fiber.Map{"code": "Brand not found"}), nil // #marked: message
 	}
 
-	// TODO: check wether the category has dependent products
-	children := new(categories.Category)
-	result = svc.CategoryRepo.Find(children, fiber.Map{"parent_id": category.ID})
-	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
-		return nil, result.Error
-	}
-	if !gormhelper.IsErrRecordNotFound(result.Error) {
-		if !forceDelete {
-			return responsehelper.ResponseErrorValidation(fiber.Map{"code": "Category has children"}), nil // #marked: message
-		}
-		result = svc.CategoryRepo.Delete(map[string]any{"parent_id": category.ID})
-		if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
-			return nil, result.Error
-		}
-		if !gormhelper.HasAffectedRows(result) {
-			return responsehelper.Response500("Failed to delete category children", nil), nil // #marked: message
-		}
-	}
+	// TODO: check wether the brand has dependent products
 
-	result = svc.CategoryRepo.Delete(map[string]any{"id": category.ID})
+	result = svc.BrandRepo.Delete(map[string]any{"id": brand.ID})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
 		return nil, result.Error
 	}
 	if !gormhelper.HasAffectedRows(result) {
-		return responsehelper.Response500("Failed to delete category", nil), nil // #marked: message
+		return responsehelper.Response500("Failed to delete brand", nil), nil // #marked: message
 	}
 
-	return responsehelper.Response200("Category deleted successfully", nil, nil), nil // #marked: message
+	return responsehelper.Response200("Brand deleted successfully", nil, nil), nil // #marked: message
 }

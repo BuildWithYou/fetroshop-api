@@ -9,8 +9,6 @@ import (
 )
 
 func (p *PostgreSQL) Find(destination *categories.Category, condition map[string]any) *gorm.DB {
-	// return p.DB.Preload("Parent").Where(condition).First(destination)
-
 	query := p.DB.Preload("Parent")
 	for field, value := range condition {
 		switch reflect.ValueOf(value).Kind() {
@@ -27,7 +25,6 @@ func (p *PostgreSQL) Find(destination *categories.Category, condition map[string
 			}
 		default:
 			{
-				fmt.Println("halo bosku default nih")
 				query = query.Where(fmt.Sprintf("%s = ?", field), value)
 			}
 		}

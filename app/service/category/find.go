@@ -1,7 +1,7 @@
 package category
 
 import (
-	ctEty "github.com/BuildWithYou/fetroshop-api/app/domain/categories"
+	"github.com/BuildWithYou/fetroshop-api/app/domain/categories"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/responsehelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
@@ -11,7 +11,7 @@ import (
 )
 
 func (svc *categoryService) Find(ctx *fiber.Ctx) (*model.Response, error) {
-	payload := new(model.FindCategoryRequest)
+	payload := new(model.FindByCodeRequest)
 	errValidation, errParsing := validatorhelper.ValidateQueryPayload(ctx, svc.Validate, payload)
 	if errParsing != nil {
 		return nil, errParsing
@@ -20,7 +20,7 @@ func (svc *categoryService) Find(ctx *fiber.Ctx) (*model.Response, error) {
 		return responsehelper.ResponseErrorValidation(errValidation), nil
 	}
 
-	category := new(ctEty.Category)
+	category := new(categories.Category)
 	result := svc.CategoryRepo.Find(category, map[string]any{"code": payload.Code})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
 		return nil, result.Error

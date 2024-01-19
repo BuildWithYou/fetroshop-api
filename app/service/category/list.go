@@ -3,7 +3,7 @@ package category
 import (
 	"fmt"
 
-	ctEty "github.com/BuildWithYou/fetroshop-api/app/domain/categories"
+	"github.com/BuildWithYou/fetroshop-api/app/domain/categories"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/responsehelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
@@ -14,8 +14,8 @@ import (
 
 func (svc *categoryService) List(ctx *fiber.Ctx) (*model.Response, error) {
 	var (
-		categories []ctEty.Category
-		parentID   null.Int
+		categorySlice []categories.Category
+		parentID      null.Int
 	)
 	payload := new(model.ListCategoriesRequest)
 	errValidation, errParsing := validatorhelper.ValidateQueryPayload(ctx, svc.Validate, payload)
@@ -29,7 +29,7 @@ func (svc *categoryService) List(ctx *fiber.Ctx) (*model.Response, error) {
 	if payload.ParentCode == "" {
 		parentID = null.NewInt(0, false)
 	} else {
-		parent := new(ctEty.Category)
+		parent := new(categories.Category)
 		result := svc.CategoryRepo.Find(parent, map[string]any{
 			"code": payload.ParentCode,
 		})
@@ -43,7 +43,7 @@ func (svc *categoryService) List(ctx *fiber.Ctx) (*model.Response, error) {
 	}
 
 	orderBy := fmt.Sprintf("%s %s", payload.OrderBy, payload.OrderDirection)
-	result := svc.CategoryRepo.List(&categories, fiber.Map{
+	result := svc.CategoryRepo.List(&categorySlice, fiber.Map{
 		"parent_id": parentID,
 	}, int(payload.Limit), int(payload.Offset), orderBy)
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
@@ -51,7 +51,7 @@ func (svc *categoryService) List(ctx *fiber.Ctx) (*model.Response, error) {
 	}
 
 	var list []*model.CategoryResponse
-	for _, ct := range categories {
+	for _, ct := range categorySlice {
 		parentCode := ""
 		if ct.Parent != nil {
 			parentCode = ct.Parent.Code

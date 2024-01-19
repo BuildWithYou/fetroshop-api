@@ -13,7 +13,7 @@ import (
 
 func (svc *categoryService) Update(ctx *fiber.Ctx) (*model.Response, error) {
 	// parse param
-	pathPayload := new(model.FindCategoryRequest)
+	pathPayload := new(model.FindByCodeRequest)
 	errValidation, errParsing := validatorhelper.ValidateParamPayload(ctx, svc.Validate, pathPayload)
 	if errParsing != nil {
 		return nil, errParsing

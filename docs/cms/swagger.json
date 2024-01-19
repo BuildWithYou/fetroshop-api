@@ -246,12 +246,6 @@
                         "required": true
                     },
                     {
-                        "type": "integer",
-                        "name": "displayOrder",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
                         "type": "string",
                         "name": "icon",
                         "in": "formData"
@@ -267,11 +261,6 @@
                         "name": "name",
                         "in": "formData",
                         "required": true
-                    },
-                    {
-                        "type": "string",
-                        "name": "parentCode",
-                        "in": "formData"
                     }
                 ],
                 "responses": {
@@ -354,7 +343,7 @@
         },
         "/api/brand/list": {
             "get": {
-                "description": "Retrieve categories list",
+                "description": "Retrieve brands list",
                 "consumes": [
                     "application/x-www-form-urlencoded",
                     "application/json"
@@ -365,7 +354,7 @@
                 "tags": [
                     "Brands"
                 ],
-                "summary": "List categories",
+                "summary": "List brands",
                 "parameters": [
                     {
                         "type": "integer",
@@ -381,9 +370,10 @@
                     },
                     {
                         "enum": [
-                            "display_order",
                             "code",
-                            "name"
+                            "name",
+                            "updated_at",
+                            "created_at"
                         ],
                         "type": "string",
                         "name": "orderBy",
@@ -399,11 +389,6 @@
                         "name": "orderDirection",
                         "in": "query",
                         "required": true
-                    },
-                    {
-                        "type": "string",
-                        "name": "parentCode",
-                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -467,12 +452,6 @@
                         "required": true
                     },
                     {
-                        "type": "integer",
-                        "name": "displayOrder",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
                         "type": "string",
                         "name": "icon",
                         "in": "formData"
@@ -488,11 +467,6 @@
                         "name": "name",
                         "in": "formData",
                         "required": true
-                    },
-                    {
-                        "type": "string",
-                        "name": "parentCode",
-                        "in": "formData"
                     }
                 ],
                 "responses": {
@@ -745,7 +719,9 @@
                         "enum": [
                             "display_order",
                             "code",
-                            "name"
+                            "name",
+                            "updated_at",
+                            "created_at"
                         ],
                         "type": "string",
                         "name": "orderBy",

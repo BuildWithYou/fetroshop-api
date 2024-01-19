@@ -65,7 +65,7 @@ func (ctr *categoryController) Update(ctx *fiber.Ctx) (err error) {
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
 // @Param        code   path       string                         true  "Category Code"
-// @Param        data   formData   model.DeleteCategoryRequest    true  "Request"
+// @Param        data   formData   model.DeleteRequest    true  "Request"
 // @Success      200    {object}   model.Response
 // @Failure      400    {object}   model.Response
 // @Failure      404    {object}   model.Response
@@ -96,7 +96,7 @@ func (ctr *categoryController) List(ctx *fiber.Ctx) (err error) {
 // @Tags         Categories
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
-// @Param        q     query    model.FindCategoryRequest  true  "Request"
+// @Param        q     query    model.FindByCodeRequest  true  "Request"
 // @Success      200  {object}  model.Response
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response

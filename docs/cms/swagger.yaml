@@ -219,10 +219,6 @@ paths:
         required: true
         type: string
       - in: formData
-        name: displayOrder
-        required: true
-        type: integer
-      - in: formData
         name: icon
         type: string
       - in: formData
@@ -232,9 +228,6 @@ paths:
       - in: formData
         name: name
         required: true
-        type: string
-      - in: formData
-        name: parentCode
         type: string
       produces:
       - application/json
@@ -271,10 +264,6 @@ paths:
         required: true
         type: string
       - in: formData
-        name: displayOrder
-        required: true
-        type: integer
-      - in: formData
         name: icon
         type: string
       - in: formData
@@ -284,9 +273,6 @@ paths:
       - in: formData
         name: name
         required: true
-        type: string
-      - in: formData
-        name: parentCode
         type: string
       produces:
       - application/json
@@ -350,7 +336,7 @@ paths:
       consumes:
       - application/x-www-form-urlencoded
       - application/json
-      description: Retrieve categories list
+      description: Retrieve brands list
       parameters:
       - default: 10
         in: query
@@ -361,9 +347,10 @@ paths:
         name: offset
         type: integer
       - enum:
-        - display_order
         - code
         - name
+        - updated_at
+        - created_at
         in: query
         name: orderBy
         required: true
@@ -374,9 +361,6 @@ paths:
         in: query
         name: orderDirection
         required: true
-        type: string
-      - in: query
-        name: parentCode
         type: string
       produces:
       - application/json
@@ -397,7 +381,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/model.Response'
-      summary: List categories
+      summary: List brands
       tags:
       - Brands
   /api/category/{code}:
@@ -599,6 +583,8 @@ paths:
         - display_order
         - code
         - name
+        - updated_at
+        - created_at
         in: query
         name: orderBy
         required: true

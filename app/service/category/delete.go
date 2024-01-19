@@ -10,7 +10,7 @@ import (
 )
 
 func (svc *categoryService) Delete(ctx *fiber.Ctx) (*model.Response, error) {
-	pathPayload := new(model.FindCategoryRequest)
+	pathPayload := new(model.FindByCodeRequest)
 	errValidation, errParsing := validatorhelper.ValidateParamPayload(ctx, svc.Validate, pathPayload)
 	if errParsing != nil {
 		return nil, errParsing
@@ -19,7 +19,7 @@ func (svc *categoryService) Delete(ctx *fiber.Ctx) (*model.Response, error) {
 		return responsehelper.ResponseErrorValidation(errValidation), nil
 	}
 
-	bodyPayload := new(model.DeleteCategoryRequest)
+	bodyPayload := new(model.DeleteRequest)
 	errValidation, errParsing = validatorhelper.ValidateBodyPayload(ctx, svc.Validate, bodyPayload)
 	if errParsing != nil {
 		return nil, errParsing
@@ -28,6 +28,7 @@ func (svc *categoryService) Delete(ctx *fiber.Ctx) (*model.Response, error) {
 		return responsehelper.ResponseErrorValidation(errValidation), nil
 	}
 
+	// find category
 	forceDelete := *bodyPayload.ForceDelete
 	category := new(categories.Category)
 	result := svc.CategoryRepo.Find(category, fiber.Map{"code": pathPayload.Code})

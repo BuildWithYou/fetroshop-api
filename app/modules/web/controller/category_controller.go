@@ -43,7 +43,7 @@ func (ctr *categoryController) List(ctx *fiber.Ctx) (err error) {
 // @Tags         Categories
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
-// @Param        q     query    model.FindCategoryRequest  true  "Request"
+// @Param        q     query    model.FindByCodeRequest  true  "Request"
 // @Success      200  {object}  model.Response
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response

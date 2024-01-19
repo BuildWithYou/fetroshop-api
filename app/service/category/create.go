@@ -105,5 +105,4 @@ func (svc *categoryService) Create(ctx *fiber.Ctx) (*model.Response, error) {
 			UpdatedAt:    newCategory.UpdatedAt,
 		},
 		nil), nil
-
 }

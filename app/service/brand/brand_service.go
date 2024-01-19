@@ -2,7 +2,7 @@ package brand
 
 import (
 	"github.com/BuildWithYou/fetroshop-api/app/connection"
-	"github.com/BuildWithYou/fetroshop-api/app/domain/categories"
+	"github.com/BuildWithYou/fetroshop-api/app/domain/brands"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/go-playground/validator/v10"
@@ -20,12 +20,12 @@ type BrandService interface {
 }
 
 type brandService struct {
-	Err          error
-	DB           *gorm.DB
-	Config       *viper.Viper
-	Validate     *validator.Validate
-	CategoryRepo categories.CategoryRepo
-	Logger       *logger.Logger
+	Err       error
+	DB        *gorm.DB
+	Config    *viper.Viper
+	Validate  *validator.Validate
+	Logger    *logger.Logger
+	BrandRepo brands.BrandRepo
 }
 
 func ServiceProvider(
@@ -33,14 +33,14 @@ func ServiceProvider(
 	config *viper.Viper,
 	validate *validator.Validate,
 	logger *logger.Logger,
-	categoryRepo categories.CategoryRepo,
+	brandRepo brands.BrandRepo,
 ) BrandService {
 	return &brandService{
-		Err:          conn.Err,
-		DB:           conn.DB,
-		Config:       config,
-		Validate:     validate,
-		CategoryRepo: categoryRepo,
-		Logger:       logger,
+		Err:       conn.Err,
+		DB:        conn.DB,
+		Config:    config,
+		Validate:  validate,
+		Logger:    logger,
+		BrandRepo: brandRepo,
 	}
 }

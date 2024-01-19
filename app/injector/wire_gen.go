@@ -9,6 +9,7 @@ package injector
 import (
 	"github.com/BuildWithYou/fetroshop-api/app"
 	"github.com/BuildWithYou/fetroshop-api/app/connection"
+	postgres6 "github.com/BuildWithYou/fetroshop-api/app/domain/brands/postgres"
 	postgres5 "github.com/BuildWithYou/fetroshop-api/app/domain/categories/postgres"
 	postgres2 "github.com/BuildWithYou/fetroshop-api/app/domain/customer_accesses/postgres"
 	postgres4 "github.com/BuildWithYou/fetroshop-api/app/domain/customers/postgres"
@@ -24,6 +25,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web/controller"
 	"github.com/BuildWithYou/fetroshop-api/app/service/auth"
+	"github.com/BuildWithYou/fetroshop-api/app/service/brand"
 	"github.com/BuildWithYou/fetroshop-api/app/service/category"
 	"github.com/google/wire"
 )
@@ -77,7 +79,10 @@ func InitializeCmsServer() *app.Fetroshop {
 	categoryRepo := postgres5.RepoProvider(connectionConnection)
 	categoryService := category.ServiceProvider(connectionConnection, viper, validate, loggerLogger, categoryRepo)
 	categoryController := controller2.CategoryControllerProvider(validate, categoryService)
-	controllerController := controller2.CmsControllerProvider(authController, categoryController)
+	brandRepo := postgres6.RepoProvider(connectionConnection)
+	brandService := brand.ServiceProvider(connectionConnection, viper, validate, loggerLogger, brandRepo)
+	brandController := controller2.BrandControllerProvider(validate, brandService)
+	controllerController := controller2.CmsControllerProvider(authController, categoryController, brandController)
 	router := cms.RouterProvider(docsDocs, jwtMiddleware, dbMiddleware, controllerController, loggerLogger)
 	serverConfig := cms.CmsServerConfigProvider(router, loggerLogger)
 	fetroshop := app.CreateFiber(serverConfig)
@@ -88,9 +93,9 @@ func InitializeCmsServer() *app.Fetroshop {
 
 var dbType connection.DBType = connection.DB_MAIN
 
-var repoSet = wire.NewSet(postgres4.RepoProvider, postgres2.RepoProvider, postgres3.RepoProvider, postgres.RepoProvider, postgres5.RepoProvider)
+var repoSet = wire.NewSet(postgres4.RepoProvider, postgres2.RepoProvider, postgres3.RepoProvider, postgres.RepoProvider, postgres5.RepoProvider, postgres6.RepoProvider)
 
-var serviceSet = wire.NewSet(auth.ServiceProvider, category.ServiceProvider)
+var serviceSet = wire.NewSet(auth.ServiceProvider, category.ServiceProvider, brand.ServiceProvider)
 
 var serverSet = wire.NewSet(wire.Value(dbType), confighelper.GetConfig, connection.OpenDBConnection, docs.DocsProvider, middleware.JwtMiddlewareProvider, middleware.DBMiddlewareProvider, validatorhelper.GetValidator, repoSet,
 	serviceSet, app.CreateFiber,
@@ -100,4 +105,4 @@ var serverSet = wire.NewSet(wire.Value(dbType), confighelper.GetConfig, connecti
 var webControllerSet = wire.NewSet(controller.WebControllerProvider, controller.AuthControllerProvider, controller.CategoryControllerProvider)
 
 // cms dependencies
-var cmsControllerSet = wire.NewSet(controller2.CmsControllerProvider, controller2.AuthControllerProvider, controller2.CategoryControllerProvider)
+var cmsControllerSet = wire.NewSet(controller2.CmsControllerProvider, controller2.AuthControllerProvider, controller2.CategoryControllerProvider, controller2.BrandControllerProvider)

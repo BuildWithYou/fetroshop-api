@@ -31,7 +31,7 @@ func BrandControllerProvider(vld *validator.Validate, brSvc brand.BrandService) 
 // @Tags         Brands
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
-// @Param        data    formData    model.UpsertCategoryRequest  true  "Request"
+// @Param        data    formData    model.UpsertBrandRequest  true  "Request"
 // @Success      200     {object}    model.Response
 // @Failure      400     {object}    model.Response
 // @Failure      404     {object}    model.Response
@@ -48,7 +48,7 @@ func (ctr *brandController) Create(ctx *fiber.Ctx) (err error) {
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
 // @Param        code   path      string                       true  "Category Code"
-// @Param        data   formData  model.UpsertCategoryRequest  true  "Request"
+// @Param        data   formData  model.UpsertBrandRequest  true  "Request"
 // @Success      200    {object}  model.Response
 // @Failure      400    {object}  model.Response
 // @Failure      404    {object}  model.Response
@@ -65,7 +65,7 @@ func (ctr *brandController) Update(ctx *fiber.Ctx) (err error) {
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
 // @Param        code   path       string                         true  "Category Code"
-// @Param        data   formData   model.DeleteCategoryRequest    true  "Request"
+// @Param        data   formData   model.DeleteRequest    true  "Request"
 // @Success      200    {object}   model.Response
 // @Failure      400    {object}   model.Response
 // @Failure      404    {object}   model.Response
@@ -76,12 +76,12 @@ func (ctr *brandController) Delete(ctx *fiber.Ctx) (err error) {
 	return execute(ctx, ctr.BrandService.Delete)
 }
 
-// @Summary      List categories
-// @Description  Retrieve categories list
+// @Summary      List brands
+// @Description  Retrieve brands list
 // @Tags         Brands
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
-// @Param        q     query    model.ListCategoriesRequest  true  "Request"
+// @Param        q     query    model.ListBrandsRequest  true  "Request"
 // @Success      200  {object}  model.Response
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response
@@ -96,7 +96,7 @@ func (ctr *brandController) List(ctx *fiber.Ctx) (err error) {
 // @Tags         Brands
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
-// @Param        q     query    model.FindCategoryRequest  true  "Request"
+// @Param        q     query    model.FindByCodeRequest  true  "Request"
 // @Success      200  {object}  model.Response
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response
