@@ -63,6 +63,7 @@ func newLogger(module string, pathFile string, levelStr string) *Logger {
 	file, _ := os.OpenFile(pathFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	logFile.SetOutput(file)
 	logFile.SetLevel(level)
+	logFile.SetReportCaller(true)
 
 	logConsole := logrus.New()
 	logConsole.SetFormatter(&logrus.JSONFormatter{})
