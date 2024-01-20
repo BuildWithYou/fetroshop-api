@@ -13,6 +13,7 @@ func (svc *brandService) Delete(ctx *fiber.Ctx) (*model.Response, error) {
 	pathPayload := new(model.FindByCodeRequest)
 	errValidation, errParsing := validatorhelper.ValidateParamPayload(ctx, svc.Validate, pathPayload)
 	if errParsing != nil {
+		svc.Logger.UseError(errParsing)
 		return nil, errParsing
 	}
 	if errValidation != nil {
@@ -22,6 +23,7 @@ func (svc *brandService) Delete(ctx *fiber.Ctx) (*model.Response, error) {
 	bodyPayload := new(model.DeleteRequest)
 	errValidation, errParsing = validatorhelper.ValidateBodyPayload(ctx, svc.Validate, bodyPayload)
 	if errParsing != nil {
+		svc.Logger.UseError(errParsing)
 		return nil, errParsing
 	}
 	if errValidation != nil {
@@ -33,6 +35,7 @@ func (svc *brandService) Delete(ctx *fiber.Ctx) (*model.Response, error) {
 	brand := new(brands.Brand)
 	result := svc.BrandRepo.Find(brand, fiber.Map{"code": pathPayload.Code})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 	if gormhelper.IsErrRecordNotFound(result.Error) {
@@ -43,6 +46,7 @@ func (svc *brandService) Delete(ctx *fiber.Ctx) (*model.Response, error) {
 
 	result = svc.BrandRepo.Delete(map[string]any{"id": brand.ID})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 	if !gormhelper.HasAffectedRows(result) {

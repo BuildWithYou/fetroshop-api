@@ -56,7 +56,7 @@ func Generate(payload *TokenPayload) *TokenGenerated {
 	}
 }
 
-func parse(tokenKey string, jwtToken string) (*jwt.Token, error) {
+func parse(tokenKey string, jwtToken string, lg *logger.Logger) (*jwt.Token, error) {
 	// Parse takes the token string and a function for looking up the key. The latter is especially
 	// useful if you use multiple keys for your application.  The standard is to use 'kid' in the
 	// head of the token to identify which key to use, but the parsed token (head and claims) is provided
@@ -64,6 +64,7 @@ func parse(tokenKey string, jwtToken string) (*jwt.Token, error) {
 	return jwt.Parse(jwtToken, func(t *jwt.Token) (interface{}, error) {
 		// Don't forget to validate the alg is what you expect:
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
+			lg.Error(fmt.Sprint("Unexpected signing method: ", t.Header["alg"]))
 			return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
 		}
 
@@ -75,7 +76,7 @@ func parse(tokenKey string, jwtToken string) (*jwt.Token, error) {
 // Verify verifies the jwt token against the secret
 func Reverse(tokenKey string, jwtToken string, lg *logger.Logger) (*TokenReversed, error) {
 	var expiredAt time.Time
-	parsed, err := parse(tokenKey, jwtToken)
+	parsed, err := parse(tokenKey, jwtToken, lg)
 
 	if err != nil {
 		if !errors.Is(err, jwt.ErrTokenExpired) {

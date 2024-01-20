@@ -53,9 +53,11 @@ func (svc *authService) CmsRefresh(ctx *fiber.Ctx) (*appModel.Response, error) {
 		},
 	)
 	if result.Error != nil {
+		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 	if !gormhelper.HasAffectedRows(result) {
+		svc.Logger.Error("Failed to refresh token")
 		return nil, errorhelper.Error500("Failed to refresh token") // #marked: message
 	}
 

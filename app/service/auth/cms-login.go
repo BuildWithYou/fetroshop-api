@@ -26,6 +26,7 @@ func (svc *authService) CmsLogin(ctx *fiber.Ctx) (*model.Response, error) {
 
 	errValidation, errParsing := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
 	if errParsing != nil {
+		svc.Logger.UseError(errParsing)
 		return nil, errParsing
 	}
 	if errValidation != nil {
@@ -35,6 +36,7 @@ func (svc *authService) CmsLogin(ctx *fiber.Ctx) (*model.Response, error) {
 	// check is customer exist
 	result := svc.UserRepo.Find(&user, fiber.Map{"username": payload.Username})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 	invalidEmailPasswordMsg := fiber.Map{
@@ -75,9 +77,11 @@ func (svc *authService) CmsLogin(ctx *fiber.Ctx) (*model.Response, error) {
 		},
 	)
 	if result.Error != nil && !gormhelper.HasAffectedRows(result) {
+		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 	if !gormhelper.HasAffectedRows(result) {
+		svc.Logger.Error("Failed to record user access")
 		return nil, errorhelper.Error500("Failed to record user access") // #marked: message
 	}
 

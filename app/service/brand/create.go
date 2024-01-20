@@ -15,6 +15,7 @@ func (svc *brandService) Create(ctx *fiber.Ctx) (*model.Response, error) {
 	payload := new(model.UpsertBrandRequest)
 	errValidation, errParsing := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
 	if errParsing != nil {
+		svc.Logger.UseError(errParsing)
 		return nil, errParsing
 	}
 	if errValidation != nil {
@@ -37,6 +38,7 @@ func (svc *brandService) Create(ctx *fiber.Ctx) (*model.Response, error) {
 	brandByCode := new(brands.Brand)
 	result := svc.BrandRepo.Find(brandByCode, map[string]any{"code": code})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 	if !gormhelper.IsErrRecordNotFound(result.Error) {
@@ -52,6 +54,7 @@ func (svc *brandService) Create(ctx *fiber.Ctx) (*model.Response, error) {
 	}
 	result = svc.BrandRepo.Create(newBrand)
 	if result.Error != nil && !gormhelper.IsErrDuplicatedKey(result.Error) {
+		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 	if gormhelper.IsErrDuplicatedKey(result.Error) {

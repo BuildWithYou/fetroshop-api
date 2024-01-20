@@ -16,6 +16,7 @@ func (svc *authService) CmsLogout(ctx *fiber.Ctx) (*appModel.Response, error) {
 		Key:    identifier,
 		UserID: userID})
 	if result.Error != nil {
+		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 	if !gormhelper.HasAffectedRows(result) {

@@ -16,6 +16,7 @@ func (svc *categoryService) Update(ctx *fiber.Ctx) (*model.Response, error) {
 	pathPayload := new(model.FindByCodeRequest)
 	errValidation, errParsing := validatorhelper.ValidateParamPayload(ctx, svc.Validate, pathPayload)
 	if errParsing != nil {
+		svc.Logger.UseError(errParsing)
 		return nil, errParsing
 	}
 	if errValidation != nil {
@@ -26,6 +27,7 @@ func (svc *categoryService) Update(ctx *fiber.Ctx) (*model.Response, error) {
 	bodyPayload := new(model.UpsertCategoryRequest)
 	errValidation, errParsing = validatorhelper.ValidateBodyPayload(ctx, svc.Validate, bodyPayload)
 	if errParsing != nil {
+		svc.Logger.UseError(errParsing)
 		return nil, errParsing
 	}
 	if errValidation != nil {
@@ -52,6 +54,7 @@ func (svc *categoryService) Update(ctx *fiber.Ctx) (*model.Response, error) {
 	category := new(categories.Category)
 	result := svc.CategoryRepo.Find(category, fiber.Map{"code": pathPayload.Code})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 	if gormhelper.IsErrRecordNotFound(result.Error) {
@@ -63,6 +66,7 @@ func (svc *categoryService) Update(ctx *fiber.Ctx) (*model.Response, error) {
 		parentCategory := new(categories.Category)
 		result := svc.CategoryRepo.Find(parentCategory, map[string]any{"code": bodyPayload.ParentCode})
 		if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+			svc.Logger.UseError(result.Error)
 			return nil, result.Error
 		}
 		if gormhelper.IsErrRecordNotFound(result.Error) {
@@ -79,6 +83,7 @@ func (svc *categoryService) Update(ctx *fiber.Ctx) (*model.Response, error) {
 		"id":            []any{"!=", category.ID},
 	})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 	if !gormhelper.IsErrRecordNotFound(result.Error) {
@@ -91,6 +96,7 @@ func (svc *categoryService) Update(ctx *fiber.Ctx) (*model.Response, error) {
 		"id":   []any{"!=", category.ID},
 	})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 	if !gormhelper.IsErrRecordNotFound(result.Error) {

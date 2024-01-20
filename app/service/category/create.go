@@ -16,6 +16,7 @@ func (svc *categoryService) Create(ctx *fiber.Ctx) (*model.Response, error) {
 	payload := new(model.UpsertCategoryRequest)
 	errValidation, errParsing := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
 	if errParsing != nil {
+		svc.Logger.UseError(errParsing)
 		return nil, errParsing
 	}
 	if errValidation != nil {
@@ -43,6 +44,7 @@ func (svc *categoryService) Create(ctx *fiber.Ctx) (*model.Response, error) {
 		parentCategory := new(categories.Category)
 		result := svc.CategoryRepo.Find(parentCategory, map[string]any{"code": payload.ParentCode})
 		if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+			svc.Logger.UseError(result.Error)
 			return nil, result.Error
 		}
 		if gormhelper.IsErrRecordNotFound(result.Error) {
@@ -56,6 +58,7 @@ func (svc *categoryService) Create(ctx *fiber.Ctx) (*model.Response, error) {
 	categoryByDisplayOrder := new(categories.Category)
 	result := svc.CategoryRepo.Find(categoryByDisplayOrder, map[string]any{"display_order": displayOrder})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 	if !gormhelper.IsErrRecordNotFound(result.Error) {
@@ -66,6 +69,7 @@ func (svc *categoryService) Create(ctx *fiber.Ctx) (*model.Response, error) {
 	categoryByCode := new(categories.Category)
 	result = svc.CategoryRepo.Find(categoryByCode, map[string]any{"code": code})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 	if !gormhelper.IsErrRecordNotFound(result.Error) {
@@ -83,6 +87,7 @@ func (svc *categoryService) Create(ctx *fiber.Ctx) (*model.Response, error) {
 	}
 	result = svc.CategoryRepo.Create(newCategory)
 	if result.Error != nil && !gormhelper.IsErrDuplicatedKey(result.Error) {
+		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 	if gormhelper.IsErrDuplicatedKey(result.Error) {

@@ -16,6 +16,7 @@ func (svc *brandService) List(ctx *fiber.Ctx) (*model.Response, error) {
 	payload := new(model.ListBrandsRequest)
 	errValidation, errParsing := validatorhelper.ValidateQueryPayload(ctx, svc.Validate, payload)
 	if errParsing != nil {
+		svc.Logger.UseError(errParsing)
 		return nil, errParsing
 	}
 	if errValidation != nil {
@@ -25,6 +26,7 @@ func (svc *brandService) List(ctx *fiber.Ctx) (*model.Response, error) {
 	orderBy := fmt.Sprintf("%s %s", payload.OrderBy, payload.OrderDirection)
 	result := svc.BrandRepo.List(&brandSlice, fiber.Map{}, int(payload.Limit), int(payload.Offset), orderBy)
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 

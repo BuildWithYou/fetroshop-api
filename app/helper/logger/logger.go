@@ -98,6 +98,6 @@ func NewCmsLogger(config *viper.Viper) *Logger {
 }
 
 func getCallerFilePath() string {
-	_, file, line, _ := runtime.Caller(2)
+	_, file, line, _ := runtime.Caller(3)
 	return string(fmt.Sprint(file, ":", line))
 }

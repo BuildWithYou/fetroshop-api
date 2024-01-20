@@ -14,6 +14,7 @@ func (svc *brandService) Find(ctx *fiber.Ctx) (*model.Response, error) {
 	payload := new(model.FindByCodeRequest)
 	errValidation, errParsing := validatorhelper.ValidateQueryPayload(ctx, svc.Validate, payload)
 	if errParsing != nil {
+		svc.Logger.UseError(errParsing)
 		return nil, errParsing
 	}
 	if errValidation != nil {
@@ -23,6 +24,7 @@ func (svc *brandService) Find(ctx *fiber.Ctx) (*model.Response, error) {
 	brand := new(brands.Brand)
 	result := svc.BrandRepo.Find(brand, map[string]any{"code": payload.Code})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 	if gormhelper.IsErrRecordNotFound(result.Error) {

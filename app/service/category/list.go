@@ -20,6 +20,7 @@ func (svc *categoryService) List(ctx *fiber.Ctx) (*model.Response, error) {
 	payload := new(model.ListCategoriesRequest)
 	errValidation, errParsing := validatorhelper.ValidateQueryPayload(ctx, svc.Validate, payload)
 	if errParsing != nil {
+		svc.Logger.UseError(errParsing)
 		return nil, errParsing
 	}
 	if errValidation != nil {
@@ -34,6 +35,7 @@ func (svc *categoryService) List(ctx *fiber.Ctx) (*model.Response, error) {
 			"code": payload.ParentCode,
 		})
 		if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+			svc.Logger.UseError(result.Error)
 			return nil, result.Error
 		}
 		if gormhelper.IsErrRecordNotFound(result.Error) {
@@ -47,6 +49,7 @@ func (svc *categoryService) List(ctx *fiber.Ctx) (*model.Response, error) {
 		"parent_id": parentID,
 	}, int(payload.Limit), int(payload.Offset), orderBy)
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 

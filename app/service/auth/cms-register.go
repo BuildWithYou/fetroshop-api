@@ -17,6 +17,7 @@ func (svc *authService) CmsRegister(ctx *fiber.Ctx) (*model.Response, error) {
 	payload := new(model.RegistrationRequest)
 	errValidation, errParsing := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
 	if errParsing != nil {
+		svc.Logger.UseError(errParsing)
 		return nil, errParsing
 	}
 	if errValidation != nil {
@@ -25,6 +26,7 @@ func (svc *authService) CmsRegister(ctx *fiber.Ctx) (*model.Response, error) {
 
 	result := svc.UserRepo.Find(&existingUsername, fiber.Map{"username": payload.Username})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 	if !gormhelper.IsErrRecordNotFound(result.Error) {
@@ -33,6 +35,7 @@ func (svc *authService) CmsRegister(ctx *fiber.Ctx) (*model.Response, error) {
 
 	result = svc.UserRepo.Find(&existingPhone, fiber.Map{"phone": payload.Phone})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 	if !gormhelper.IsErrRecordNotFound(result.Error) {
@@ -41,6 +44,7 @@ func (svc *authService) CmsRegister(ctx *fiber.Ctx) (*model.Response, error) {
 
 	result = svc.UserRepo.Find(&existingEmail, fiber.Map{"email": payload.Email})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 	if !gormhelper.IsErrRecordNotFound(result.Error) {
@@ -58,9 +62,11 @@ func (svc *authService) CmsRegister(ctx *fiber.Ctx) (*model.Response, error) {
 	}
 	result = svc.UserRepo.Create(newUser)
 	if result.Error != nil {
+		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 	if !gormhelper.HasAffectedRows(result) {
+		svc.Logger.Error("Failed to create user")
 		return nil, errorhelper.Error500("Failed to create user") // #marked: message
 	}
 
