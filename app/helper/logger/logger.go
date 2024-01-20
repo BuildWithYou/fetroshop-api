@@ -3,6 +3,7 @@ package logger
 import (
 	"fmt"
 	"os"
+	"runtime"
 	"time"
 
 	"github.com/sirupsen/logrus"
@@ -63,7 +64,6 @@ func newLogger(module string, pathFile string, levelStr string) *Logger {
 	file, _ := os.OpenFile(pathFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	logFile.SetOutput(file)
 	logFile.SetLevel(level)
-	logFile.SetReportCaller(true)
 
 	logConsole := logrus.New()
 	logConsole.SetFormatter(&logrus.JSONFormatter{})
@@ -95,4 +95,9 @@ func NewCmsLogger(config *viper.Viper) *Logger {
 		CmsLogger = newLogger("cms", pathFile, config.GetString("app.cms.logLevel"))
 	}
 	return CmsLogger
+}
+
+func getCallerFilePath() string {
+	_, file, line, _ := runtime.Caller(2)
+	return string(fmt.Sprint(file, ":", line))
 }

@@ -45,8 +45,9 @@ func (lg *Logger) Error(args ...interface{}) {
 	lg.LogConsole.WithField("module", lg.module).Error(args...)
 }
 func (lg *Logger) UseError(err error) {
-	lg.LogFile.WithField("module", lg.module).Error(err.Error())
-	lg.LogConsole.WithField("module", lg.module).Error(err.Error())
+	stackTrace := getCallerFilePath()
+	lg.LogFile.WithField("module", lg.module).WithField("stackTrace", stackTrace).Error(err.Error())
+	lg.LogConsole.WithField("module", lg.module).WithField("stackTrace", stackTrace).Error(err.Error())
 }
 
 func (lg *Logger) Fatal(args ...interface{}) {

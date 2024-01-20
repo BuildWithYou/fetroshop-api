@@ -61,10 +61,6 @@ func CreateFiber(serverConfig *ServerConfig) *Fetroshop {
 				}
 			}
 
-			if code >= 500 {
-				serverConfig.Logger.UseError(err)
-			}
-
 			return ctx.Status(code).JSON(appModel.Response{
 				Code:    code,
 				Status:  status,
