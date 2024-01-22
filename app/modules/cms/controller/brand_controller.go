@@ -11,6 +11,7 @@ type BrandController interface {
 	Update(ctx *fiber.Ctx) (err error)
 	Delete(ctx *fiber.Ctx) (err error)
 	List(ctx *fiber.Ctx) (err error)
+	ListByPrefix(ctx *fiber.Ctx) (err error)
 	Find(ctx *fiber.Ctx) (err error)
 }
 
@@ -89,6 +90,21 @@ func (ctr *brandController) Delete(ctx *fiber.Ctx) (err error) {
 // @Router       /api/brand/list [get]
 func (ctr *brandController) List(ctx *fiber.Ctx) (err error) {
 	return execute(ctx, ctr.BrandService.List)
+}
+
+// @Summary      List brands by prefix
+// @Description  Retrieve brands list by prefix
+// @Tags         Brands
+// @Accept       x-www-form-urlencoded,json
+// @Produce      json
+// @Param        q     query    model.ListBrandsByPrefixRequest  true  "Request"
+// @Success      200  {object}  model.Response
+// @Failure      400  {object}  model.Response
+// @Failure      404  {object}  model.Response
+// @Failure      500  {object}  model.Response
+// @Router       /api/brand/list-by-prefix [get]
+func (ctr *brandController) ListByPrefix(ctx *fiber.Ctx) (err error) {
+	return execute(ctx, ctr.BrandService.ListByPrefix)
 }
 
 // @Summary      Get detail brand

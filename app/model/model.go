@@ -14,5 +14,5 @@ type FindByCodeRequest struct {
 }
 
 type DeleteRequest struct {
-	ForceDelete *bool `json:"forceDelete" form:"forceDelete" validate:"required"`
+	ForceDelete *bool `json:"forceDelete" validate:"required"`
 }

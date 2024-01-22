@@ -16,6 +16,7 @@ type BrandService interface {
 	Update(ctx *fiber.Ctx) (*model.Response, error)
 	Delete(ctx *fiber.Ctx) (*model.Response, error)
 	List(ctx *fiber.Ctx) (*model.Response, error)
+	ListByPrefix(ctx *fiber.Ctx) (*model.Response, error)
 	Find(ctx *fiber.Ctx) (*model.Response, error)
 }
 
