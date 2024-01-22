@@ -41,13 +41,13 @@ func (lg *Logger) logConsoleTemplate(useStackTrace bool) *logrus.Entry {
 }
 
 func (lg *Logger) Trace(args ...interface{}) {
-	lg.logFileTemplate(false).Trace(args...)
-	lg.logConsoleTemplate(false).Trace(args...)
+	lg.logFileTemplate(true).Trace(args...)
+	lg.logConsoleTemplate(true).Trace(args...)
 }
 
 func (lg *Logger) Debug(args ...interface{}) {
-	lg.logFileTemplate(false).Debug(args...)
-	lg.logConsoleTemplate(false).Debug(args...)
+	lg.logFileTemplate(true).Debug(args...)
+	lg.logConsoleTemplate(true).Debug(args...)
 }
 
 func (lg *Logger) Info(args ...interface{}) {
@@ -56,8 +56,8 @@ func (lg *Logger) Info(args ...interface{}) {
 }
 
 func (lg *Logger) Warning(args ...interface{}) {
-	lg.logFileTemplate(false).Warning(args...)
-	lg.logConsoleTemplate(false).Warning(args...)
+	lg.logFileTemplate(true).Warning(args...)
+	lg.logConsoleTemplate(true).Warning(args...)
 }
 
 func (lg *Logger) Error(args ...interface{}) {
