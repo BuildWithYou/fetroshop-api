@@ -7,27 +7,19 @@ import (
 )
 
 type UpsertCategoryRequest struct {
-	ParentCode   string `json:"parentCode" form:"parentCode"`
-	Code         string `json:"code" form:"code" validate:"required"`
-	Name         string `json:"name" form:"name" validate:"required"`
-	IsActive     *bool  `json:"isActive" form:"isActive" validate:"required"`
-	Icon         string `json:"icon" form:"icon"`
-	DisplayOrder int64  `json:"displayOrder" form:"displayOrder" validate:"required"`
-}
-
-type CategoryPathRequest struct {
-	Code string `json:"code" form:"code" validate:"required"`
-}
-
-type DeleteCategoryRequest struct {
-	ForceDelete *bool `json:"forceDelete" form:"forceDelete" validate:"required"`
+	ParentCode   string `json:"parentCode"`
+	Code         string `json:"code" validate:"required"`
+	Name         string `json:"name" validate:"required"`
+	IsActive     *bool  `json:"isActive" validate:"required"`
+	Icon         string `json:"icon"`
+	DisplayOrder int64  `json:"displayOrder" validate:"required"`
 }
 
 type ListCategoriesRequest struct {
 	ParentCode     string `json:"parentCode"`
 	Offset         int64  `json:"offset" default:"0"`
 	Limit          int64  `json:"limit" default:"10"`
-	OrderBy        string `json:"orderBy" validate:"required" enums:"display_order,code,name"`
+	OrderBy        string `json:"orderBy" validate:"required" enums:"display_order,code,name,updated_at,created_at"`
 	OrderDirection string `json:"orderDirection" validate:"required" enums:"ASC,DESC"`
 }
 
@@ -40,8 +32,4 @@ type CategoryResponse struct {
 	DisplayOrder int64       ` json:"displayOrder"`
 	CreatedAt    time.Time   ` json:"createdAt"`
 	UpdatedAt    time.Time   ` json:"updatedAt"`
-}
-
-type FindCategoryRequest struct {
-	Code string `json:"code" validate:"required"`
 }

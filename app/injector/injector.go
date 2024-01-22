@@ -6,6 +6,7 @@ package injector
 import (
 	"github.com/BuildWithYou/fetroshop-api/app"
 	"github.com/BuildWithYou/fetroshop-api/app/connection"
+	brandRepo "github.com/BuildWithYou/fetroshop-api/app/domain/brands/postgres"
 	categoryRepo "github.com/BuildWithYou/fetroshop-api/app/domain/categories/postgres"
 	customerAccessRepo "github.com/BuildWithYou/fetroshop-api/app/domain/customer_accesses/postgres"
 	customerRepo "github.com/BuildWithYou/fetroshop-api/app/domain/customers/postgres"
@@ -21,6 +22,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/modules/web"
 	webController "github.com/BuildWithYou/fetroshop-api/app/modules/web/controller"
 	"github.com/BuildWithYou/fetroshop-api/app/service/auth"
+	"github.com/BuildWithYou/fetroshop-api/app/service/brand"
 	"github.com/BuildWithYou/fetroshop-api/app/service/category"
 	"github.com/google/wire"
 )
@@ -33,11 +35,13 @@ var repoSet = wire.NewSet(
 	userRepo.RepoProvider,
 	userAccessRepo.RepoProvider,
 	categoryRepo.RepoProvider,
+	brandRepo.RepoProvider,
 )
 
 var serviceSet = wire.NewSet(
 	auth.ServiceProvider,
 	category.ServiceProvider,
+	brand.ServiceProvider,
 )
 
 var serverSet = wire.NewSet(
@@ -76,6 +80,7 @@ var cmsControllerSet = wire.NewSet(
 	cmsController.CmsControllerProvider,
 	cmsController.AuthControllerProvider,
 	cmsController.CategoryControllerProvider,
+	cmsController.BrandControllerProvider,
 )
 
 func InitializeCmsServer() *app.Fetroshop {

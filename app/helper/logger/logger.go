@@ -3,6 +3,7 @@ package logger
 import (
 	"fmt"
 	"os"
+	"runtime"
 	"time"
 
 	"github.com/sirupsen/logrus"
@@ -94,4 +95,9 @@ func NewCmsLogger(config *viper.Viper) *Logger {
 		CmsLogger = newLogger("cms", pathFile, config.GetString("app.cms.logLevel"))
 	}
 	return CmsLogger
+}
+
+func getCallerFilePath() string {
+	_, file, line, _ := runtime.Caller(3)
+	return string(fmt.Sprint(file, ":", line))
 }

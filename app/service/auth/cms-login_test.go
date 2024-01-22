@@ -54,7 +54,6 @@ func TestCmsServiceLogin(t *testing.T) {
 			assert.NotNil(t, bytes)
 
 			if response.StatusCode != tt.wantResponseCode {
-				fmt.Println("cmsLogger : ", cmsLogger)
 				cmsLogger.LogConsole.Error(fmt.Sprintln("Response : ", string(bytes)))
 			}
 

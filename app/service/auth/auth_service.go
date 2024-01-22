@@ -31,7 +31,7 @@ type AuthService interface {
 	WebRefresh(ctx *fiber.Ctx) (*appModel.Response, error)
 }
 
-type AuthServiceImpl struct {
+type authService struct {
 	Err                error
 	DB                 *gorm.DB
 	Config             *viper.Viper
@@ -53,7 +53,7 @@ func ServiceProvider(
 	customerAccessRepo customer_accesses.CustomerAccessRepo,
 	logger *logger.Logger,
 ) AuthService {
-	return &AuthServiceImpl{
+	return &authService{
 		Err:                conn.Err,
 		DB:                 conn.DB,
 		Config:             config,

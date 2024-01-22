@@ -15,18 +15,18 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/utils"
 )
 
-func (svc *AuthServiceImpl) WebLogin(ctx *fiber.Ctx) (*model.Response, error) {
+func (svc *authService) WebLogin(ctx *fiber.Ctx) (*model.Response, error) {
 	var customer customers.Customer
 
-	payload := new(model.WebLoginRequest)
+	payload := new(model.LoginRequest)
 	jwtTokenKey := svc.Config.GetString("security.jwt.tokenKey")
 	jwtExpiration := svc.Config.GetString("security.jwt.expiration")
 
 	errValidation, errParsing := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
 	if errParsing != nil {
+		svc.Logger.UseError(errParsing)
 		return nil, errParsing
 	}
 	if errValidation != nil {
@@ -36,6 +36,7 @@ func (svc *AuthServiceImpl) WebLogin(ctx *fiber.Ctx) (*model.Response, error) {
 	// check is customer exist
 	result := svc.CustomerRepo.Find(&customer, fiber.Map{"username": payload.Username})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 	invalidEmailPasswordMsg := fiber.Map{
@@ -76,9 +77,11 @@ func (svc *AuthServiceImpl) WebLogin(ctx *fiber.Ctx) (*model.Response, error) {
 		},
 	)
 	if result.Error != nil && !gormhelper.HasAffectedRows(result) {
+		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 	if !gormhelper.HasAffectedRows(result) {
+		svc.Logger.Error("Failed to record user access")
 		return nil, errorhelper.Error500("Failed to record user access") // #marked: message
 	}
 
@@ -89,14 +92,11 @@ func (svc *AuthServiceImpl) WebLogin(ctx *fiber.Ctx) (*model.Response, error) {
 		Type:       CUSTOMER_TYPE,
 	})
 
-	return &model.Response{
-		Code:    fiber.StatusOK,
-		Status:  utils.StatusMessage(fiber.StatusOK),
-		Message: "Login success", // #marked: message
-		Data: fiber.Map{
+	return responsehelper.Response200(
+		"Login success", // #marked: message
+		fiber.Map{
 			"token":     generatedJwt.Token,
 			"createdAt": time.Now().Format("2006-01-02 15:04:05"),
 			"expiredAt": generatedJwt.ExpiredAt.Format("2006-01-02 15:04:05"),
-		},
-	}, nil
+		}, nil), nil
 }

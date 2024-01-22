@@ -10,12 +10,12 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/jwt"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/password"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/responsehelper"
 	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/utils"
 )
 
-func (svc *AuthServiceImpl) WebRefresh(ctx *fiber.Ctx) (*appModel.Response, error) {
+func (svc *authService) WebRefresh(ctx *fiber.Ctx) (*appModel.Response, error) {
 	customerID := jwt.GetCustomerID(ctx)
 	identifier := jwt.GetAccessIdentifier(ctx)
 	jwtTokenKey := svc.Config.GetString("security.jwt.tokenKey")
@@ -53,20 +53,19 @@ func (svc *AuthServiceImpl) WebRefresh(ctx *fiber.Ctx) (*appModel.Response, erro
 		},
 	)
 	if result.Error != nil {
+		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 	if !gormhelper.HasAffectedRows(result) {
+		svc.Logger.Error("Failed to refresh token")
 		return nil, errorhelper.Error500("Failed to refresh token") // #marked: message
 	}
 
-	return &appModel.Response{
-		Code:    fiber.StatusOK,
-		Status:  utils.StatusMessage(fiber.StatusOK),
-		Message: "Refresh success", // #marked: message
-		Data: fiber.Map{
+	return responsehelper.Response200(
+		"Refresh success", // #marked: message
+		fiber.Map{
 			"token":     generatedJwt.Token,
 			"createdAt": time.Now().Format("2006-01-02 15:04:05"),
 			"expiredAt": generatedJwt.ExpiredAt.Format("2006-01-02 15:04:05"),
-		},
-	}, nil
+		}, nil), nil
 }

@@ -9,29 +9,33 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func (svc *CategoryServiceImpl) Delete(ctx *fiber.Ctx) (*model.Response, error) {
-	pathPayload := new(model.CategoryPathRequest)
+func (svc *categoryService) Delete(ctx *fiber.Ctx) (*model.Response, error) {
+	pathPayload := new(model.FindByCodeRequest)
 	errValidation, errParsing := validatorhelper.ValidateParamPayload(ctx, svc.Validate, pathPayload)
 	if errParsing != nil {
+		svc.Logger.UseError(errParsing)
 		return nil, errParsing
 	}
 	if errValidation != nil {
 		return responsehelper.ResponseErrorValidation(errValidation), nil
 	}
 
-	bodyPayload := new(model.DeleteCategoryRequest)
+	bodyPayload := new(model.DeleteRequest)
 	errValidation, errParsing = validatorhelper.ValidateBodyPayload(ctx, svc.Validate, bodyPayload)
 	if errParsing != nil {
+		svc.Logger.UseError(errParsing)
 		return nil, errParsing
 	}
 	if errValidation != nil {
 		return responsehelper.ResponseErrorValidation(errValidation), nil
 	}
 
+	// find category
 	forceDelete := *bodyPayload.ForceDelete
 	category := new(categories.Category)
 	result := svc.CategoryRepo.Find(category, fiber.Map{"code": pathPayload.Code})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 	if gormhelper.IsErrRecordNotFound(result.Error) {
@@ -42,6 +46,7 @@ func (svc *CategoryServiceImpl) Delete(ctx *fiber.Ctx) (*model.Response, error) 
 	children := new(categories.Category)
 	result = svc.CategoryRepo.Find(children, fiber.Map{"parent_id": category.ID})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 	if !gormhelper.IsErrRecordNotFound(result.Error) {
@@ -50,6 +55,7 @@ func (svc *CategoryServiceImpl) Delete(ctx *fiber.Ctx) (*model.Response, error) 
 		}
 		result = svc.CategoryRepo.Delete(map[string]any{"parent_id": category.ID})
 		if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+			svc.Logger.UseError(result.Error)
 			return nil, result.Error
 		}
 		if !gormhelper.HasAffectedRows(result) {
@@ -59,6 +65,7 @@ func (svc *CategoryServiceImpl) Delete(ctx *fiber.Ctx) (*model.Response, error) 
 
 	result = svc.CategoryRepo.Delete(map[string]any{"id": category.ID})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 	if !gormhelper.HasAffectedRows(result) {

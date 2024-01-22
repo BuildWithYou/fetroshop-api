@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 func (lg *Logger) WebLoggerResetOutput() {
@@ -20,37 +22,59 @@ func (lg *Logger) CmsLoggerResetOutput() {
 	lg.LogFile.SetOutput(file)
 }
 
+func (lg *Logger) logFileTemplate(useStackTrace bool) *logrus.Entry {
+	entry := lg.LogFile.WithField("module", lg.module)
+	if useStackTrace {
+		stackTrace := getCallerFilePath()
+		entry = entry.WithField("stackTrace", stackTrace)
+	}
+	return entry
+}
+
+func (lg *Logger) logConsoleTemplate(useStackTrace bool) *logrus.Entry {
+	entry := lg.LogConsole.WithField("module", lg.module)
+	if useStackTrace {
+		stackTrace := getCallerFilePath()
+		entry = entry.WithField("stackTrace", stackTrace)
+	}
+	return entry
+}
+
 func (lg *Logger) Trace(args ...interface{}) {
-	lg.LogFile.WithField("module", lg.module).Trace(args...)
-	lg.LogConsole.WithField("module", lg.module).Trace(args...)
+	lg.logFileTemplate(true).Trace(args...)
+	lg.logConsoleTemplate(true).Trace(args...)
 }
 
 func (lg *Logger) Debug(args ...interface{}) {
-	lg.LogFile.WithField("module", lg.module).Debug(args...)
-	lg.LogConsole.WithField("module", lg.module).Debug(args...)
+	lg.logFileTemplate(true).Debug(args...)
+	lg.logConsoleTemplate(true).Debug(args...)
 }
 
 func (lg *Logger) Info(args ...interface{}) {
-	lg.LogFile.WithField("module", lg.module).Info(args...)
-	lg.LogConsole.WithField("module", lg.module).Info(args...)
+	lg.logFileTemplate(false).Info(args...)
+	lg.logConsoleTemplate(false).Info(args...)
 }
 
 func (lg *Logger) Warning(args ...interface{}) {
-	lg.LogFile.WithField("module", lg.module).Warning(args...)
-	lg.LogConsole.WithField("module", lg.module).Warning(args...)
+	lg.logFileTemplate(true).Warning(args...)
+	lg.logConsoleTemplate(true).Warning(args...)
 }
 
 func (lg *Logger) Error(args ...interface{}) {
-	lg.LogFile.WithField("module", lg.module).Error(args...)
-	lg.LogConsole.WithField("module", lg.module).Error(args...)
+	lg.logFileTemplate(true).Error(args...)
+	lg.logConsoleTemplate(true).Error(args...)
+}
+func (lg *Logger) UseError(err error) {
+	lg.logFileTemplate(true).Error(err.Error())
+	lg.logConsoleTemplate(true).Error(err.Error())
 }
 
 func (lg *Logger) Fatal(args ...interface{}) {
-	lg.LogFile.WithField("module", lg.module).Fatal(args...)
-	lg.LogConsole.WithField("module", lg.module).Fatal(args...)
+	lg.logFileTemplate(true).Fatal(args...)
+	lg.logConsoleTemplate(true).Fatal(args...)
 }
 
 func (lg *Logger) Panic(args ...interface{}) {
-	lg.LogFile.WithField("module", lg.module).Panic(args...)
-	lg.LogConsole.WithField("module", lg.module).Panic(args...)
+	lg.logFileTemplate(true).Panic(args...)
+	lg.logConsoleTemplate(true).Panic(args...)
 }

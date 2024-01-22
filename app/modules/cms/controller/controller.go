@@ -8,15 +8,18 @@ import (
 type Controller struct {
 	Auth     AuthController
 	Category CategoryController
+	Brand    BrandController
 }
 
 func CmsControllerProvider(
 	authController AuthController,
 	categoryController CategoryController,
+	brandController BrandController,
 ) *Controller {
 	return &Controller{
 		Auth:     authController,
 		Category: categoryController,
+		Brand:    brandController,
 	}
 }
 

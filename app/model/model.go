@@ -8,3 +8,11 @@ type Response struct {
 	Meta    any            `json:"meta"`    // support data
 	Errors  map[string]any `json:"errors"`  // error data
 }
+
+type FindByCodeRequest struct {
+	Code string `json:"code" validate:"required"`
+}
+
+type DeleteRequest struct {
+	ForceDelete *bool `json:"forceDelete" validate:"required"`
+}

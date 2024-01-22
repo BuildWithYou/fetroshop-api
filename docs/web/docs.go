@@ -309,7 +309,9 @@ const docTemplate = `{
                         "enum": [
                             "display_order",
                             "code",
-                            "name"
+                            "name",
+                            "updated_at",
+                            "created_at"
                         ],
                         "type": "string",
                         "name": "orderBy",

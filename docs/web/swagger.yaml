@@ -217,6 +217,8 @@ paths:
         - display_order
         - code
         - name
+        - updated_at
+        - created_at
         in: query
         name: orderBy
         required: true
