@@ -55,7 +55,7 @@ func (router *CmsRouter) Init(app *fiber.App) {
 	brand.Put("/:code", contentTypeMiddleware, jwtMiddleware, router.Controller.Brand.Update)
 	brand.Delete("/:code", contentTypeMiddleware, jwtMiddleware, router.Controller.Brand.Delete)
 	brand.Get("/list", router.Controller.Brand.List)
-	brand.Get("/list-by-prefix", router.Controller.Brand.List)
+	brand.Get("/list-by-prefix", router.Controller.Brand.ListByPrefix)
 	brand.Get("/find", router.Controller.Brand.Find)
 
 }

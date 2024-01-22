@@ -2,6 +2,7 @@ package brand
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/BuildWithYou/fetroshop-api/app/domain/brands"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
@@ -24,12 +25,13 @@ func (svc *brandService) ListByPrefix(ctx *fiber.Ctx) (*model.Response, error) {
 	}
 
 	orderBy := fmt.Sprintf("%s %s", payload.OrderBy, payload.OrderDirection)
-	result := svc.BrandRepo.List(&brandSlice, map[string]any{
-		"name": []string{
-			"like",
-			payload.Prefix,
-		},
-	}, int(payload.Limit), int(payload.Offset), orderBy)
+	result := svc.BrandRepo.List(
+		&brandSlice,
+		map[string]any{fmt.Sprintf("LOWER(SUBSTR(name, 1, %d))", len(payload.Prefix)): []any{"=", strings.ToLower(payload.Prefix)}},
+		int(payload.Limit),
+		int(payload.Offset),
+		orderBy,
+	)
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
 		svc.Logger.UseError(result.Error)
 		return nil, result.Error
