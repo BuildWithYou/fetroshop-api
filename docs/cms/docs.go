@@ -477,7 +477,6 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "minLength": 1,
                         "type": "string",
                         "name": "prefix",
                         "in": "query",

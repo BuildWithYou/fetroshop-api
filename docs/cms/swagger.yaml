@@ -416,7 +416,6 @@ paths:
         required: true
         type: string
       - in: query
-        minLength: 1
         name: prefix
         required: true
         type: string

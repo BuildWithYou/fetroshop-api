@@ -50,7 +50,10 @@ func InitializeWebServer() *app.Fetroshop {
 	categoryRepo := postgres5.RepoProvider(connectionConnection)
 	categoryService := category.ServiceProvider(connectionConnection, viper, validate, loggerLogger, categoryRepo)
 	categoryController := controller.CategoryControllerProvider(validate, categoryService)
-	controllerController := controller.WebControllerProvider(authController, categoryController)
+	brandRepo := postgres6.RepoProvider(connectionConnection)
+	brandService := brand.ServiceProvider(connectionConnection, viper, validate, loggerLogger, brandRepo)
+	brandController := controller.BrandControllerProvider(validate, brandService)
+	controllerController := controller.WebControllerProvider(authController, categoryController, brandController)
 	router := web.RouterProvider(docsDocs, jwtMiddleware, dbMiddleware, controllerController, loggerLogger)
 	serverConfig := web.WebServerConfigProvider(router, loggerLogger)
 	fetroshop := app.CreateFiber(serverConfig)
@@ -102,7 +105,7 @@ var serverSet = wire.NewSet(wire.Value(dbType), confighelper.GetConfig, connecti
 )
 
 // web dependencies
-var webControllerSet = wire.NewSet(controller.WebControllerProvider, controller.AuthControllerProvider, controller.CategoryControllerProvider)
+var webControllerSet = wire.NewSet(controller.WebControllerProvider, controller.AuthControllerProvider, controller.CategoryControllerProvider, controller.BrandControllerProvider)
 
 // cms dependencies
 var cmsControllerSet = wire.NewSet(controller2.CmsControllerProvider, controller2.AuthControllerProvider, controller2.CategoryControllerProvider, controller2.BrandControllerProvider)
