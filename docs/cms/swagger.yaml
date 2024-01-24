@@ -171,7 +171,7 @@ paths:
       - application/x-www-form-urlencoded
       - application/json
       parameters:
-      - description: Category Code
+      - description: Brand Code
         in: path
         name: code
         required: true
@@ -209,7 +209,7 @@ paths:
       - application/x-www-form-urlencoded
       - application/json
       parameters:
-      - description: Category Code
+      - description: Brand Code
         in: path
         name: code
         required: true
@@ -303,7 +303,7 @@ paths:
       consumes:
       - application/x-www-form-urlencoded
       - application/json
-      description: Retrieve categories detail
+      description: Retrieve brand detail
       parameters:
       - in: query
         name: code
@@ -593,7 +593,7 @@ paths:
       consumes:
       - application/x-www-form-urlencoded
       - application/json
-      description: Retrieve categories detail
+      description: Retrieve category detail
       parameters:
       - in: query
         name: code
@@ -678,6 +678,243 @@ paths:
       summary: List categories
       tags:
       - Categories
+  /api/store/{code}:
+    delete:
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      parameters:
+      - description: Store Code
+        in: path
+        name: code
+        required: true
+        type: string
+      - in: formData
+        name: forceDelete
+        required: true
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Response'
+      security:
+      - Bearer: []
+      summary: Delete store
+      tags:
+      - Stores
+    put:
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      parameters:
+      - description: Store Code
+        in: path
+        name: code
+        required: true
+        type: string
+      - in: formData
+        name: code
+        required: true
+        type: string
+      - in: formData
+        name: displayOrder
+        required: true
+        type: integer
+      - in: formData
+        name: icon
+        type: string
+      - in: formData
+        name: isActive
+        required: true
+        type: boolean
+      - in: formData
+        name: name
+        required: true
+        type: string
+      - in: formData
+        name: parentCode
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Response'
+      security:
+      - Bearer: []
+      summary: Update store
+      tags:
+      - Stores
+  /api/store/create:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      parameters:
+      - in: formData
+        name: code
+        required: true
+        type: string
+      - in: formData
+        name: displayOrder
+        required: true
+        type: integer
+      - in: formData
+        name: icon
+        type: string
+      - in: formData
+        name: isActive
+        required: true
+        type: boolean
+      - in: formData
+        name: name
+        required: true
+        type: string
+      - in: formData
+        name: parentCode
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Response'
+      security:
+      - Bearer: []
+      summary: Create store
+      tags:
+      - Stores
+  /api/store/find:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      description: Retrieve store detail
+      parameters:
+      - in: query
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Response'
+      summary: Get detail store
+      tags:
+      - Stores
+  /api/store/list:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      description: Retrieve stores list
+      parameters:
+      - default: 10
+        in: query
+        name: limit
+        type: integer
+      - default: 0
+        in: query
+        name: offset
+        type: integer
+      - enum:
+        - display_order
+        - code
+        - name
+        - updated_at
+        - created_at
+        in: query
+        name: orderBy
+        required: true
+        type: string
+      - enum:
+        - ASC
+        - DESC
+        in: query
+        name: orderDirection
+        required: true
+        type: string
+      - in: query
+        name: parentCode
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Response'
+      summary: List stores
+      tags:
+      - Stores
 securityDefinitions:
   Bearer:
     description: Use format 'Bearer YOUR_TOKEN'

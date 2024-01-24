@@ -92,7 +92,7 @@ func (ctr *categoryController) List(ctx *fiber.Ctx) (err error) {
 }
 
 // @Summary      Get detail category
-// @Description  Retrieve categories detail
+// @Description  Retrieve category detail
 // @Tags         Categories
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json

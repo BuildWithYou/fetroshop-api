@@ -48,7 +48,7 @@ func (ctr *brandController) Create(ctx *fiber.Ctx) (err error) {
 // @Tags         Brands
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
-// @Param        code   path      string                       true  "Category Code"
+// @Param        code   path      string                       true  "Brand Code"
 // @Param        data   formData  model.UpsertBrandRequest  true  "Request"
 // @Success      200    {object}  model.Response
 // @Failure      400    {object}  model.Response
@@ -65,7 +65,7 @@ func (ctr *brandController) Update(ctx *fiber.Ctx) (err error) {
 // @Tags         Brands
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
-// @Param        code   path       string                         true  "Category Code"
+// @Param        code   path       string                         true  "Brand Code"
 // @Param        data   formData   model.DeleteRequest    true  "Request"
 // @Success      200    {object}   model.Response
 // @Failure      400    {object}   model.Response
@@ -108,7 +108,7 @@ func (ctr *brandController) ListByPrefix(ctx *fiber.Ctx) (err error) {
 }
 
 // @Summary      Get detail brand
-// @Description  Retrieve categories detail
+// @Description  Retrieve brand detail
 // @Tags         Brands
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
