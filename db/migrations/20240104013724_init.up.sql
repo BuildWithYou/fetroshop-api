@@ -128,6 +128,32 @@ create table brands (
    constraint AK_CATEGORY_CODE_UNIQ_BRANDS unique (code)
 );
 
+/*==============================================================*/
+/* Table: stores                                                */
+/*==============================================================*/
+create table stores (
+   id                   INT4                 not null,
+   user_id              INT4                 not null,
+   code                 VARCHAR(64)          not null,
+   name                 VARCHAR(64)          not null,
+   is_active            BOOL                 not null default false,
+   icon                 VARCHAR(255)         null,
+   latitude             VARCHAR(64)          null,
+   longitude            VARCHAR(64)          null,
+   address              VARCHAR(255)         null,
+   province_id          INT4                 null,
+   city_id              INT4                 null,
+   district_id          INT4                 null,
+   subdistrict_id       INT4                 null,
+   postal_code          VARCHAR(16)          null,
+   created_at           TIMESTAMP            not null,
+   updated_at           TIMESTAMP            not null,
+   deleted_at           TIMESTAMP            null,
+   constraint PK_STORES primary key (id),
+   constraint AK_STORE_CODE_UNIQUE_STORES unique (code)
+);
+
+
 -- tables alter
 alter table user_accesses
    add constraint FK_USER_ACC_REFERENCE_USERS foreign key (user_id)
@@ -149,6 +175,11 @@ alter table user_roles
       references users (id)
       on delete restrict on update cascade;
 
+alter table stores
+   add constraint FK_STORES_REFERENCE_USERS foreign key (user_id)
+      references users (id)
+      on delete restrict on update cascade;
+
 
 -- data initialization
 /* users table data init */
@@ -158,7 +189,6 @@ alter table user_roles
 /* customers table data init */
    INSERT INTO customers VALUES (1, 'testerwebapi', '081234567890', 'tester@mail.com', 'Tester Web API', '$2a$10$UQy61eWcNaOfzrINghwLO.DHmIsTTgWidWKmDziberHOVUi4NLV4W', '2024-01-18 09:45:12.736703', '2024-01-18 09:45:12.736703', NULL);
    SELECT setval('customers_id_seq', (SELECT MAX(id) FROM customers));
-
 
 /* categories table data init */
    INSERT INTO categories (id, parent_id, code, name, is_active, icon, display_order, created_at, updated_at) VALUES
@@ -1241,3 +1271,4 @@ alter table user_roles
          icon = EXCLUDED.icon,
          updated_at = EXCLUDED.updated_at;
       SELECT setval('brands_id_seq', (SELECT MAX(id) FROM brands));
+
