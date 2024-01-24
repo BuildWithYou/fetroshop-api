@@ -1033,15 +1033,24 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "name": "address",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "cityId",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
                         "name": "code",
                         "in": "formData",
                         "required": true
                     },
                     {
-                        "type": "integer",
-                        "name": "displayOrder",
-                        "in": "formData",
-                        "required": true
+                        "type": "string",
+                        "name": "districtId",
+                        "in": "formData"
                     },
                     {
                         "type": "string",
@@ -1056,13 +1065,33 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
+                        "name": "latitude",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "longitude",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
                         "name": "name",
                         "in": "formData",
                         "required": true
                     },
                     {
                         "type": "string",
-                        "name": "parentCode",
+                        "name": "postalCode",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "provinceId",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "subdistrictId",
                         "in": "formData"
                     }
                 ],
@@ -1173,7 +1202,6 @@ const docTemplate = `{
                     },
                     {
                         "enum": [
-                            "display_order",
                             "code",
                             "name",
                             "updated_at",
@@ -1193,11 +1221,6 @@ const docTemplate = `{
                         "name": "orderDirection",
                         "in": "query",
                         "required": true
-                    },
-                    {
-                        "type": "string",
-                        "name": "parentCode",
-                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -1256,15 +1279,24 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
+                        "name": "address",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "cityId",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
                         "name": "code",
                         "in": "formData",
                         "required": true
                     },
                     {
-                        "type": "integer",
-                        "name": "displayOrder",
-                        "in": "formData",
-                        "required": true
+                        "type": "string",
+                        "name": "districtId",
+                        "in": "formData"
                     },
                     {
                         "type": "string",
@@ -1279,13 +1311,33 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
+                        "name": "latitude",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "longitude",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
                         "name": "name",
                         "in": "formData",
                         "required": true
                     },
                     {
                         "type": "string",
-                        "name": "parentCode",
+                        "name": "postalCode",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "provinceId",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "subdistrictId",
                         "in": "formData"
                     }
                 ],

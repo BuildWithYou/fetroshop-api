@@ -728,13 +728,18 @@ paths:
         required: true
         type: string
       - in: formData
+        name: address
+        type: string
+      - in: formData
+        name: cityId
+        type: string
+      - in: formData
         name: code
         required: true
         type: string
       - in: formData
-        name: displayOrder
-        required: true
-        type: integer
+        name: districtId
+        type: string
       - in: formData
         name: icon
         type: string
@@ -743,11 +748,23 @@ paths:
         required: true
         type: boolean
       - in: formData
+        name: latitude
+        type: string
+      - in: formData
+        name: longitude
+        type: string
+      - in: formData
         name: name
         required: true
         type: string
       - in: formData
-        name: parentCode
+        name: postalCode
+        type: string
+      - in: formData
+        name: provinceId
+        type: string
+      - in: formData
+        name: subdistrictId
         type: string
       produces:
       - application/json
@@ -780,13 +797,18 @@ paths:
       - application/json
       parameters:
       - in: formData
+        name: address
+        type: string
+      - in: formData
+        name: cityId
+        type: string
+      - in: formData
         name: code
         required: true
         type: string
       - in: formData
-        name: displayOrder
-        required: true
-        type: integer
+        name: districtId
+        type: string
       - in: formData
         name: icon
         type: string
@@ -795,11 +817,23 @@ paths:
         required: true
         type: boolean
       - in: formData
+        name: latitude
+        type: string
+      - in: formData
+        name: longitude
+        type: string
+      - in: formData
         name: name
         required: true
         type: string
       - in: formData
-        name: parentCode
+        name: postalCode
+        type: string
+      - in: formData
+        name: provinceId
+        type: string
+      - in: formData
+        name: subdistrictId
         type: string
       produces:
       - application/json
@@ -874,7 +908,6 @@ paths:
         name: offset
         type: integer
       - enum:
-        - display_order
         - code
         - name
         - updated_at
@@ -889,9 +922,6 @@ paths:
         in: query
         name: orderDirection
         required: true
-        type: string
-      - in: query
-        name: parentCode
         type: string
       produces:
       - application/json

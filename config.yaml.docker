@@ -110,4 +110,4 @@ swagger:
    deepLinking: false
 
    # Controls the default expansion setting for the operations and tags. 'list' (default, expands only the tags), 'full' (expands the tags and operations), 'none' (expands nothing)
-   docExpansion: list
+   docExpansion: none
