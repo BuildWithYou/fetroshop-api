@@ -10,6 +10,7 @@ import (
 	categoryRepo "github.com/BuildWithYou/fetroshop-api/app/domain/categories/postgres"
 	customerAccessRepo "github.com/BuildWithYou/fetroshop-api/app/domain/customer_accesses/postgres"
 	customerRepo "github.com/BuildWithYou/fetroshop-api/app/domain/customers/postgres"
+	storeRepo "github.com/BuildWithYou/fetroshop-api/app/domain/stores/postgres"
 	userAccessRepo "github.com/BuildWithYou/fetroshop-api/app/domain/user_accesses/postgres"
 	userRepo "github.com/BuildWithYou/fetroshop-api/app/domain/users/postgres"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
@@ -24,6 +25,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/service/auth"
 	"github.com/BuildWithYou/fetroshop-api/app/service/brand"
 	"github.com/BuildWithYou/fetroshop-api/app/service/category"
+	"github.com/BuildWithYou/fetroshop-api/app/service/store"
 	"github.com/google/wire"
 )
 
@@ -36,12 +38,14 @@ var repoSet = wire.NewSet(
 	userAccessRepo.RepoProvider,
 	categoryRepo.RepoProvider,
 	brandRepo.RepoProvider,
+	storeRepo.RepoProvider,
 )
 
 var serviceSet = wire.NewSet(
 	auth.ServiceProvider,
 	category.ServiceProvider,
 	brand.ServiceProvider,
+	store.ServiceProvider,
 )
 
 var serverSet = wire.NewSet(
@@ -82,6 +86,7 @@ var cmsControllerSet = wire.NewSet(
 	cmsController.AuthControllerProvider,
 	cmsController.CategoryControllerProvider,
 	cmsController.BrandControllerProvider,
+	cmsController.StoreControllerProvider,
 )
 
 func InitializeCmsServer() *app.Fetroshop {

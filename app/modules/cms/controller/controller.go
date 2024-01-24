@@ -9,17 +9,20 @@ type Controller struct {
 	Auth     AuthController
 	Category CategoryController
 	Brand    BrandController
+	Store    StoreController
 }
 
 func CmsControllerProvider(
 	authController AuthController,
 	categoryController CategoryController,
 	brandController BrandController,
+	storeController StoreController,
 ) *Controller {
 	return &Controller{
 		Auth:     authController,
 		Category: categoryController,
 		Brand:    brandController,
+		Store:    storeController,
 	}
 }
 
