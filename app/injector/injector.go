@@ -25,6 +25,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/service/auth"
 	"github.com/BuildWithYou/fetroshop-api/app/service/brand"
 	"github.com/BuildWithYou/fetroshop-api/app/service/category"
+	"github.com/BuildWithYou/fetroshop-api/app/service/location"
 	"github.com/BuildWithYou/fetroshop-api/app/service/store"
 	"github.com/google/wire"
 )
@@ -46,6 +47,7 @@ var serviceSet = wire.NewSet(
 	category.ServiceProvider,
 	brand.ServiceProvider,
 	store.ServiceProvider,
+	location.ServiceProvider,
 )
 
 var serverSet = wire.NewSet(
@@ -87,6 +89,7 @@ var cmsControllerSet = wire.NewSet(
 	cmsController.CategoryControllerProvider,
 	cmsController.BrandControllerProvider,
 	cmsController.StoreControllerProvider,
+	cmsController.LocationControllerProvider,
 )
 
 func InitializeCmsServer() *app.Fetroshop {

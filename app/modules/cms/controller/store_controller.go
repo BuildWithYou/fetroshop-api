@@ -19,10 +19,10 @@ type storeController struct {
 	StoreService store.StoreService
 }
 
-func StoreControllerProvider(vld *validator.Validate, catSvc store.StoreService) StoreController {
+func StoreControllerProvider(vld *validator.Validate, svc store.StoreService) StoreController {
 	return &storeController{
 		Validate:     vld,
-		StoreService: catSvc,
+		StoreService: svc,
 	}
 }
 
