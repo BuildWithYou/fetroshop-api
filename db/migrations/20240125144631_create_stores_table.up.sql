@@ -24,6 +24,26 @@ create table stores (
 );
 
 alter table stores
+   add constraint FK_STORES_REFERENCE_CITIES foreign key (city_id)
+      references cities (id)
+      on delete restrict on update cascade;
+
+alter table stores
+   add constraint FK_STORES_REFERENCE_DISTRICT foreign key (district_id)
+      references districts (id)
+      on delete restrict on update cascade;
+
+alter table stores
+   add constraint FK_STORES_REFERENCE_SUBDISTR foreign key (subdistrict_id)
+      references subdistricts (id)
+      on delete restrict on update cascade;
+
+alter table stores
    add constraint FK_STORES_REFERENCE_USERS foreign key (user_id)
       references users (id)
+      on delete restrict on update cascade;
+
+alter table stores
+   add constraint FK_STORES_REFERENCE_PROVINCE foreign key (province_id)
+      references provinces (id)
       on delete restrict on update cascade;
