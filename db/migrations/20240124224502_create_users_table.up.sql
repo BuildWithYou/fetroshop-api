@@ -18,5 +18,5 @@ create table users (
 );
 
 /* users table data init */
-   INSERT INTO users VALUES (2, 'testercmsapi', '081234567890', 'tester@mail.com', 'Tester CMS API', '$2a$10$x.S5GJvGqw4L5366USju6.I2fISEOEyqPFswmYQiX/fF.ZjOcYChO', '2024-01-18 09:46:46.743833', '2024-01-18 09:46:46.743833', NULL);
+   INSERT INTO users VALUES (2, 'testercmsapi', '081234567890', 'tester@mail.com', 'Tester CMS API', '$2a$10$x.S5GJvGqw4L5366USju6.I2fISEOEyqPFswmYQiX/fF.ZjOcYChO', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL);
    SELECT setval('users_id_seq', (SELECT MAX(id) FROM users));

@@ -19,5 +19,5 @@ create table customers (
 );
 
 /* customers table data init */
-   INSERT INTO customers VALUES (1, 'testerwebapi', '081234567890', 'tester@mail.com', 'Tester Web API', '$2a$10$UQy61eWcNaOfzrINghwLO.DHmIsTTgWidWKmDziberHOVUi4NLV4W', '2024-01-18 09:45:12.736703', '2024-01-18 09:45:12.736703', NULL);
+   INSERT INTO customers VALUES (1, 'testerwebapi', '081234567890', 'tester@mail.com', 'Tester Web API', '$2a$10$UQy61eWcNaOfzrINghwLO.DHmIsTTgWidWKmDziberHOVUi4NLV4W', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL);
    SELECT setval('customers_id_seq', (SELECT MAX(id) FROM customers));
