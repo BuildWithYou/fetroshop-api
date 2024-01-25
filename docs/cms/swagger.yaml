@@ -75,6 +75,29 @@ definitions:
         description: http status message
         type: string
     type: object
+  model.StoresListResponse:
+    properties:
+      code:
+        description: http status code
+        type: integer
+      data:
+        description: main data
+        items:
+          $ref: '#/definitions/model.StoreDetail'
+        type: array
+      errors:
+        additionalProperties: {}
+        description: error data
+        type: object
+      message:
+        description: message from system
+        type: string
+      meta:
+        description: support data
+      status:
+        description: http status message
+        type: string
+    type: object
 info:
   contact: {}
   description: Fetroshop API is a robust and efficient backend solution designed to
@@ -828,7 +851,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: '#/definitions/model.StoreDetailResponse'
         "400":
           description: Bad Request
           schema:
@@ -897,7 +920,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: '#/definitions/model.StoreDetailResponse'
         "400":
           description: Bad Request
           schema:
@@ -985,7 +1008,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: '#/definitions/model.StoresListResponse'
         "400":
           description: Bad Request
           schema:

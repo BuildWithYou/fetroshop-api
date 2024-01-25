@@ -1099,7 +1099,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Response"
+                            "$ref": "#/definitions/model.StoreDetailResponse"
                         }
                     },
                     "400": {
@@ -1227,7 +1227,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Response"
+                            "$ref": "#/definitions/model.StoresListResponse"
                         }
                     },
                     "400": {
@@ -1345,7 +1345,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Response"
+                            "$ref": "#/definitions/model.StoreDetailResponse"
                         }
                     },
                     "400": {
@@ -1524,6 +1524,38 @@ const docTemplate = `{
                             "$ref": "#/definitions/model.StoreDetail"
                         }
                     ]
+                },
+                "errors": {
+                    "description": "error data",
+                    "type": "object",
+                    "additionalProperties": {}
+                },
+                "message": {
+                    "description": "message from system",
+                    "type": "string"
+                },
+                "meta": {
+                    "description": "support data"
+                },
+                "status": {
+                    "description": "http status message",
+                    "type": "string"
+                }
+            }
+        },
+        "model.StoresListResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "http status code",
+                    "type": "integer"
+                },
+                "data": {
+                    "description": "main data",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.StoreDetail"
+                    }
                 },
                 "errors": {
                     "description": "error data",

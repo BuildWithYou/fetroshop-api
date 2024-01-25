@@ -32,7 +32,7 @@ func StoreControllerProvider(vld *validator.Validate, catSvc store.StoreService)
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
 // @Param        data    formData    model.UpsertStoreRequest  true  "Request"
-// @Success      200     {object}    model.Response
+// @Success      200     {object}    model.StoreDetailResponse
 // @Failure      400     {object}    model.Response
 // @Failure      404     {object}    model.Response
 // @Failure      500     {object}    model.Response
@@ -49,7 +49,7 @@ func (ctr *storeController) Create(ctx *fiber.Ctx) (err error) {
 // @Produce      json
 // @Param        code   path      string                       true  "Store Code"
 // @Param        data   formData  model.UpsertStoreRequest  true  "Request"
-// @Success      200    {object}  model.Response
+// @Success      200    {object}  model.StoreDetailResponse
 // @Failure      400    {object}  model.Response
 // @Failure      404    {object}  model.Response
 // @Failure      500    {object}  model.Response
@@ -64,7 +64,7 @@ func (ctr *storeController) Update(ctx *fiber.Ctx) (err error) {
 // @Tags         Stores
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
-// @Param        code   path       string                         true  "Store Code"
+// @Param        code   path       string                 true  "Store Code"
 // @Param        data   formData   model.DeleteRequest    true  "Request"
 // @Success      200    {object}   model.Response
 // @Failure      400    {object}   model.Response
@@ -82,7 +82,7 @@ func (ctr *storeController) Delete(ctx *fiber.Ctx) (err error) {
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
 // @Param        q     query    model.ListStoresRequest  true  "Request"
-// @Success      200  {object}  model.Response
+// @Success      200  {object}  model.StoresListResponse
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response
 // @Failure      500  {object}  model.Response
