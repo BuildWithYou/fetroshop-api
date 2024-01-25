@@ -7,7 +7,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/domain/user_accesses"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/users"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
-	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
+	"github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/viper"
@@ -19,16 +19,16 @@ const CUSTOMER_TYPE = "customer"
 
 type AuthService interface {
 	// Cms Modules
-	CmsRegister(ctx *fiber.Ctx) (*appModel.Response, error)
-	CmsLogin(ctx *fiber.Ctx) (*appModel.Response, error)
-	CmsLogout(ctx *fiber.Ctx) (*appModel.Response, error)
-	CmsRefresh(ctx *fiber.Ctx) (*appModel.Response, error)
+	CmsRegister(ctx *fiber.Ctx) (*model.Response, error)
+	CmsLogin(ctx *fiber.Ctx) (*model.Response, error)
+	CmsLogout(ctx *fiber.Ctx) (*model.Response, error)
+	CmsRefresh(ctx *fiber.Ctx) (*model.Response, error)
 
 	// Web Modules
-	WebRegister(ctx *fiber.Ctx) (*appModel.Response, error)
-	WebLogin(ctx *fiber.Ctx) (*appModel.Response, error)
-	WebLogout(ctx *fiber.Ctx) (*appModel.Response, error)
-	WebRefresh(ctx *fiber.Ctx) (*appModel.Response, error)
+	WebRegister(ctx *fiber.Ctx) (*model.Response, error)
+	WebLogin(ctx *fiber.Ctx) (*model.Response, error)
+	WebLogout(ctx *fiber.Ctx) (*model.Response, error)
+	WebRefresh(ctx *fiber.Ctx) (*model.Response, error)
 }
 
 type authService struct {

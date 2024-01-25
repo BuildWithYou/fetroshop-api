@@ -4,7 +4,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/connection"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/stores"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
-	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
+	"github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/viper"
@@ -12,11 +12,11 @@ import (
 )
 
 type StoreService interface {
-	Create(ctx *fiber.Ctx) (*appModel.Response, error)
-	Update(ctx *fiber.Ctx) (*appModel.Response, error)
-	Delete(ctx *fiber.Ctx) (*appModel.Response, error)
-	List(ctx *fiber.Ctx) (*appModel.Response, error)
-	Find(ctx *fiber.Ctx) (*appModel.Response, error)
+	Create(ctx *fiber.Ctx) (*model.Response, error)
+	Update(ctx *fiber.Ctx) (*model.Response, error)
+	Delete(ctx *fiber.Ctx) (*model.Response, error)
+	List(ctx *fiber.Ctx) (*model.Response, error)
+	Find(ctx *fiber.Ctx) (*model.Response, error)
 }
 
 type storeService struct {

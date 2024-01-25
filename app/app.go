@@ -7,7 +7,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/constant"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/BuildWithYou/fetroshop-api/app/middleware"
-	appModel "github.com/BuildWithYou/fetroshop-api/app/model"
+	"github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/utils"
@@ -61,7 +61,7 @@ func CreateFiber(serverConfig *ServerConfig) *Fetroshop {
 				}
 			}
 
-			return ctx.Status(code).JSON(appModel.Response{
+			return ctx.Status(code).JSON(model.Response{
 				Code:    code,
 				Status:  status,
 				Message: message,
