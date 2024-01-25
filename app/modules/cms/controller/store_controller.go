@@ -97,7 +97,7 @@ func (ctr *storeController) List(ctx *fiber.Ctx) (err error) {
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
 // @Param        q     query    model.FindByCodeRequest  true  "Request"
-// @Success      200  {object}  model.Response
+// @Success      200  {object}  model.StoreDetailResponse
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response
 // @Failure      500  {object}  model.Response

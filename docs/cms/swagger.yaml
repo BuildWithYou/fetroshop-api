@@ -1,10 +1,66 @@
 definitions:
+  model.Location:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
   model.Response:
     properties:
       code:
         description: http status code
         type: integer
       data:
+        description: main data
+      errors:
+        additionalProperties: {}
+        description: error data
+        type: object
+      message:
+        description: message from system
+        type: string
+      meta:
+        description: support data
+      status:
+        description: http status message
+        type: string
+    type: object
+  model.StoreDetail:
+    properties:
+      address:
+        type: string
+      city:
+        $ref: '#/definitions/model.Location'
+      code:
+        type: string
+      district:
+        $ref: '#/definitions/model.Location'
+      icon:
+        type: string
+      isActive:
+        type: boolean
+      latitude:
+        type: string
+      longitude:
+        type: string
+      name:
+        type: string
+      postalCode:
+        type: string
+      province:
+        $ref: '#/definitions/model.Location'
+      subdistrict:
+        $ref: '#/definitions/model.Location'
+    type: object
+  model.StoreDetailResponse:
+    properties:
+      code:
+        description: http status code
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/model.StoreDetail'
         description: main data
       errors:
         additionalProperties: {}
@@ -876,7 +932,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: '#/definitions/model.StoreDetailResponse'
         "400":
           description: Bad Request
           schema:

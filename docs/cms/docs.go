@@ -1149,7 +1149,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Response"
+                            "$ref": "#/definitions/model.StoreDetailResponse"
                         }
                     },
                     "400": {
@@ -1430,6 +1430,17 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "model.Location": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "model.Response": {
             "type": "object",
             "properties": {
@@ -1439,6 +1450,80 @@ const docTemplate = `{
                 },
                 "data": {
                     "description": "main data"
+                },
+                "errors": {
+                    "description": "error data",
+                    "type": "object",
+                    "additionalProperties": {}
+                },
+                "message": {
+                    "description": "message from system",
+                    "type": "string"
+                },
+                "meta": {
+                    "description": "support data"
+                },
+                "status": {
+                    "description": "http status message",
+                    "type": "string"
+                }
+            }
+        },
+        "model.StoreDetail": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "city": {
+                    "$ref": "#/definitions/model.Location"
+                },
+                "code": {
+                    "type": "string"
+                },
+                "district": {
+                    "$ref": "#/definitions/model.Location"
+                },
+                "icon": {
+                    "type": "string"
+                },
+                "isActive": {
+                    "type": "boolean"
+                },
+                "latitude": {
+                    "type": "string"
+                },
+                "longitude": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "postalCode": {
+                    "type": "string"
+                },
+                "province": {
+                    "$ref": "#/definitions/model.Location"
+                },
+                "subdistrict": {
+                    "$ref": "#/definitions/model.Location"
+                }
+            }
+        },
+        "model.StoreDetailResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "http status code",
+                    "type": "integer"
+                },
+                "data": {
+                    "description": "main data",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/model.StoreDetail"
+                        }
+                    ]
                 },
                 "errors": {
                     "description": "error data",
