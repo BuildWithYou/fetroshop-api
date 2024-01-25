@@ -14,7 +14,7 @@ services:
       networks:
          - fetroshop_network
       volumes:
-         - fetroshop_app_volume:/app
+         - fetroshop_api_volume:/app
       depends_on:
          db:
             condition: service_healthy
@@ -61,8 +61,33 @@ services:
       networks:
          - fetroshop_network
 
+   web:
+      build:
+         context: ./
+         dockerfile: fetroshop-web.Dockerfile
+      image: fetroshop-web
+      container_name: fetroshop-web
+      restart: no # available options: no, always, on-failure, unless-stopped, on-abnormal
+      working_dir: /app
+      ports:
+         - 3003:3003
+      networks:
+         - fetroshop_network
+      volumes:
+         - fetroshop_web_volume:/app
+      depends_on:
+         api:
+            condition: service_healthy
+      links:
+         - "api"
+      healthcheck:
+         test: ["CMD", "curl", "-f", "http://localhost:3003"]
+         interval: 30s
+         timeout: 10s
+         retries: 5
 volumes:
-   fetroshop_app_volume:
+   fetroshop_api_volume:
+   fetroshop_web_volume:
    fetroshop_db_volume:
 networks:
    fetroshop_network:
