@@ -1,7 +1,7 @@
 package location
 
 import (
-	"github.com/BuildWithYou/fetroshop-api/app/domain/stores"
+	"github.com/BuildWithYou/fetroshop-api/app/domain/districts"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/responsehelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
@@ -21,8 +21,8 @@ func (svc *locationService) FindDistrict(ctx *fiber.Ctx) (*model.Response, error
 		return responsehelper.ResponseErrorValidation(errValidation), nil
 	}
 
-	category := new(stores.Store)
-	result := svc.StoreRepo.Find(category, map[string]any{"code": payload.Code})
+	category := new(districts.District)
+	result := svc.DistrictRepo.Find(category, map[string]any{"code": payload.Code})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
 		svc.Logger.UseError(result.Error)
 		return nil, result.Error
@@ -33,12 +33,5 @@ func (svc *locationService) FindDistrict(ctx *fiber.Ctx) (*model.Response, error
 
 	return responsehelper.Response200(
 		"Successfuly got category", // #marked: message
-		&model.CategoryResponse{
-			Code:      category.Code,
-			Name:      category.Name,
-			IsActive:  category.IsActive,
-			Icon:      category.Icon,
-			CreatedAt: category.CreatedAt,
-			UpdatedAt: category.UpdatedAt,
-		}, nil), nil
+		nil, nil), nil
 }

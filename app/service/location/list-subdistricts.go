@@ -3,7 +3,7 @@ package location
 import (
 	"fmt"
 
-	"github.com/BuildWithYou/fetroshop-api/app/domain/stores"
+	"github.com/BuildWithYou/fetroshop-api/app/domain/subdistricts"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/responsehelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
@@ -15,7 +15,7 @@ import (
 func (svc *locationService) ListSubdistricts(ctx *fiber.Ctx) (*model.Response, error) {
 	// TODO: implement me
 	var (
-		categorySlice []stores.Store
+		categorySlice []subdistricts.Subdistrict
 		parentID      null.Int
 	)
 	payload := new(model.ListCategoriesRequest)
@@ -31,8 +31,8 @@ func (svc *locationService) ListSubdistricts(ctx *fiber.Ctx) (*model.Response, e
 	if payload.ParentCode == "" {
 		parentID = null.NewInt(0, false)
 	} else {
-		parent := new(stores.Store)
-		result := svc.StoreRepo.Find(parent, map[string]any{
+		parent := new(subdistricts.Subdistrict)
+		result := svc.SubdistrictRepo.Find(parent, map[string]any{
 			"code": payload.ParentCode,
 		})
 		if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
@@ -46,7 +46,7 @@ func (svc *locationService) ListSubdistricts(ctx *fiber.Ctx) (*model.Response, e
 	}
 
 	orderBy := fmt.Sprintf("%s %s", payload.OrderBy, payload.OrderDirection)
-	result := svc.StoreRepo.List(&categorySlice, fiber.Map{
+	result := svc.SubdistrictRepo.List(&categorySlice, fiber.Map{
 		"parent_id": parentID,
 	}, int(payload.Limit), int(payload.Offset), orderBy)
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
@@ -57,10 +57,7 @@ func (svc *locationService) ListSubdistricts(ctx *fiber.Ctx) (*model.Response, e
 	var list []*model.CategoryResponse
 	for _, ct := range categorySlice {
 		category := &model.CategoryResponse{
-			Code:      ct.Code,
 			Name:      ct.Name,
-			IsActive:  ct.IsActive,
-			Icon:      ct.Icon,
 			CreatedAt: ct.CreatedAt,
 			UpdatedAt: ct.UpdatedAt,
 		}

@@ -8,9 +8,13 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/connection"
 	brandRepo "github.com/BuildWithYou/fetroshop-api/app/domain/brands/postgres"
 	categoryRepo "github.com/BuildWithYou/fetroshop-api/app/domain/categories/postgres"
+	cityRepo "github.com/BuildWithYou/fetroshop-api/app/domain/cities/postgres"
 	customerAccessRepo "github.com/BuildWithYou/fetroshop-api/app/domain/customer_accesses/postgres"
 	customerRepo "github.com/BuildWithYou/fetroshop-api/app/domain/customers/postgres"
+	districtRepo "github.com/BuildWithYou/fetroshop-api/app/domain/districts/postgres"
+	provinceRepo "github.com/BuildWithYou/fetroshop-api/app/domain/provinces/postgres"
 	storeRepo "github.com/BuildWithYou/fetroshop-api/app/domain/stores/postgres"
+	subdistrictRepo "github.com/BuildWithYou/fetroshop-api/app/domain/subdistricts/postgres"
 	userAccessRepo "github.com/BuildWithYou/fetroshop-api/app/domain/user_accesses/postgres"
 	userRepo "github.com/BuildWithYou/fetroshop-api/app/domain/users/postgres"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
@@ -40,6 +44,10 @@ var repoSet = wire.NewSet(
 	categoryRepo.RepoProvider,
 	brandRepo.RepoProvider,
 	storeRepo.RepoProvider,
+	provinceRepo.RepoProvider,
+	cityRepo.RepoProvider,
+	districtRepo.RepoProvider,
+	subdistrictRepo.RepoProvider,
 )
 
 var serviceSet = wire.NewSet(

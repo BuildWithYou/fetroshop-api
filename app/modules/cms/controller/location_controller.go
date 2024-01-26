@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/BuildWithYou/fetroshop-api/app/service/store"
+	"github.com/BuildWithYou/fetroshop-api/app/service/location"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )
@@ -18,14 +18,14 @@ type LocationController interface {
 }
 
 type locationController struct {
-	Validate     *validator.Validate
-	StoreService store.StoreService
+	Validate        *validator.Validate
+	LocationService location.LocationService
 }
 
-func LocationControllerProvider(vld *validator.Validate, svc store.StoreService) LocationController {
+func LocationControllerProvider(vld *validator.Validate, svc location.LocationService) LocationController {
 	return &locationController{
-		Validate:     vld,
-		StoreService: svc,
+		Validate:        vld,
+		LocationService: svc,
 	}
 }
 
@@ -41,7 +41,7 @@ func LocationControllerProvider(vld *validator.Validate, svc store.StoreService)
 // @Failure      500  {object}  model.Response
 // @Router       /api/location/province/list [get]
 func (ctr *locationController) ListProvinces(ctx *fiber.Ctx) (err error) {
-	return execute(ctx, ctr.StoreService.List)
+	return execute(ctx, ctr.LocationService.ListProvinces)
 }
 
 // @Summary      Get detail province
@@ -56,7 +56,7 @@ func (ctr *locationController) ListProvinces(ctx *fiber.Ctx) (err error) {
 // @Failure      500  {object}  model.Response
 // @Router       /api/location/province/find [get]
 func (ctr *locationController) FindProvince(ctx *fiber.Ctx) (err error) {
-	return execute(ctx, ctr.StoreService.Find)
+	return execute(ctx, ctr.LocationService.FindProvince)
 }
 
 // @Summary      List cities
@@ -71,7 +71,7 @@ func (ctr *locationController) FindProvince(ctx *fiber.Ctx) (err error) {
 // @Failure      500  {object}  model.Response
 // @Router       /api/location/city/list [get]
 func (ctr *locationController) ListCities(ctx *fiber.Ctx) (err error) {
-	return execute(ctx, ctr.StoreService.List)
+	return execute(ctx, ctr.LocationService.ListCities)
 }
 
 // @Summary      Get detail city
@@ -86,7 +86,7 @@ func (ctr *locationController) ListCities(ctx *fiber.Ctx) (err error) {
 // @Failure      500  {object}  model.Response
 // @Router       /api/location/city/find [get]
 func (ctr *locationController) FindCity(ctx *fiber.Ctx) (err error) {
-	return execute(ctx, ctr.StoreService.Find)
+	return execute(ctx, ctr.LocationService.FindCity)
 }
 
 // @Summary      List districts
@@ -101,7 +101,7 @@ func (ctr *locationController) FindCity(ctx *fiber.Ctx) (err error) {
 // @Failure      500  {object}  model.Response
 // @Router       /api/location/district/list [get]
 func (ctr *locationController) ListDistricts(ctx *fiber.Ctx) (err error) {
-	return execute(ctx, ctr.StoreService.List)
+	return execute(ctx, ctr.LocationService.ListDistricts)
 }
 
 // @Summary      Get detail district
@@ -116,7 +116,7 @@ func (ctr *locationController) ListDistricts(ctx *fiber.Ctx) (err error) {
 // @Failure      500  {object}  model.Response
 // @Router       /api/location/district/find [get]
 func (ctr *locationController) FindDistrict(ctx *fiber.Ctx) (err error) {
-	return execute(ctx, ctr.StoreService.Find)
+	return execute(ctx, ctr.LocationService.FindDistrict)
 }
 
 // @Summary      List subdistricts
@@ -131,7 +131,7 @@ func (ctr *locationController) FindDistrict(ctx *fiber.Ctx) (err error) {
 // @Failure      500  {object}  model.Response
 // @Router       /api/location/subdistrict/list [get]
 func (ctr *locationController) ListSubdistricts(ctx *fiber.Ctx) (err error) {
-	return execute(ctx, ctr.StoreService.List)
+	return execute(ctx, ctr.LocationService.ListSubdistricts)
 }
 
 // @Summary      Get detail subdistrict
@@ -146,5 +146,5 @@ func (ctr *locationController) ListSubdistricts(ctx *fiber.Ctx) (err error) {
 // @Failure      500  {object}  model.Response
 // @Router       /api/location/subdistrict/find [get]
 func (ctr *locationController) FindSubdistrict(ctx *fiber.Ctx) (err error) {
-	return execute(ctx, ctr.StoreService.Find)
+	return execute(ctx, ctr.LocationService.FindSubdistrict)
 }
