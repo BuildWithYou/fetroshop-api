@@ -12,5 +12,9 @@ func (p *PostgreSQL) List(destination *[]provinces.Province, condition map[strin
 		return query
 	}
 
-	return query.Limit(limit).Offset(offset).Order(orderBy).Find(destination)
+	if limit > 0 {
+		query = query.Limit(limit).Offset(offset)
+	}
+
+	return query.Order(orderBy).Find(destination)
 }

@@ -1340,6 +1340,11 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
+                        "type": "string",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
                         "type": "integer",
                         "default": 0,
                         "name": "offset",
@@ -1347,7 +1352,7 @@ const docTemplate = `{
                     },
                     {
                         "enum": [
-                            "code",
+                            "id",
                             "name",
                             "updated_at",
                             "created_at"
@@ -1372,7 +1377,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.StoresListResponse"
+                            "$ref": "#/definitions/model.ProvinceListResponse"
                         }
                     },
                     "400": {
@@ -1953,6 +1958,60 @@ const docTemplate = `{
                 }
             }
         },
+        "model.ProvinceDetail": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.ProvinceListResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "http status code",
+                    "type": "integer"
+                },
+                "data": {
+                    "description": "main data",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.ProvinceDetail"
+                    }
+                },
+                "errors": {
+                    "description": "error data",
+                    "type": "object",
+                    "additionalProperties": {}
+                },
+                "message": {
+                    "description": "message from system",
+                    "type": "string"
+                },
+                "meta": {
+                    "description": "support data",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/model.provinceListMeta"
+                        }
+                    ]
+                },
+                "status": {
+                    "description": "http status message",
+                    "type": "string"
+                }
+            }
+        },
         "model.Response": {
             "type": "object",
             "properties": {
@@ -2084,6 +2143,20 @@ const docTemplate = `{
                 "status": {
                     "description": "http status message",
                     "type": "string"
+                }
+            }
+        },
+        "model.provinceListMeta": {
+            "type": "object",
+            "properties": {
+                "filtered": {
+                    "type": "integer"
+                },
+                "selected": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
                 }
             }
         }

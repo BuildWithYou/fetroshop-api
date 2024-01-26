@@ -6,6 +6,42 @@ definitions:
       name:
         type: string
     type: object
+  model.ProvinceDetail:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  model.ProvinceListResponse:
+    properties:
+      code:
+        description: http status code
+        type: integer
+      data:
+        description: main data
+        items:
+          $ref: '#/definitions/model.ProvinceDetail'
+        type: array
+      errors:
+        additionalProperties: {}
+        description: error data
+        type: object
+      message:
+        description: message from system
+        type: string
+      meta:
+        allOf:
+        - $ref: '#/definitions/model.provinceListMeta'
+        description: support data
+      status:
+        description: http status message
+        type: string
+    type: object
   model.Response:
     properties:
       code:
@@ -97,6 +133,15 @@ definitions:
       status:
         description: http status message
         type: string
+    type: object
+  model.provinceListMeta:
+    properties:
+      filtered:
+        type: integer
+      selected:
+        type: integer
+      total:
+        type: integer
     type: object
 info:
   contact: {}
@@ -973,12 +1018,15 @@ paths:
         in: query
         name: limit
         type: integer
+      - in: query
+        name: name
+        type: string
       - default: 0
         in: query
         name: offset
         type: integer
       - enum:
-        - code
+        - id
         - name
         - updated_at
         - created_at
@@ -999,7 +1047,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.StoresListResponse'
+            $ref: '#/definitions/model.ProvinceListResponse'
         "400":
           description: Bad Request
           schema:

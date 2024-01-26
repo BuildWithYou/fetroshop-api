@@ -66,6 +66,16 @@ func (router *CmsRouter) Init(app *fiber.App) {
 	store.Get("/list", router.Controller.Store.List)
 	store.Get("/find", router.Controller.Store.Find)
 
+	// Location
+	location := api.Group("/location")
+	location.Get("/province/list", router.Controller.Location.ListProvinces)
+	location.Get("/province/find", router.Controller.Location.FindProvince)
+	location.Get("/city/list", router.Controller.Location.ListCities)
+	location.Get("/city/find", router.Controller.Location.FindCity)
+	location.Get("/district/list", router.Controller.Location.ListDistricts)
+	location.Get("/district/find", router.Controller.Location.FindDistrict)
+	location.Get("/subdistrict/list", router.Controller.Location.ListSubdistricts)
+	location.Get("/subdistrict/find", router.Controller.Location.FindSubdistrict)
 }
 
 func RouterProvider(

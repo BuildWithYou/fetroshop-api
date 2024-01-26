@@ -15,7 +15,7 @@ type UpsertStoreRequest struct {
 	PostalCode    string `json:"postalCode"`
 }
 
-type ListStoresRequest struct {
+type StoresListRequest struct {
 	Offset         int64  `json:"offset" default:"0"`
 	Limit          int64  `json:"limit" default:"10"`
 	OrderBy        string `json:"orderBy" validate:"required" enums:"code,name,updated_at,created_at"`

@@ -34,8 +34,8 @@ func LocationControllerProvider(vld *validator.Validate, svc location.LocationSe
 // @Tags         Locations
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
-// @Param        q     query    model.ListStoresRequest  true  "Request"
-// @Success      200  {object}  model.StoresListResponse
+// @Param        q     query    model.ProvinceListRequest  true  "Request"
+// @Success      200  {object}  model.ProvinceListResponse
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response
 // @Failure      500  {object}  model.Response
@@ -64,7 +64,7 @@ func (ctr *locationController) FindProvince(ctx *fiber.Ctx) (err error) {
 // @Tags         Locations
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
-// @Param        q     query    model.ListStoresRequest  true  "Request"
+// @Param        q     query    model.StoresListRequest  true  "Request"
 // @Success      200  {object}  model.StoresListResponse
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response
@@ -94,7 +94,7 @@ func (ctr *locationController) FindCity(ctx *fiber.Ctx) (err error) {
 // @Tags         Locations
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
-// @Param        q     query    model.ListStoresRequest  true  "Request"
+// @Param        q     query    model.StoresListRequest  true  "Request"
 // @Success      200  {object}  model.StoresListResponse
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response
@@ -124,7 +124,7 @@ func (ctr *locationController) FindDistrict(ctx *fiber.Ctx) (err error) {
 // @Tags         Locations
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
-// @Param        q     query    model.ListStoresRequest  true  "Request"
+// @Param        q     query    model.StoresListRequest  true  "Request"
 // @Success      200  {object}  model.StoresListResponse
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response
