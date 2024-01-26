@@ -55,7 +55,7 @@ func (ctr *brandController) ListByPrefix(ctx *fiber.Ctx) (err error) {
 }
 
 // @Summary      Get detail brand
-// @Description  Retrieve categories detail
+// @Description  Retrieve brand detail
 // @Tags         Brands
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json

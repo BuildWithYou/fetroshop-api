@@ -8,8 +8,13 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/connection"
 	brandRepo "github.com/BuildWithYou/fetroshop-api/app/domain/brands/postgres"
 	categoryRepo "github.com/BuildWithYou/fetroshop-api/app/domain/categories/postgres"
+	cityRepo "github.com/BuildWithYou/fetroshop-api/app/domain/cities/postgres"
 	customerAccessRepo "github.com/BuildWithYou/fetroshop-api/app/domain/customer_accesses/postgres"
 	customerRepo "github.com/BuildWithYou/fetroshop-api/app/domain/customers/postgres"
+	districtRepo "github.com/BuildWithYou/fetroshop-api/app/domain/districts/postgres"
+	provinceRepo "github.com/BuildWithYou/fetroshop-api/app/domain/provinces/postgres"
+	storeRepo "github.com/BuildWithYou/fetroshop-api/app/domain/stores/postgres"
+	subdistrictRepo "github.com/BuildWithYou/fetroshop-api/app/domain/subdistricts/postgres"
 	userAccessRepo "github.com/BuildWithYou/fetroshop-api/app/domain/user_accesses/postgres"
 	userRepo "github.com/BuildWithYou/fetroshop-api/app/domain/users/postgres"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
@@ -24,6 +29,8 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/service/auth"
 	"github.com/BuildWithYou/fetroshop-api/app/service/brand"
 	"github.com/BuildWithYou/fetroshop-api/app/service/category"
+	"github.com/BuildWithYou/fetroshop-api/app/service/location"
+	"github.com/BuildWithYou/fetroshop-api/app/service/store"
 	"github.com/google/wire"
 )
 
@@ -36,12 +43,19 @@ var repoSet = wire.NewSet(
 	userAccessRepo.RepoProvider,
 	categoryRepo.RepoProvider,
 	brandRepo.RepoProvider,
+	storeRepo.RepoProvider,
+	provinceRepo.RepoProvider,
+	cityRepo.RepoProvider,
+	districtRepo.RepoProvider,
+	subdistrictRepo.RepoProvider,
 )
 
 var serviceSet = wire.NewSet(
 	auth.ServiceProvider,
 	category.ServiceProvider,
 	brand.ServiceProvider,
+	store.ServiceProvider,
+	location.ServiceProvider,
 )
 
 var serverSet = wire.NewSet(
@@ -82,6 +96,8 @@ var cmsControllerSet = wire.NewSet(
 	cmsController.AuthControllerProvider,
 	cmsController.CategoryControllerProvider,
 	cmsController.BrandControllerProvider,
+	cmsController.StoreControllerProvider,
+	cmsController.LocationControllerProvider,
 )
 
 func InitializeCmsServer() *app.Fetroshop {

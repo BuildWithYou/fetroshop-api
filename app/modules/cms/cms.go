@@ -6,14 +6,14 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 )
 
-//	@title			Fetroshop CMS API
-//	@version		1.0
-//	@description	Fetroshop API is a robust and efficient backend solution designed to power the online store app named Fetroshop. Developed using the Go programming language, this API serves as the backbone for managing the Content Management System (CMS) and handling various store-related functionalities.
+//	@title			               Fetroshop CMS API
+//	@version		                  1.0
+//	@description	               Fetroshop API is a robust and efficient backend solution designed to power the online store app named Fetroshop. Developed using the Go programming language, this API serves as the backbone for managing the Content Management System (CMS) and handling various store-related functionalities.
 
 //	@securityDefinitions.apikey	Bearer
-//	@in							header
-//	@name						Authorization
-//	@description				Use format 'Bearer YOUR_TOKEN'
+//	@in							      header
+//	@name						         Authorization
+//	@description				      Use format 'Bearer YOUR_TOKEN'
 
 func CmsServerConfigProvider(webRouter app.Router, logger *logger.Logger) *app.ServerConfig {
 	config := confighelper.GetConfig()

@@ -107,7 +107,7 @@ security:
       tokenKey: U/i0fGkXlkwE9tLkmklxHl99dZhoK6TFopqsM3Hx040=
 swagger:
    # If set to true, enables deep linking for tags and operations. default: true
-   deepLinking: false
+   deepLinking: true
 
    # Controls the default expansion setting for the operations and tags. 'list' (default, expands only the tags), 'full' (expands the tags and operations), 'none' (expands nothing)
-   docExpansion: list
+   docExpansion: none

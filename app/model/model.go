@@ -16,3 +16,10 @@ type FindByCodeRequest struct {
 type DeleteRequest struct {
 	ForceDelete *bool `json:"forceDelete" validate:"required"`
 }
+
+// #marked: for swagger generation purposes only
+type listMeta struct {
+	Filtered int64 `json:"filtered"`
+	Selected int64 `json:"selected"`
+	Total    int64 `json:"total"`
+}
