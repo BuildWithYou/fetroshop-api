@@ -68,7 +68,7 @@ func (svc *storeService) List(ctx *fiber.Ctx) (*model.Response, error) {
 	}
 
 	return responsehelper.Response200(
-		"Successfuly got list of categories", // #marked: message
+		"Successfuly got list of stores", // #marked: message
 		list,
 		fiber.Map{"total": result.RowsAffected},
 	), nil

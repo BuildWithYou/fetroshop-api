@@ -1034,6 +1034,11 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
+                        "type": "string",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
                         "type": "integer",
                         "default": 0,
                         "name": "offset",
@@ -1041,7 +1046,7 @@ const docTemplate = `{
                     },
                     {
                         "enum": [
-                            "code",
+                            "id",
                             "name",
                             "updated_at",
                             "created_at"
@@ -1060,13 +1065,19 @@ const docTemplate = `{
                         "name": "orderDirection",
                         "in": "query",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "provinceId",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.StoresListResponse"
+                            "$ref": "#/definitions/model.LocationListResponse"
                         }
                     },
                     "400": {
@@ -1106,9 +1117,20 @@ const docTemplate = `{
                 "summary": "List districts",
                 "parameters": [
                     {
+                        "type": "string",
+                        "name": "cityId",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
                         "type": "integer",
                         "default": 10,
                         "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "name",
                         "in": "query"
                     },
                     {
@@ -1119,7 +1141,7 @@ const docTemplate = `{
                     },
                     {
                         "enum": [
-                            "code",
+                            "id",
                             "name",
                             "updated_at",
                             "created_at"
@@ -1144,7 +1166,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.StoresListResponse"
+                            "$ref": "#/definitions/model.LocationListResponse"
                         }
                     },
                     "400": {
@@ -1227,7 +1249,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.ProvinceListResponse"
+                            "$ref": "#/definitions/model.LocationListResponse"
                         }
                     },
                     "400": {
@@ -1267,9 +1289,20 @@ const docTemplate = `{
                 "summary": "List subdistricts",
                 "parameters": [
                     {
+                        "type": "string",
+                        "name": "districtId",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
                         "type": "integer",
                         "default": 10,
                         "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "name",
                         "in": "query"
                     },
                     {
@@ -1280,7 +1313,7 @@ const docTemplate = `{
                     },
                     {
                         "enum": [
-                            "code",
+                            "id",
                             "name",
                             "updated_at",
                             "created_at"
@@ -1305,7 +1338,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.StoresListResponse"
+                            "$ref": "#/definitions/model.LocationListResponse"
                         }
                     },
                     "400": {
@@ -1758,24 +1791,7 @@ const docTemplate = `{
                 }
             }
         },
-        "model.ProvinceDetail": {
-            "type": "object",
-            "properties": {
-                "createdAt": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "updatedAt": {
-                    "type": "string"
-                }
-            }
-        },
-        "model.ProvinceListResponse": {
+        "model.LocationListResponse": {
             "type": "object",
             "properties": {
                 "code": {
@@ -1786,7 +1802,7 @@ const docTemplate = `{
                     "description": "main data",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.ProvinceDetail"
+                        "$ref": "#/definitions/model.Location"
                     }
                 },
                 "errors": {

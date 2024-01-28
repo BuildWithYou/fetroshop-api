@@ -33,7 +33,7 @@ func (svc *locationService) ListProvinces(ctx *fiber.Ctx) (*model.Response, erro
 	}
 	orderBy := fmt.Sprintf("%s %s", payload.OrderBy, payload.OrderDirection)
 
-	// retrive data
+	// retrieve data
 	result := svc.ProvinceRepo.List(&provinceSlice, condition, int(payload.Limit), int(payload.Offset), orderBy)
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
 		svc.Logger.UseError(result.Error)
@@ -41,13 +41,11 @@ func (svc *locationService) ListProvinces(ctx *fiber.Ctx) (*model.Response, erro
 	}
 	selected = result.RowsAffected
 
-	var list []*model.ProvinceDetail
+	var list []*model.Location
 	for _, ct := range provinceSlice {
-		category := &model.ProvinceDetail{
-			ID:        ct.ID,
-			Name:      ct.Name,
-			CreatedAt: ct.CreatedAt,
-			UpdatedAt: ct.UpdatedAt,
+		category := &model.Location{
+			ID:   ct.ID,
+			Name: ct.Name,
 		}
 		list = append(list, category)
 	}
@@ -67,7 +65,7 @@ func (svc *locationService) ListProvinces(ctx *fiber.Ctx) (*model.Response, erro
 	}
 
 	return responsehelper.Response200(
-		"Successfuly got list of categories", // #marked: message
+		"Successfuly got list of provinces", // #marked: message
 		list,
 		fiber.Map{
 			"selected": selected,

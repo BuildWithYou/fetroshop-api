@@ -2,23 +2,24 @@ package location
 
 import (
 	"fmt"
+	"strings"
 
-	"github.com/BuildWithYou/fetroshop-api/app/domain/subdistricts"
+	"github.com/BuildWithYou/fetroshop-api/app/domain/provinces"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/responsehelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/gofiber/fiber/v2"
-	"gopkg.in/guregu/null.v3"
 )
 
 func (svc *locationService) ListSubdistricts(ctx *fiber.Ctx) (*model.Response, error) {
 	// TODO: implement me
 	var (
-		categorySlice []subdistricts.Subdistrict
-		parentID      null.Int
+		provinceSlice             []provinces.Province
+		selected, filtered, total int64
 	)
-	payload := new(model.ListCategoriesRequest)
+
+	payload := new(model.ProvinceListRequest)
 	errValidation, errParsing := validatorhelper.ValidateQueryPayload(ctx, svc.Validate, payload)
 	if errParsing != nil {
 		svc.Logger.UseError(errParsing)
@@ -28,45 +29,49 @@ func (svc *locationService) ListSubdistricts(ctx *fiber.Ctx) (*model.Response, e
 		return responsehelper.ResponseErrorValidation(errValidation), nil
 	}
 
-	if payload.ParentCode == "" {
-		parentID = null.NewInt(0, false)
-	} else {
-		parent := new(subdistricts.Subdistrict)
-		result := svc.SubdistrictRepo.Find(parent, map[string]any{
-			"code": payload.ParentCode,
-		})
-		if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
-			svc.Logger.UseError(result.Error)
-			return nil, result.Error
+	condition := fiber.Map{
+		"UPPER(name)": []any{"like", fmt.Sprintf("%%%s%%", strings.ToUpper(payload.Name))},
+	}
+	orderBy := fmt.Sprintf("%s %s", payload.OrderBy, payload.OrderDirection)
+
+	// retrieve data
+	result := svc.ProvinceRepo.List(&provinceSlice, condition, int(payload.Limit), int(payload.Offset), orderBy)
+	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+		svc.Logger.UseError(result.Error)
+		return nil, result.Error
+	}
+	selected = result.RowsAffected
+
+	var list []*model.Location
+	for _, ct := range provinceSlice {
+		category := &model.Location{
+			ID:   ct.ID,
+			Name: ct.Name,
 		}
-		if gormhelper.IsErrRecordNotFound(result.Error) {
-			return responsehelper.ResponseErrorValidation(fiber.Map{"parentCode": "Invalid parent category code"}), nil // #marked: message
-		}
-		parentID = null.NewInt(parent.ID, parent.ID != 0)
+		list = append(list, category)
 	}
 
-	orderBy := fmt.Sprintf("%s %s", payload.OrderBy, payload.OrderDirection)
-	result := svc.SubdistrictRepo.List(&categorySlice, fiber.Map{
-		"parent_id": parentID,
-	}, int(payload.Limit), int(payload.Offset), orderBy)
+	// count filtered
+	result = svc.ProvinceRepo.Count(&filtered, condition)
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
 		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 
-	var list []*model.CategoryResponse
-	for _, ct := range categorySlice {
-		category := &model.CategoryResponse{
-			Name:      ct.Name,
-			CreatedAt: ct.CreatedAt,
-			UpdatedAt: ct.UpdatedAt,
-		}
-		list = append(list, category)
+	// count total
+	result = svc.ProvinceRepo.Count(&total, fiber.Map{})
+	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+		svc.Logger.UseError(result.Error)
+		return nil, result.Error
 	}
 
 	return responsehelper.Response200(
 		"Successfuly got list of categories", // #marked: message
 		list,
-		fiber.Map{"total": result.RowsAffected},
+		fiber.Map{
+			"selected": selected,
+			"filtered": filtered,
+			"total":    total,
+		},
 	), nil
 }

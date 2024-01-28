@@ -81,7 +81,7 @@ func (ctr *storeController) Delete(ctx *fiber.Ctx) (err error) {
 // @Tags         Stores
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
-// @Param        q     query    model.StoresListRequest  true  "Request"
+// @Param        q     query    model.StoreListRequest  true  "Request"
 // @Success      200  {object}  model.StoresListResponse
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response
