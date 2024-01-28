@@ -36,7 +36,7 @@ definitions:
         type: string
       meta:
         allOf:
-        - $ref: '#/definitions/model.provinceListMeta'
+        - $ref: '#/definitions/model.listMeta'
         description: support data
       status:
         description: http status message
@@ -134,7 +134,7 @@ definitions:
         description: http status message
         type: string
     type: object
-  model.provinceListMeta:
+  model.listMeta:
     properties:
       filtered:
         type: integer
@@ -802,39 +802,6 @@ paths:
       summary: List categories
       tags:
       - Categories
-  /api/location/city/detail:
-    get:
-      consumes:
-      - application/x-www-form-urlencoded
-      - application/json
-      description: Retrieve city detail
-      parameters:
-      - in: query
-        name: code
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.StoreDetailResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/model.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/model.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/model.Response'
-      summary: Get detail city
-      tags:
-      - Locations
   /api/location/city/list:
     get:
       consumes:
@@ -888,39 +855,6 @@ paths:
       summary: List cities
       tags:
       - Locations
-  /api/location/district/detail:
-    get:
-      consumes:
-      - application/x-www-form-urlencoded
-      - application/json
-      description: Retrieve district detail
-      parameters:
-      - in: query
-        name: code
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.StoreDetailResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/model.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/model.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/model.Response'
-      summary: Get detail district
-      tags:
-      - Locations
   /api/location/district/list:
     get:
       consumes:
@@ -972,39 +906,6 @@ paths:
           schema:
             $ref: '#/definitions/model.Response'
       summary: List districts
-      tags:
-      - Locations
-  /api/location/province/detail:
-    get:
-      consumes:
-      - application/x-www-form-urlencoded
-      - application/json
-      description: Retrieve province detail
-      parameters:
-      - in: query
-        name: code
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.StoreDetailResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/model.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/model.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/model.Response'
-      summary: Get detail province
       tags:
       - Locations
   /api/location/province/list:
@@ -1061,39 +962,6 @@ paths:
           schema:
             $ref: '#/definitions/model.Response'
       summary: List provinces
-      tags:
-      - Locations
-  /api/location/subdistrict/detail:
-    get:
-      consumes:
-      - application/x-www-form-urlencoded
-      - application/json
-      description: Retrieve subdistrict detail
-      parameters:
-      - in: query
-        name: code
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.StoreDetailResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/model.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/model.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/model.Response'
-      summary: Get detail subdistrict
       tags:
       - Locations
   /api/location/subdistrict/list:

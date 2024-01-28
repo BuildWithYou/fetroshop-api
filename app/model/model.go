@@ -13,6 +13,10 @@ type FindByCodeRequest struct {
 	Code string `json:"code" validate:"required"`
 }
 
+type FindByIdRequest struct {
+	ID string `json:"id" validate:"required"`
+}
+
 type DeleteRequest struct {
 	ForceDelete *bool `json:"forceDelete" validate:"required"`
 }

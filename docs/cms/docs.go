@@ -1012,56 +1012,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/location/city/detail": {
-            "get": {
-                "description": "Retrieve city detail",
-                "consumes": [
-                    "application/x-www-form-urlencoded",
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Locations"
-                ],
-                "summary": "Get detail city",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "name": "code",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.StoreDetailResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/model.Response"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/model.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/model.Response"
-                        }
-                    }
-                }
-            }
-        },
         "/api/location/city/list": {
             "get": {
                 "description": "Retrieve cities list",
@@ -1117,56 +1067,6 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/model.StoresListResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/model.Response"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/model.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/model.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/location/district/detail": {
-            "get": {
-                "description": "Retrieve district detail",
-                "consumes": [
-                    "application/x-www-form-urlencoded",
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Locations"
-                ],
-                "summary": "Get detail district",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "name": "code",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.StoreDetailResponse"
                         }
                     },
                     "400": {
@@ -1268,56 +1168,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/location/province/detail": {
-            "get": {
-                "description": "Retrieve province detail",
-                "consumes": [
-                    "application/x-www-form-urlencoded",
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Locations"
-                ],
-                "summary": "Get detail province",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "name": "code",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.StoreDetailResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/model.Response"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/model.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/model.Response"
-                        }
-                    }
-                }
-            }
-        },
         "/api/location/province/list": {
             "get": {
                 "description": "Retrieve provinces list",
@@ -1378,56 +1228,6 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/model.ProvinceListResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/model.Response"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/model.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/model.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/location/subdistrict/detail": {
-            "get": {
-                "description": "Retrieve subdistrict detail",
-                "consumes": [
-                    "application/x-www-form-urlencoded",
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Locations"
-                ],
-                "summary": "Get detail subdistrict",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "name": "code",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.StoreDetailResponse"
                         }
                     },
                     "400": {
@@ -2002,7 +1802,7 @@ const docTemplate = `{
                     "description": "support data",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/model.provinceListMeta"
+                            "$ref": "#/definitions/model.listMeta"
                         }
                     ]
                 },
@@ -2146,7 +1946,7 @@ const docTemplate = `{
                 }
             }
         },
-        "model.provinceListMeta": {
+        "model.listMeta": {
             "type": "object",
             "properties": {
                 "filtered": {
