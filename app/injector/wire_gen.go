@@ -11,13 +11,13 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/connection"
 	postgres6 "github.com/BuildWithYou/fetroshop-api/app/domain/brands/postgres"
 	postgres5 "github.com/BuildWithYou/fetroshop-api/app/domain/categories/postgres"
-	postgres9 "github.com/BuildWithYou/fetroshop-api/app/domain/cities/postgres"
+	postgres8 "github.com/BuildWithYou/fetroshop-api/app/domain/cities/postgres"
 	postgres2 "github.com/BuildWithYou/fetroshop-api/app/domain/customer_accesses/postgres"
 	postgres4 "github.com/BuildWithYou/fetroshop-api/app/domain/customers/postgres"
-	postgres10 "github.com/BuildWithYou/fetroshop-api/app/domain/districts/postgres"
-	postgres8 "github.com/BuildWithYou/fetroshop-api/app/domain/provinces/postgres"
-	postgres7 "github.com/BuildWithYou/fetroshop-api/app/domain/stores/postgres"
-	postgres11 "github.com/BuildWithYou/fetroshop-api/app/domain/subdistricts/postgres"
+	postgres9 "github.com/BuildWithYou/fetroshop-api/app/domain/districts/postgres"
+	postgres7 "github.com/BuildWithYou/fetroshop-api/app/domain/provinces/postgres"
+	postgres11 "github.com/BuildWithYou/fetroshop-api/app/domain/stores/postgres"
+	postgres10 "github.com/BuildWithYou/fetroshop-api/app/domain/subdistricts/postgres"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/user_accesses/postgres"
 	postgres3 "github.com/BuildWithYou/fetroshop-api/app/domain/users/postgres"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
@@ -60,7 +60,13 @@ func InitializeWebServer() *app.Fetroshop {
 	brandRepo := postgres6.RepoProvider(connectionConnection)
 	brandService := brand.ServiceProvider(connectionConnection, viper, validate, loggerLogger, brandRepo)
 	brandController := controller.BrandControllerProvider(validate, brandService)
-	controllerController := controller.WebControllerProvider(authController, categoryController, brandController)
+	provinceRepo := postgres7.RepoProvider(connectionConnection)
+	cityRepo := postgres8.RepoProvider(connectionConnection)
+	districtRepo := postgres9.RepoProvider(connectionConnection)
+	subdistrictRepo := postgres10.RepoProvider(connectionConnection)
+	locationService := location.ServiceProvider(connectionConnection, viper, validate, loggerLogger, provinceRepo, cityRepo, districtRepo, subdistrictRepo)
+	locationController := controller.LocationControllerProvider(validate, locationService)
+	controllerController := controller.WebControllerProvider(authController, categoryController, brandController, locationController)
 	router := web.RouterProvider(docsDocs, jwtMiddleware, dbMiddleware, controllerController, loggerLogger)
 	serverConfig := web.WebServerConfigProvider(router, loggerLogger)
 	fetroshop := app.CreateFiber(serverConfig)
@@ -92,13 +98,13 @@ func InitializeCmsServer() *app.Fetroshop {
 	brandRepo := postgres6.RepoProvider(connectionConnection)
 	brandService := brand.ServiceProvider(connectionConnection, viper, validate, loggerLogger, brandRepo)
 	brandController := controller2.BrandControllerProvider(validate, brandService)
-	storeRepo := postgres7.RepoProvider(connectionConnection)
+	storeRepo := postgres11.RepoProvider(connectionConnection)
 	storeService := store.ServiceProvider(connectionConnection, viper, validate, loggerLogger, storeRepo)
 	storeController := controller2.StoreControllerProvider(validate, storeService)
-	provinceRepo := postgres8.RepoProvider(connectionConnection)
-	cityRepo := postgres9.RepoProvider(connectionConnection)
-	districtRepo := postgres10.RepoProvider(connectionConnection)
-	subdistrictRepo := postgres11.RepoProvider(connectionConnection)
+	provinceRepo := postgres7.RepoProvider(connectionConnection)
+	cityRepo := postgres8.RepoProvider(connectionConnection)
+	districtRepo := postgres9.RepoProvider(connectionConnection)
+	subdistrictRepo := postgres10.RepoProvider(connectionConnection)
 	locationService := location.ServiceProvider(connectionConnection, viper, validate, loggerLogger, provinceRepo, cityRepo, districtRepo, subdistrictRepo)
 	locationController := controller2.LocationControllerProvider(validate, locationService)
 	controllerController := controller2.CmsControllerProvider(authController, categoryController, brandController, storeController, locationController)
@@ -112,7 +118,7 @@ func InitializeCmsServer() *app.Fetroshop {
 
 var dbType connection.DBType = connection.DB_MAIN
 
-var repoSet = wire.NewSet(postgres4.RepoProvider, postgres2.RepoProvider, postgres3.RepoProvider, postgres.RepoProvider, postgres5.RepoProvider, postgres6.RepoProvider, postgres7.RepoProvider, postgres8.RepoProvider, postgres9.RepoProvider, postgres10.RepoProvider, postgres11.RepoProvider)
+var repoSet = wire.NewSet(postgres4.RepoProvider, postgres2.RepoProvider, postgres3.RepoProvider, postgres.RepoProvider, postgres5.RepoProvider, postgres6.RepoProvider, postgres11.RepoProvider, postgres7.RepoProvider, postgres8.RepoProvider, postgres9.RepoProvider, postgres10.RepoProvider)
 
 var serviceSet = wire.NewSet(auth.ServiceProvider, category.ServiceProvider, brand.ServiceProvider, store.ServiceProvider, location.ServiceProvider)
 
@@ -121,7 +127,7 @@ var serverSet = wire.NewSet(wire.Value(dbType), confighelper.GetConfig, connecti
 )
 
 // web dependencies
-var webControllerSet = wire.NewSet(controller.WebControllerProvider, controller.AuthControllerProvider, controller.CategoryControllerProvider, controller.BrandControllerProvider)
+var webControllerSet = wire.NewSet(controller.WebControllerProvider, controller.AuthControllerProvider, controller.CategoryControllerProvider, controller.BrandControllerProvider, controller.LocationControllerProvider)
 
 // cms dependencies
 var cmsControllerSet = wire.NewSet(controller2.CmsControllerProvider, controller2.AuthControllerProvider, controller2.CategoryControllerProvider, controller2.BrandControllerProvider, controller2.StoreControllerProvider, controller2.LocationControllerProvider)

@@ -1,4 +1,36 @@
 definitions:
+  model.Location:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  model.LocationListResponse:
+    properties:
+      code:
+        description: http status code
+        type: integer
+      data:
+        description: main data
+        items:
+          $ref: '#/definitions/model.Location'
+        type: array
+      errors:
+        additionalProperties: {}
+        description: error data
+        type: object
+      message:
+        description: message from system
+        type: string
+      meta:
+        allOf:
+        - $ref: '#/definitions/model.listMeta'
+        description: support data
+      status:
+        description: http status message
+        type: string
+    type: object
   model.Response:
     properties:
       code:
@@ -18,6 +50,15 @@ definitions:
       status:
         description: http status message
         type: string
+    type: object
+  model.listMeta:
+    properties:
+      filtered:
+        type: integer
+      selected:
+        type: integer
+      total:
+        type: integer
     type: object
 info:
   contact: {}
@@ -170,7 +211,7 @@ paths:
       consumes:
       - application/x-www-form-urlencoded
       - application/json
-      description: Retrieve categories detail
+      description: Retrieve brand detail
       parameters:
       - in: query
         name: code
@@ -313,7 +354,7 @@ paths:
       consumes:
       - application/x-www-form-urlencoded
       - application/json
-      description: Retrieve categories detail
+      description: Retrieve category detail
       parameters:
       - in: query
         name: code
@@ -398,6 +439,242 @@ paths:
       summary: List categories
       tags:
       - Categories
+  /api/location/city/list:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      description: Retrieve cities list
+      parameters:
+      - default: 10
+        in: query
+        name: limit
+        type: integer
+      - in: query
+        name: name
+        type: string
+      - default: 0
+        in: query
+        name: offset
+        type: integer
+      - enum:
+        - id
+        - name
+        - updated_at
+        - created_at
+        in: query
+        name: orderBy
+        required: true
+        type: string
+      - enum:
+        - ASC
+        - DESC
+        in: query
+        name: orderDirection
+        required: true
+        type: string
+      - in: query
+        name: provinceId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.LocationListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Response'
+      summary: List cities
+      tags:
+      - Locations
+  /api/location/district/list:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      description: Retrieve districts list
+      parameters:
+      - in: query
+        name: cityId
+        required: true
+        type: string
+      - default: 10
+        in: query
+        name: limit
+        type: integer
+      - in: query
+        name: name
+        type: string
+      - default: 0
+        in: query
+        name: offset
+        type: integer
+      - enum:
+        - id
+        - name
+        - updated_at
+        - created_at
+        in: query
+        name: orderBy
+        required: true
+        type: string
+      - enum:
+        - ASC
+        - DESC
+        in: query
+        name: orderDirection
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.LocationListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Response'
+      summary: List districts
+      tags:
+      - Locations
+  /api/location/province/list:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      description: Retrieve provinces list
+      parameters:
+      - default: 10
+        in: query
+        name: limit
+        type: integer
+      - in: query
+        name: name
+        type: string
+      - default: 0
+        in: query
+        name: offset
+        type: integer
+      - enum:
+        - id
+        - name
+        - updated_at
+        - created_at
+        in: query
+        name: orderBy
+        required: true
+        type: string
+      - enum:
+        - ASC
+        - DESC
+        in: query
+        name: orderDirection
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.LocationListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Response'
+      summary: List provinces
+      tags:
+      - Locations
+  /api/location/subdistrict/list:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      description: Retrieve subdistricts list
+      parameters:
+      - in: query
+        name: districtId
+        required: true
+        type: string
+      - default: 10
+        in: query
+        name: limit
+        type: integer
+      - in: query
+        name: name
+        type: string
+      - default: 0
+        in: query
+        name: offset
+        type: integer
+      - enum:
+        - id
+        - name
+        - updated_at
+        - created_at
+        in: query
+        name: orderBy
+        required: true
+        type: string
+      - enum:
+        - ASC
+        - DESC
+        in: query
+        name: orderDirection
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.LocationListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Response'
+      summary: List subdistricts
+      tags:
+      - Locations
 securityDefinitions:
   Bearer:
     description: Use format 'Bearer YOUR_TOKEN'

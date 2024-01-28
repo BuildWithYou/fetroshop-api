@@ -77,6 +77,7 @@ var webControllerSet = wire.NewSet(
 	webController.AuthControllerProvider,
 	webController.CategoryControllerProvider,
 	webController.BrandControllerProvider,
+	webController.LocationControllerProvider,
 )
 
 func InitializeWebServer() *app.Fetroshop {
