@@ -165,7 +165,7 @@ paths:
       summary: Register new user
       tags:
       - Authentication
-  /api/brand/find:
+  /api/brand/detail:
     get:
       consumes:
       - application/x-www-form-urlencoded
@@ -308,7 +308,7 @@ paths:
       summary: List brands by prefix
       tags:
       - Brands
-  /api/category/find:
+  /api/category/detail:
     get:
       consumes:
       - application/x-www-form-urlencoded

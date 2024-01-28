@@ -117,7 +117,7 @@ func (ctr *brandController) ListByPrefix(ctx *fiber.Ctx) (err error) {
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response
 // @Failure      500  {object}  model.Response
-// @Router       /api/brand/find [get]
+// @Router       /api/brand/detail [get]
 func (ctr *brandController) Find(ctx *fiber.Ctx) (err error) {
 	return execute(ctx, ctr.BrandService.Find)
 }

@@ -47,7 +47,7 @@ func (router *CmsRouter) Init(app *fiber.App) {
 	category.Put("/:code", contentTypeMiddleware, jwtMiddleware, router.Controller.Category.Update)
 	category.Delete("/:code", contentTypeMiddleware, jwtMiddleware, router.Controller.Category.Delete)
 	category.Get("/list", router.Controller.Category.List)
-	category.Get("/find", router.Controller.Category.Find)
+	category.Get("/detail", router.Controller.Category.Find)
 
 	// Brand
 	brand := api.Group("/brand")
@@ -56,7 +56,7 @@ func (router *CmsRouter) Init(app *fiber.App) {
 	brand.Delete("/:code", contentTypeMiddleware, jwtMiddleware, router.Controller.Brand.Delete)
 	brand.Get("/list", router.Controller.Brand.List)
 	brand.Get("/list-by-prefix", router.Controller.Brand.ListByPrefix)
-	brand.Get("/find", router.Controller.Brand.Find)
+	brand.Get("/detail", router.Controller.Brand.Find)
 
 	// Store
 	store := api.Group("/store")
@@ -64,18 +64,18 @@ func (router *CmsRouter) Init(app *fiber.App) {
 	store.Put("/:code", contentTypeMiddleware, jwtMiddleware, router.Controller.Store.Update)
 	store.Delete("/:code", contentTypeMiddleware, jwtMiddleware, router.Controller.Store.Delete)
 	store.Get("/list", router.Controller.Store.List)
-	store.Get("/find", router.Controller.Store.Find)
+	store.Get("/detail", router.Controller.Store.Find)
 
 	// Location
 	location := api.Group("/location")
 	location.Get("/province/list", router.Controller.Location.ListProvinces)
-	location.Get("/province/find", router.Controller.Location.FindProvince)
+	location.Get("/province/detail", router.Controller.Location.FindProvince)
 	location.Get("/city/list", router.Controller.Location.ListCities)
-	location.Get("/city/find", router.Controller.Location.FindCity)
+	location.Get("/city/detail", router.Controller.Location.FindCity)
 	location.Get("/district/list", router.Controller.Location.ListDistricts)
-	location.Get("/district/find", router.Controller.Location.FindDistrict)
+	location.Get("/district/detail", router.Controller.Location.FindDistrict)
 	location.Get("/subdistrict/list", router.Controller.Location.ListSubdistricts)
-	location.Get("/subdistrict/find", router.Controller.Location.FindSubdistrict)
+	location.Get("/subdistrict/detail", router.Controller.Location.FindSubdistrict)
 }
 
 func RouterProvider(

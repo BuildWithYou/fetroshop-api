@@ -299,7 +299,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/brand/find": {
+        "/api/brand/detail": {
             "get": {
                 "description": "Retrieve brand detail",
                 "consumes": [
@@ -730,7 +730,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/category/find": {
+        "/api/category/detail": {
             "get": {
                 "description": "Retrieve category detail",
                 "consumes": [
@@ -1012,7 +1012,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/location/city/find": {
+        "/api/location/city/detail": {
             "get": {
                 "description": "Retrieve city detail",
                 "consumes": [
@@ -1140,7 +1140,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/location/district/find": {
+        "/api/location/district/detail": {
             "get": {
                 "description": "Retrieve district detail",
                 "consumes": [
@@ -1268,7 +1268,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/location/province/find": {
+        "/api/location/province/detail": {
             "get": {
                 "description": "Retrieve province detail",
                 "consumes": [
@@ -1401,7 +1401,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/location/subdistrict/find": {
+        "/api/location/subdistrict/detail": {
             "get": {
                 "description": "Retrieve subdistrict detail",
                 "consumes": [
@@ -1640,7 +1640,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/store/find": {
+        "/api/store/detail": {
             "get": {
                 "description": "Retrieve store detail",
                 "consumes": [

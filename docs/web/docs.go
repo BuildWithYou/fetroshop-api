@@ -228,7 +228,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/brand/find": {
+        "/api/brand/detail": {
             "get": {
                 "description": "Retrieve categories detail",
                 "consumes": [
@@ -440,7 +440,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/category/find": {
+        "/api/category/detail": {
             "get": {
                 "description": "Retrieve categories detail",
                 "consumes": [

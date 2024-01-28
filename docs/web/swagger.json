@@ -220,7 +220,7 @@
                 }
             }
         },
-        "/api/brand/find": {
+        "/api/brand/detail": {
             "get": {
                 "description": "Retrieve categories detail",
                 "consumes": [
@@ -432,7 +432,7 @@
                 }
             }
         },
-        "/api/category/find": {
+        "/api/category/detail": {
             "get": {
                 "description": "Retrieve categories detail",
                 "consumes": [

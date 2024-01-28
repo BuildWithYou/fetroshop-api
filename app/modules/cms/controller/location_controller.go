@@ -54,7 +54,7 @@ func (ctr *locationController) ListProvinces(ctx *fiber.Ctx) (err error) {
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response
 // @Failure      500  {object}  model.Response
-// @Router       /api/location/province/find [get]
+// @Router       /api/location/province/detail [get]
 func (ctr *locationController) FindProvince(ctx *fiber.Ctx) (err error) {
 	return execute(ctx, ctr.LocationService.FindProvince)
 }
@@ -84,7 +84,7 @@ func (ctr *locationController) ListCities(ctx *fiber.Ctx) (err error) {
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response
 // @Failure      500  {object}  model.Response
-// @Router       /api/location/city/find [get]
+// @Router       /api/location/city/detail [get]
 func (ctr *locationController) FindCity(ctx *fiber.Ctx) (err error) {
 	return execute(ctx, ctr.LocationService.FindCity)
 }
@@ -114,7 +114,7 @@ func (ctr *locationController) ListDistricts(ctx *fiber.Ctx) (err error) {
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response
 // @Failure      500  {object}  model.Response
-// @Router       /api/location/district/find [get]
+// @Router       /api/location/district/detail [get]
 func (ctr *locationController) FindDistrict(ctx *fiber.Ctx) (err error) {
 	return execute(ctx, ctr.LocationService.FindDistrict)
 }
@@ -144,7 +144,7 @@ func (ctr *locationController) ListSubdistricts(ctx *fiber.Ctx) (err error) {
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response
 // @Failure      500  {object}  model.Response
-// @Router       /api/location/subdistrict/find [get]
+// @Router       /api/location/subdistrict/detail [get]
 func (ctr *locationController) FindSubdistrict(ctx *fiber.Ctx) (err error) {
 	return execute(ctx, ctr.LocationService.FindSubdistrict)
 }
