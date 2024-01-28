@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/BuildWithYou/fetroshop-api/app/domain/cities"
+	"github.com/BuildWithYou/fetroshop-api/app/domain/districts"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/responsehelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
@@ -14,11 +15,11 @@ import (
 
 func (svc *locationService) ListDistricts(ctx *fiber.Ctx) (*model.Response, error) {
 	var (
-		citySlice                 []cities.City
+		districtSlice             []districts.District
 		selected, filtered, total int64
 	)
 
-	payload := new(model.CityListRequest)
+	payload := new(model.DistrictListRequest)
 	errValidation, errParsing := validatorhelper.ValidateQueryPayload(ctx, svc.Validate, payload)
 	if errParsing != nil {
 		svc.Logger.UseError(errParsing)
@@ -28,14 +29,24 @@ func (svc *locationService) ListDistricts(ctx *fiber.Ctx) (*model.Response, erro
 		return responsehelper.ResponseErrorValidation(errValidation), nil
 	}
 
+	city := new(cities.City)
+	result := svc.CityRepo.Find(city, fiber.Map{"id": payload.CityID})
+	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+		svc.Logger.UseError(result.Error)
+		return nil, result.Error
+	}
+	if gormhelper.IsErrRecordNotFound(result.Error) {
+		return responsehelper.ResponseErrorValidation(fiber.Map{"cityId": "City not found"}), nil
+	}
+
 	condition := fiber.Map{
-		"province_id": payload.ProvinceID,
+		"city_id":     payload.CityID,
 		"UPPER(name)": []any{"like", fmt.Sprintf("%%%s%%", strings.ToUpper(payload.Name))},
 	}
 	orderBy := fmt.Sprintf("%s %s", payload.OrderBy, payload.OrderDirection)
 
 	// retrieve data
-	result := svc.CityRepo.List(&citySlice, condition, int(payload.Limit), int(payload.Offset), orderBy)
+	result = svc.DistrictRepo.List(&districtSlice, condition, int(payload.Limit), int(payload.Offset), orderBy)
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
 		svc.Logger.UseError(result.Error)
 		return nil, result.Error
@@ -43,7 +54,7 @@ func (svc *locationService) ListDistricts(ctx *fiber.Ctx) (*model.Response, erro
 	selected = result.RowsAffected
 
 	var list []*model.Location
-	for _, ct := range citySlice {
+	for _, ct := range districtSlice {
 		category := &model.Location{
 			ID:   ct.ID,
 			Name: ct.Name,
@@ -52,21 +63,21 @@ func (svc *locationService) ListDistricts(ctx *fiber.Ctx) (*model.Response, erro
 	}
 
 	// count filtered
-	result = svc.CityRepo.Count(&filtered, condition)
+	result = svc.DistrictRepo.Count(&filtered, condition)
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
 		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 
 	// count total
-	result = svc.CityRepo.Count(&total, fiber.Map{})
+	result = svc.DistrictRepo.Count(&total, fiber.Map{})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
 		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 
 	return responsehelper.Response200(
-		"Successfuly got list of cities", // #marked: message
+		"Successfuly got list of districts", // #marked: message
 		list,
 		fiber.Map{
 			"selected": selected,
