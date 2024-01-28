@@ -16,6 +16,7 @@ type UpsertStoreRequest struct {
 }
 
 type StoreListRequest struct {
+	Search         string `json:"search"` // Store Code or Store Name
 	Offset         int64  `json:"offset" default:"0"`
 	Limit          int64  `json:"limit" default:"10"`
 	OrderBy        string `json:"orderBy" validate:"required" enums:"code,name,updated_at,created_at"`
@@ -34,12 +35,27 @@ type StoreDetailResponse struct {
 
 // #marked: for swagger generation purposes only
 type StoresListResponse struct {
-	Code    int            `json:"code"`    // http status code
-	Status  string         `json:"status"`  // http status message
-	Message string         `json:"message"` // message from system
-	Data    []StoreDetail  `json:"data"`    // main data
-	Meta    any            `json:"meta"`    // support data
-	Errors  map[string]any `json:"errors"`  // error data
+	Code    int             `json:"code"`    // http status code
+	Status  string          `json:"status"`  // http status message
+	Message string          `json:"message"` // message from system
+	Data    []StoreListData `json:"data"`    // main data
+	Meta    any             `json:"meta"`    // support data
+	Errors  map[string]any  `json:"errors"`  // error data
+}
+
+type StoreListData struct {
+	Code          string  `json:"code"`
+	Name          string  `json:"name"`
+	IsActive      bool    `json:"isActive"`
+	Icon          *string `json:"icon"`
+	Latitude      *string `json:"latitude"`
+	Longitude     *string `json:"longitude"`
+	Address       string  `json:"address"`
+	ProvinceID    int64   `json:"provinceId"`
+	CityID        int64   `json:"cityId"`
+	DistrictID    int64   `json:"districtId"`
+	SubdistrictID int64   `json:"subdistrictId"`
+	PostalCode    string  `json:"postalCode"`
 }
 
 type StoreDetail struct {

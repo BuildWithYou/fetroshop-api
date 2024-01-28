@@ -1072,7 +1072,7 @@ paths:
       - application/json
       description: Retrieve store detail
       parameters:
-      - description: Request
+      - description: Store Code
         in: path
         name: code
         required: true
@@ -1285,6 +1285,10 @@ paths:
         in: query
         name: orderDirection
         required: true
+        type: string
+      - description: Store Code or Store Name
+        in: query
+        name: search
         type: string
       produces:
       - application/json

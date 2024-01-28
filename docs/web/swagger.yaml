@@ -51,6 +51,78 @@ definitions:
         description: http status message
         type: string
     type: object
+  model.StoreDetail:
+    properties:
+      address:
+        type: string
+      city:
+        $ref: '#/definitions/model.Location'
+      code:
+        type: string
+      district:
+        $ref: '#/definitions/model.Location'
+      icon:
+        type: string
+      isActive:
+        type: boolean
+      latitude:
+        type: string
+      longitude:
+        type: string
+      name:
+        type: string
+      postalCode:
+        type: string
+      province:
+        $ref: '#/definitions/model.Location'
+      subdistrict:
+        $ref: '#/definitions/model.Location'
+    type: object
+  model.StoreDetailResponse:
+    properties:
+      code:
+        description: http status code
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/model.StoreDetail'
+        description: main data
+      errors:
+        additionalProperties: {}
+        description: error data
+        type: object
+      message:
+        description: message from system
+        type: string
+      meta:
+        description: support data
+      status:
+        description: http status message
+        type: string
+    type: object
+  model.StoresListResponse:
+    properties:
+      code:
+        description: http status code
+        type: integer
+      data:
+        description: main data
+        items:
+          $ref: '#/definitions/model.StoreDetail'
+        type: array
+      errors:
+        additionalProperties: {}
+        description: error data
+        type: object
+      message:
+        description: message from system
+        type: string
+      meta:
+        description: support data
+      status:
+        description: http status message
+        type: string
+    type: object
   model.listMeta:
     properties:
       filtered:
@@ -675,6 +747,97 @@ paths:
       summary: List subdistricts
       tags:
       - Locations
+  /api/store/{code}:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      description: Retrieve store detail
+      parameters:
+      - description: Store Code
+        in: path
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.StoreDetailResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Response'
+      summary: Get detail store
+      tags:
+      - Stores
+  /api/store/list:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      description: Retrieve stores list
+      parameters:
+      - default: 10
+        in: query
+        name: limit
+        type: integer
+      - default: 0
+        in: query
+        name: offset
+        type: integer
+      - enum:
+        - code
+        - name
+        - updated_at
+        - created_at
+        in: query
+        name: orderBy
+        required: true
+        type: string
+      - enum:
+        - ASC
+        - DESC
+        in: query
+        name: orderDirection
+        required: true
+        type: string
+      - description: Store Code or Store Name
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.StoresListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Response'
+      summary: List stores
+      tags:
+      - Stores
 securityDefinitions:
   Bearer:
     description: Use format 'Bearer YOUR_TOKEN'

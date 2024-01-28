@@ -77,6 +77,7 @@ var webControllerSet = wire.NewSet(
 	webController.AuthControllerProvider,
 	webController.CategoryControllerProvider,
 	webController.BrandControllerProvider,
+	webController.StoreControllerProvider,
 	webController.LocationControllerProvider,
 )
 

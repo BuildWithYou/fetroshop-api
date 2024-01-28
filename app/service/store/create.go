@@ -66,7 +66,7 @@ func (svc *storeService) Create(ctx *fiber.Ctx) (*model.Response, error) {
 		return nil, result.Error
 	}
 	if !gormhelper.IsErrRecordNotFound(result.Error) {
-		return responsehelper.ResponseErrorValidation(fiber.Map{"message": "User already has store"}), nil
+		return responsehelper.ResponseErrorValidation(fiber.Map{"code": "User already has store"}), nil
 	}
 
 	// check code is unique
@@ -146,10 +146,10 @@ func (svc *storeService) Create(ctx *fiber.Ctx) (*model.Response, error) {
 		return nil, result.Error
 	}
 	if gormhelper.IsErrDuplicatedKey(result.Error) {
-		return responsehelper.ResponseErrorValidation(fiber.Map{"code": "Category code has been taken"}), nil // #marked: message
+		return responsehelper.ResponseErrorValidation(fiber.Map{"code": "Store code has been taken"}), nil // #marked: message
 	}
 	if !gormhelper.HasAffectedRows(result) {
-		return responsehelper.Response500("Failed to create category", nil), nil // #marked: message
+		return responsehelper.Response500("Failed to create store", nil), nil // #marked: message
 	}
 
 	return responsehelper.Response201(

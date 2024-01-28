@@ -1528,6 +1528,12 @@ const docTemplate = `{
                         "name": "orderDirection",
                         "in": "query",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Store Code or Store Name",
+                        "name": "search",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -1575,7 +1581,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Request",
+                        "description": "Store Code",
                         "name": "code",
                         "in": "path",
                         "required": true
