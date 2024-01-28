@@ -1,18 +1,18 @@
 package model
 
 type UpsertStoreRequest struct {
-	Code          string `json:"code" validate:"required"`
+	Code          string `json:"code" validate:"required"` // store code (unique)
 	Name          string `json:"name" validate:"required"`
 	IsActive      *bool  `json:"isActive" validate:"required"`
 	Icon          string `json:"icon"`
 	Latitude      string `json:"latitude"`
 	Longitude     string `json:"longitude"`
-	Address       string `json:"address"`
-	ProvinceID    string `json:"provinceId"`
-	CityID        string `json:"cityId"`
-	DistrictID    string `json:"districtId"`
-	SubdistrictID string `json:"subdistrictId"`
-	PostalCode    string `json:"postalCode"`
+	Address       string `json:"address" validate:"required"`
+	ProvinceID    int64  `json:"provinceId" validate:"required"`
+	CityID        int64  `json:"cityId" validate:"required"`
+	DistrictID    int64  `json:"districtId" validate:"required"`
+	SubdistrictID int64  `json:"subdistrictId" validate:"required"`
+	PostalCode    string `json:"postalCode" validate:"required"`
 }
 
 type StoreListRequest struct {
@@ -45,10 +45,10 @@ type StoresListResponse struct {
 type StoreDetail struct {
 	Code        string   `json:"code"`
 	Name        string   `json:"name"`
-	IsActive    *bool    `json:"isActive"`
-	Icon        string   `json:"icon"`
-	Latitude    string   `json:"latitude"`
-	Longitude   string   `json:"longitude"`
+	IsActive    bool     `json:"isActive"`
+	Icon        *string  `json:"icon"`
+	Latitude    *string  `json:"latitude"`
+	Longitude   *string  `json:"longitude"`
 	Address     string   `json:"address"`
 	Province    Location `json:"province"`
 	City        Location `json:"city"`

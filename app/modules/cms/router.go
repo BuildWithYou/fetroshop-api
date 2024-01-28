@@ -64,7 +64,7 @@ func (router *CmsRouter) Init(app *fiber.App) {
 	store.Put("/:code", contentTypeMiddleware, jwtMiddleware, router.Controller.Store.Update)
 	store.Delete("/:code", contentTypeMiddleware, jwtMiddleware, router.Controller.Store.Delete)
 	store.Get("/list", router.Controller.Store.List)
-	store.Get("/detail", router.Controller.Store.Find)
+	store.Get("/:code", router.Controller.Store.Find)
 
 	// Location
 	location := api.Group("/location")

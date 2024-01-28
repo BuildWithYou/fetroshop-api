@@ -9,13 +9,13 @@ import (
 
 type Store struct {
 	ID            int64          `gorm:"column:id;primaryKey;autoIncrement;<-:create"`
-	UserID        int64          `gorm:"column:parent_id"`
+	UserID        int64          `gorm:"column:user_id"`
 	Code          string         `gorm:"column:code;unique"`
 	Name          string         `gorm:"column:name"`
 	IsActive      bool           `gorm:"column:is_active"`
 	Icon          null.String    `gorm:"column:icon"`
-	Latitude      string         `gorm:"column:latitude"`
-	Longitude     string         `gorm:"column:longitude"`
+	Latitude      null.String    `gorm:"column:latitude"`
+	Longitude     null.String    `gorm:"column:longitude"`
 	Address       string         `gorm:"column:address"`
 	ProvinceID    int64          `gorm:"column:province_id"`
 	CityID        int64          `gorm:"column:city_id"`

@@ -1384,23 +1384,27 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "name": "address",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     },
                     {
-                        "type": "string",
+                        "type": "integer",
                         "name": "cityId",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "name": "code",
                         "in": "formData",
                         "required": true
                     },
                     {
                         "type": "string",
+                        "description": "store code (unique)",
+                        "name": "code",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
                         "name": "districtId",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     },
                     {
                         "type": "string",
@@ -1432,66 +1436,19 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "name": "postalCode",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     },
                     {
-                        "type": "string",
+                        "type": "integer",
                         "name": "provinceId",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     },
                     {
-                        "type": "string",
+                        "type": "integer",
                         "name": "subdistrictId",
-                        "in": "formData"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.StoreDetailResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/model.Response"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/model.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/model.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/store/detail": {
-            "get": {
-                "description": "Retrieve store detail",
-                "consumes": [
-                    "application/x-www-form-urlencoded",
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Stores"
-                ],
-                "summary": "Get detail store",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "name": "code",
-                        "in": "query",
+                        "in": "formData",
                         "required": true
                     }
                 ],
@@ -1602,6 +1559,55 @@ const docTemplate = `{
             }
         },
         "/api/store/{code}": {
+            "get": {
+                "description": "Retrieve store detail",
+                "consumes": [
+                    "application/x-www-form-urlencoded",
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Stores"
+                ],
+                "summary": "Get detail store",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Request",
+                        "name": "code",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.StoreDetailResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/model.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Response"
+                        }
+                    }
+                }
+            },
             "put": {
                 "security": [
                     {
@@ -1630,23 +1636,27 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "name": "address",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     },
                     {
-                        "type": "string",
+                        "type": "integer",
                         "name": "cityId",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "name": "code",
                         "in": "formData",
                         "required": true
                     },
                     {
                         "type": "string",
+                        "description": "store code (unique)",
+                        "name": "code",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
                         "name": "districtId",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     },
                     {
                         "type": "string",
@@ -1678,17 +1688,20 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "name": "postalCode",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     },
                     {
-                        "type": "string",
+                        "type": "integer",
                         "name": "provinceId",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     },
                     {
-                        "type": "string",
+                        "type": "integer",
                         "name": "subdistrictId",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {

@@ -96,12 +96,12 @@ func (ctr *storeController) List(ctx *fiber.Ctx) (err error) {
 // @Tags         Stores
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
-// @Param        q     query    model.FindByCodeRequest  true  "Request"
+// @Param        code path      string                     true  "Request"
 // @Success      200  {object}  model.StoreDetailResponse
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response
 // @Failure      500  {object}  model.Response
-// @Router       /api/store/detail [get]
+// @Router       /api/store/{code} [get]
 func (ctr *storeController) Find(ctx *fiber.Ctx) (err error) {
 	return execute(ctx, ctr.StoreService.Find)
 }

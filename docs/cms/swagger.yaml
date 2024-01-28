@@ -1066,6 +1066,39 @@ paths:
       summary: Delete store
       tags:
       - Stores
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      description: Retrieve store detail
+      parameters:
+      - description: Request
+        in: path
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.StoreDetailResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Response'
+      summary: Get detail store
+      tags:
+      - Stores
     put:
       consumes:
       - application/x-www-form-urlencoded
@@ -1078,17 +1111,21 @@ paths:
         type: string
       - in: formData
         name: address
+        required: true
         type: string
       - in: formData
         name: cityId
-        type: string
-      - in: formData
+        required: true
+        type: integer
+      - description: store code (unique)
+        in: formData
         name: code
         required: true
         type: string
       - in: formData
         name: districtId
-        type: string
+        required: true
+        type: integer
       - in: formData
         name: icon
         type: string
@@ -1108,13 +1145,16 @@ paths:
         type: string
       - in: formData
         name: postalCode
+        required: true
         type: string
       - in: formData
         name: provinceId
-        type: string
+        required: true
+        type: integer
       - in: formData
         name: subdistrictId
-        type: string
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
@@ -1147,17 +1187,21 @@ paths:
       parameters:
       - in: formData
         name: address
+        required: true
         type: string
       - in: formData
         name: cityId
-        type: string
-      - in: formData
+        required: true
+        type: integer
+      - description: store code (unique)
+        in: formData
         name: code
         required: true
         type: string
       - in: formData
         name: districtId
-        type: string
+        required: true
+        type: integer
       - in: formData
         name: icon
         type: string
@@ -1177,13 +1221,16 @@ paths:
         type: string
       - in: formData
         name: postalCode
+        required: true
         type: string
       - in: formData
         name: provinceId
-        type: string
+        required: true
+        type: integer
       - in: formData
         name: subdistrictId
-        type: string
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
@@ -1206,39 +1253,6 @@ paths:
       security:
       - Bearer: []
       summary: Create store
-      tags:
-      - Stores
-  /api/store/detail:
-    get:
-      consumes:
-      - application/x-www-form-urlencoded
-      - application/json
-      description: Retrieve store detail
-      parameters:
-      - in: query
-        name: code
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.StoreDetailResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/model.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/model.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/model.Response'
-      summary: Get detail store
       tags:
       - Stores
   /api/store/list:

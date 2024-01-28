@@ -1,8 +1,13 @@
 package store
 
 import (
+	"github.com/BuildWithYou/fetroshop-api/app/domain/cities"
+	"github.com/BuildWithYou/fetroshop-api/app/domain/districts"
+	"github.com/BuildWithYou/fetroshop-api/app/domain/provinces"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/stores"
+	"github.com/BuildWithYou/fetroshop-api/app/domain/subdistricts"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/jwt"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/responsehelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/model"
@@ -12,9 +17,8 @@ import (
 )
 
 func (svc *storeService) Create(ctx *fiber.Ctx) (*model.Response, error) {
-	// TODO: implement me
 	// parse body
-	payload := new(model.UpsertCategoryRequest)
+	payload := new(model.UpsertStoreRequest)
 	errValidation, errParsing := validatorhelper.ValidateBodyPayload(ctx, svc.Validate, payload)
 	if errParsing != nil {
 		svc.Logger.UseError(errParsing)
@@ -25,64 +29,118 @@ func (svc *storeService) Create(ctx *fiber.Ctx) (*model.Response, error) {
 	}
 
 	var (
-		parentCode   null.String
-		code         string
-		name         string
-		isActive     bool
-		icon         null.String
-		displayOrder int64
+		userID        int64
+		code          string
+		name          string
+		isActive      bool
+		icon          null.String
+		latitude      null.String
+		longitude     null.String
+		address       string
+		provinceID    int64
+		cityID        int64
+		districtID    int64
+		subdistrictID int64
+		postalCode    string
 	)
 
+	userID = jwt.GetUserID(ctx)
 	code = slug.Make(payload.Code)
 	name = payload.Name
 	isActive = *payload.IsActive
-	displayOrder = payload.DisplayOrder
-	icon = null.NewString(payload.Icon, payload.Icon != "")
+	icon = null.NewString(payload.Icon, payload.Icon != "") // TODO: need to handle with upload file
+	latitude = null.NewString(payload.Latitude, payload.Latitude != "")
+	longitude = null.NewString(payload.Longitude, payload.Longitude != "")
+	address = payload.Address
+	provinceID = payload.ProvinceID
+	cityID = payload.CityID
+	districtID = payload.DistrictID
+	subdistrictID = payload.SubdistrictID
+	postalCode = payload.PostalCode
 
-	// check parent category exists
-	if payload.ParentCode != "" {
-		parentCategory := new(stores.Store)
-		result := svc.StoreRepo.Find(parentCategory, map[string]any{"code": payload.ParentCode})
-		if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
-			svc.Logger.UseError(result.Error)
-			return nil, result.Error
-		}
-		if gormhelper.IsErrRecordNotFound(result.Error) {
-			return responsehelper.ResponseErrorValidation(fiber.Map{"parentCode": "Invalid parent category code"}), nil // #marked: message
-		}
-		parentCode = null.StringFrom(parentCategory.Code)
-	}
-
-	// check display order is unique
-	categoryByDisplayOrder := new(stores.Store)
-	result := svc.StoreRepo.Find(categoryByDisplayOrder, map[string]any{"display_order": displayOrder})
+	// check user has store
+	existingStore := new(stores.Store)
+	result := svc.StoreRepo.Find(existingStore, fiber.Map{"user_id": userID})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
 		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 	if !gormhelper.IsErrRecordNotFound(result.Error) {
-		return responsehelper.ResponseErrorValidation(fiber.Map{"displayOrder": "Display order has been taken"}), nil // #marked: message
+		return responsehelper.ResponseErrorValidation(fiber.Map{"message": "User already has store"}), nil
 	}
 
 	// check code is unique
-	categoryByCode := new(stores.Store)
-	result = svc.StoreRepo.Find(categoryByCode, map[string]any{"code": code})
+	storeByCode := new(stores.Store)
+	result = svc.StoreRepo.Find(storeByCode, fiber.Map{"code": code})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
 		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 	if !gormhelper.IsErrRecordNotFound(result.Error) {
-		return responsehelper.ResponseErrorValidation(fiber.Map{"code": "Category code has been taken"}), nil // #marked: message
+		return responsehelper.ResponseErrorValidation(fiber.Map{"code": "Store code has been taken"}), nil // #marked: message
 	}
 
-	// create new category
-	newCategory := &stores.Store{
-		Code:     code,
-		Name:     name,
-		IsActive: isActive,
-		Icon:     icon,
+	// check province is valid
+	province := new(provinces.Province)
+	result = svc.ProvinceRepo.Find(province, fiber.Map{"id": provinceID})
+	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+		svc.Logger.UseError(result.Error)
+		return nil, result.Error
 	}
-	result = svc.StoreRepo.Create(newCategory)
+	if gormhelper.IsErrRecordNotFound(result.Error) {
+		return responsehelper.ResponseErrorValidation(fiber.Map{"provinceId": "provinceId is invalid"}), nil // #marked: message
+	}
+
+	// check city is valid
+	city := new(cities.City)
+	result = svc.CityRepo.Find(city, fiber.Map{"province_id": provinceID, "id": cityID})
+	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+		svc.Logger.UseError(result.Error)
+		return nil, result.Error
+	}
+	if gormhelper.IsErrRecordNotFound(result.Error) {
+		return responsehelper.ResponseErrorValidation(fiber.Map{"cityId": "cityId is invalid or not match with provinceId"}), nil // #marked: message
+	}
+
+	// check district is valid
+	district := new(districts.District)
+	result = svc.DistrictRepo.Find(district, fiber.Map{"city_id": cityID, "id": districtID})
+	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+		svc.Logger.UseError(result.Error)
+		return nil, result.Error
+	}
+	if gormhelper.IsErrRecordNotFound(result.Error) {
+		return responsehelper.ResponseErrorValidation(fiber.Map{"districtId": "districtId is invalid or not match with cityId"}), nil // #marked: message
+	}
+
+	// check subdistrict is valid
+	subdistrict := new(subdistricts.Subdistrict)
+	result = svc.SubdistrictRepo.Find(subdistrict, fiber.Map{"district_id": districtID, "id": subdistrictID})
+	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {
+		svc.Logger.UseError(result.Error)
+		return nil, result.Error
+	}
+	if gormhelper.IsErrRecordNotFound(result.Error) {
+		return responsehelper.ResponseErrorValidation(fiber.Map{"subdistrictId": "subdistrictId is invalid or not match with districtId"}), nil // #marked: message
+	}
+
+	// create new store
+	newStore := &stores.Store{
+		UserID:        userID,
+		Code:          code,
+		Name:          name,
+		IsActive:      isActive,
+		Icon:          icon,
+		Latitude:      latitude,
+		Longitude:     longitude,
+		Address:       address,
+		ProvinceID:    provinceID,
+		CityID:        cityID,
+		DistrictID:    districtID,
+		SubdistrictID: subdistrictID,
+		PostalCode:    postalCode,
+	}
+	result = svc.StoreRepo.Create(newStore)
 	if result.Error != nil && !gormhelper.IsErrDuplicatedKey(result.Error) {
 		svc.Logger.UseError(result.Error)
 		return nil, result.Error
@@ -95,15 +153,32 @@ func (svc *storeService) Create(ctx *fiber.Ctx) (*model.Response, error) {
 	}
 
 	return responsehelper.Response201(
-		"Category created successfully", // #marked: message
-		model.CategoryResponse{
-			Code:       newCategory.Code,
-			ParentCode: parentCode,
-			Name:       newCategory.Name,
-			IsActive:   newCategory.IsActive,
-			Icon:       newCategory.Icon,
-			CreatedAt:  newCategory.CreatedAt,
-			UpdatedAt:  newCategory.UpdatedAt,
+		"Store created successfully", // #marked: message
+		model.StoreDetail{
+			Code:      newStore.Code,
+			Name:      newStore.Name,
+			IsActive:  newStore.IsActive,
+			Icon:      newStore.Icon.Ptr(),
+			Latitude:  newStore.Latitude.Ptr(),
+			Longitude: newStore.Longitude.Ptr(),
+			Address:   newStore.Address,
+			Province: model.Location{
+				ID:   newStore.ProvinceID,
+				Name: province.Name,
+			},
+			City: model.Location{
+				ID:   newStore.CityID,
+				Name: city.Name,
+			},
+			District: model.Location{
+				ID:   newStore.DistrictID,
+				Name: district.Name,
+			},
+			Subdistrict: model.Location{
+				ID:   newStore.SubdistrictID,
+				Name: subdistrict.Name,
+			},
+			PostalCode: newStore.PostalCode,
 		},
 		nil), nil
 }

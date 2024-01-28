@@ -2,7 +2,7 @@
 /* Table: stores                                                */
 /*==============================================================*/
 create table stores (
-   id                   INT4                 not null,
+   id                   SERIAL               not null,
    user_id              INT4                 not null,
    code                 VARCHAR(64)          not null,
    name                 VARCHAR(64)          not null,
