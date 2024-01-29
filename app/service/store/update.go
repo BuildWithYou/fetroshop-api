@@ -151,13 +151,13 @@ func (svc *storeService) Update(ctx *fiber.Ctx) (*model.Response, error) {
 		SubdistrictID: subdistrictID,
 		PostalCode:    postalCode,
 	}
-	result = svc.StoreRepo.Create(newStore)
+	result = svc.StoreRepo.Update(newStore, fiber.Map{"id": existingStore.ID})
 	if result.Error != nil && !gormhelper.IsErrDuplicatedKey(result.Error) {
 		svc.Logger.UseError(result.Error)
 		return nil, result.Error
 	}
 	if gormhelper.IsErrDuplicatedKey(result.Error) {
-		return responsehelper.ResponseErrorValidation(fiber.Map{"code": "Category code has been taken"}), nil // #marked: message
+		return responsehelper.ResponseErrorValidation(fiber.Map{"code": "Store code has been taken"}), nil // #marked: message
 	}
 	if !gormhelper.HasAffectedRows(result) {
 		return responsehelper.Response500("Failed to create store", nil), nil // #marked: message
