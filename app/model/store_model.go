@@ -24,7 +24,9 @@ type StoreListRequest struct {
 }
 
 // #marked: for swagger generation purposes only
-type StoreDetailResponse struct {
+//
+//lint:ignore U1000 Ignore unused code
+type storeDetailResponse struct {
 	Code    int            `json:"code"`    // http status code
 	Status  string         `json:"status"`  // http status message
 	Message string         `json:"message"` // message from system
@@ -34,7 +36,9 @@ type StoreDetailResponse struct {
 }
 
 // #marked: for swagger generation purposes only
-type StoresListResponse struct {
+//
+//lint:ignore U1000 Ignore unused code
+type storesListResponse struct {
 	Code    int             `json:"code"`    // http status code
 	Status  string          `json:"status"`  // http status message
 	Message string          `json:"message"` // message from system

@@ -1077,7 +1077,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.LocationListResponse"
+                            "$ref": "#/definitions/model.locationListResponse"
                         }
                     },
                     "400": {
@@ -1166,7 +1166,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.LocationListResponse"
+                            "$ref": "#/definitions/model.locationListResponse"
                         }
                     },
                     "400": {
@@ -1249,7 +1249,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.LocationListResponse"
+                            "$ref": "#/definitions/model.locationListResponse"
                         }
                     },
                     "400": {
@@ -1338,7 +1338,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.LocationListResponse"
+                            "$ref": "#/definitions/model.locationListResponse"
                         }
                     },
                     "400": {
@@ -1456,7 +1456,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.StoreDetailResponse"
+                            "$ref": "#/definitions/model.storeDetailResponse"
                         }
                     },
                     "400": {
@@ -1540,7 +1540,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.StoresListResponse"
+                            "$ref": "#/definitions/model.storesListResponse"
                         }
                     },
                     "400": {
@@ -1591,7 +1591,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.StoreDetailResponse"
+                            "$ref": "#/definitions/model.storeDetailResponse"
                         }
                     },
                     "400": {
@@ -1714,7 +1714,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.StoreDetailResponse"
+                            "$ref": "#/definitions/model.storeDetailResponse"
                         }
                     },
                     "400": {
@@ -1810,43 +1810,6 @@ const docTemplate = `{
                 }
             }
         },
-        "model.LocationListResponse": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "description": "http status code",
-                    "type": "integer"
-                },
-                "data": {
-                    "description": "main data",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.Location"
-                    }
-                },
-                "errors": {
-                    "description": "error data",
-                    "type": "object",
-                    "additionalProperties": {}
-                },
-                "message": {
-                    "description": "message from system",
-                    "type": "string"
-                },
-                "meta": {
-                    "description": "support data",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/model.listMeta"
-                        }
-                    ]
-                },
-                "status": {
-                    "description": "http status message",
-                    "type": "string"
-                }
-            }
-        },
         "model.Response": {
             "type": "object",
             "properties": {
@@ -1916,7 +1879,99 @@ const docTemplate = `{
                 }
             }
         },
-        "model.StoreDetailResponse": {
+        "model.StoreListData": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "cityId": {
+                    "type": "integer"
+                },
+                "code": {
+                    "type": "string"
+                },
+                "districtId": {
+                    "type": "integer"
+                },
+                "icon": {
+                    "type": "string"
+                },
+                "isActive": {
+                    "type": "boolean"
+                },
+                "latitude": {
+                    "type": "string"
+                },
+                "longitude": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "postalCode": {
+                    "type": "string"
+                },
+                "provinceId": {
+                    "type": "integer"
+                },
+                "subdistrictId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.listMeta": {
+            "type": "object",
+            "properties": {
+                "filtered": {
+                    "type": "integer"
+                },
+                "selected": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.locationListResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "http status code",
+                    "type": "integer"
+                },
+                "data": {
+                    "description": "main data",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Location"
+                    }
+                },
+                "errors": {
+                    "description": "error data",
+                    "type": "object",
+                    "additionalProperties": {}
+                },
+                "message": {
+                    "description": "message from system",
+                    "type": "string"
+                },
+                "meta": {
+                    "description": "support data",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/model.listMeta"
+                        }
+                    ]
+                },
+                "status": {
+                    "description": "http status message",
+                    "type": "string"
+                }
+            }
+        },
+        "model.storeDetailResponse": {
             "type": "object",
             "properties": {
                 "code": {
@@ -1949,7 +2004,7 @@ const docTemplate = `{
                 }
             }
         },
-        "model.StoresListResponse": {
+        "model.storesListResponse": {
             "type": "object",
             "properties": {
                 "code": {
@@ -1960,7 +2015,7 @@ const docTemplate = `{
                     "description": "main data",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.StoreDetail"
+                        "$ref": "#/definitions/model.StoreListData"
                     }
                 },
                 "errors": {
@@ -1978,20 +2033,6 @@ const docTemplate = `{
                 "status": {
                     "description": "http status message",
                     "type": "string"
-                }
-            }
-        },
-        "model.listMeta": {
-            "type": "object",
-            "properties": {
-                "filtered": {
-                    "type": "integer"
-                },
-                "selected": {
-                    "type": "integer"
-                },
-                "total": {
-                    "type": "integer"
                 }
             }
         }

@@ -6,31 +6,6 @@ definitions:
       name:
         type: string
     type: object
-  model.LocationListResponse:
-    properties:
-      code:
-        description: http status code
-        type: integer
-      data:
-        description: main data
-        items:
-          $ref: '#/definitions/model.Location'
-        type: array
-      errors:
-        additionalProperties: {}
-        description: error data
-        type: object
-      message:
-        description: message from system
-        type: string
-      meta:
-        allOf:
-        - $ref: '#/definitions/model.listMeta'
-        description: support data
-      status:
-        description: http status message
-        type: string
-    type: object
   model.Response:
     properties:
       code:
@@ -78,7 +53,68 @@ definitions:
       subdistrict:
         $ref: '#/definitions/model.Location'
     type: object
-  model.StoreDetailResponse:
+  model.StoreListData:
+    properties:
+      address:
+        type: string
+      cityId:
+        type: integer
+      code:
+        type: string
+      districtId:
+        type: integer
+      icon:
+        type: string
+      isActive:
+        type: boolean
+      latitude:
+        type: string
+      longitude:
+        type: string
+      name:
+        type: string
+      postalCode:
+        type: string
+      provinceId:
+        type: integer
+      subdistrictId:
+        type: integer
+    type: object
+  model.listMeta:
+    properties:
+      filtered:
+        type: integer
+      selected:
+        type: integer
+      total:
+        type: integer
+    type: object
+  model.locationListResponse:
+    properties:
+      code:
+        description: http status code
+        type: integer
+      data:
+        description: main data
+        items:
+          $ref: '#/definitions/model.Location'
+        type: array
+      errors:
+        additionalProperties: {}
+        description: error data
+        type: object
+      message:
+        description: message from system
+        type: string
+      meta:
+        allOf:
+        - $ref: '#/definitions/model.listMeta'
+        description: support data
+      status:
+        description: http status message
+        type: string
+    type: object
+  model.storeDetailResponse:
     properties:
       code:
         description: http status code
@@ -100,7 +136,7 @@ definitions:
         description: http status message
         type: string
     type: object
-  model.StoresListResponse:
+  model.storesListResponse:
     properties:
       code:
         description: http status code
@@ -108,7 +144,7 @@ definitions:
       data:
         description: main data
         items:
-          $ref: '#/definitions/model.StoreDetail'
+          $ref: '#/definitions/model.StoreListData'
         type: array
       errors:
         additionalProperties: {}
@@ -122,15 +158,6 @@ definitions:
       status:
         description: http status message
         type: string
-    type: object
-  model.listMeta:
-    properties:
-      filtered:
-        type: integer
-      selected:
-        type: integer
-      total:
-        type: integer
     type: object
 info:
   contact: {}
@@ -555,7 +582,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.LocationListResponse'
+            $ref: '#/definitions/model.locationListResponse'
         "400":
           description: Bad Request
           schema:
@@ -615,7 +642,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.LocationListResponse'
+            $ref: '#/definitions/model.locationListResponse'
         "400":
           description: Bad Request
           schema:
@@ -671,7 +698,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.LocationListResponse'
+            $ref: '#/definitions/model.locationListResponse'
         "400":
           description: Bad Request
           schema:
@@ -731,7 +758,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.LocationListResponse'
+            $ref: '#/definitions/model.locationListResponse'
         "400":
           description: Bad Request
           schema:
@@ -765,7 +792,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.StoreDetailResponse'
+            $ref: '#/definitions/model.storeDetailResponse'
         "400":
           description: Bad Request
           schema:
@@ -822,7 +849,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.StoresListResponse'
+            $ref: '#/definitions/model.storesListResponse'
         "400":
           description: Bad Request
           schema:

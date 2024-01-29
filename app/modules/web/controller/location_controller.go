@@ -31,7 +31,7 @@ func LocationControllerProvider(vld *validator.Validate, svc location.LocationSe
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
 // @Param        q     query    model.ProvinceListRequest  true  "Request"
-// @Success      200  {object}  model.LocationListResponse
+// @Success      200  {object}  model.locationListResponse
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response
 // @Failure      500  {object}  model.Response
@@ -46,7 +46,7 @@ func (ctr *locationController) ListProvinces(ctx *fiber.Ctx) (err error) {
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
 // @Param        q     query    model.CityListRequest  true  "Request"
-// @Success      200  {object}  model.LocationListResponse
+// @Success      200  {object}  model.locationListResponse
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response
 // @Failure      500  {object}  model.Response
@@ -61,7 +61,7 @@ func (ctr *locationController) ListCities(ctx *fiber.Ctx) (err error) {
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
 // @Param        q     query    model.DistrictListRequest  true  "Request"
-// @Success      200  {object}  model.LocationListResponse
+// @Success      200  {object}  model.locationListResponse
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response
 // @Failure      500  {object}  model.Response
@@ -76,7 +76,7 @@ func (ctr *locationController) ListDistricts(ctx *fiber.Ctx) (err error) {
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
 // @Param        q     query    model.SubdistrictListRequest  true  "Request"
-// @Success      200  {object}  model.LocationListResponse
+// @Success      200  {object}  model.locationListResponse
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response
 // @Failure      500  {object}  model.Response

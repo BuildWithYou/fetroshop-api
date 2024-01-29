@@ -22,6 +22,8 @@ type DeleteRequest struct {
 }
 
 // #marked: for swagger generation purposes only
+//
+//lint:ignore U1000 Ignore unused code
 type listMeta struct {
 	Filtered int64 `json:"filtered"`
 	Selected int64 `json:"selected"`

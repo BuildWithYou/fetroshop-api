@@ -15,7 +15,9 @@ type ProvinceListRequest struct {
 }
 
 // #marked: for swagger generation purposes only
-type LocationListResponse struct {
+//
+//lint:ignore U1000 Ignore unused code
+type locationListResponse struct {
 	Code    int            `json:"code"`    // http status code
 	Status  string         `json:"status"`  // http status message
 	Message string         `json:"message"` // message from system
