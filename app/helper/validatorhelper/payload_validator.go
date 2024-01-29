@@ -3,12 +3,11 @@ package validatorhelper
 import (
 	"fmt"
 	"reflect"
+	"strings"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )
-
-// TODO: handle proper message here
 
 func generateErrorMessage(err error) (errValidation fiber.Map) {
 	// make error map
@@ -32,6 +31,23 @@ func generateErrorMessage(err error) (errValidation fiber.Map) {
 				} else {
 					errValidation[fieldName] = fmt.Sprint(fieldName, " field must be greater than ", fieldError.Param())
 				}
+			}
+		case "required_with":
+			{
+				fieldParam := fieldError.Param()
+				fieldSlice := strings.Split(fieldParam, " ")
+				for i, field := range fieldSlice {
+
+					// Convert the first character to lowercase
+					firstCharLower := strings.ToLower(string(field[0]))
+
+					// Convert the last character to lowercase
+					lastCharLower := strings.ToLower(string(field[len(field)-1]))
+
+					// Combine the modified first and last characters with the rest of the string
+					fieldSlice[i] = firstCharLower + field[1:len(field)-1] + lastCharLower
+				}
+				errValidation[fieldName] = fmt.Sprint(fieldName, " field is required when ", strings.Join(fieldSlice, ", "), " is filled")
 			}
 		default:
 			{

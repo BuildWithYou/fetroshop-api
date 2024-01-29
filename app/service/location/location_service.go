@@ -16,13 +16,9 @@ import (
 
 type LocationService interface {
 	ListProvinces(ctx *fiber.Ctx) (*model.Response, error)
-	FindProvince(ctx *fiber.Ctx) (*model.Response, error)
 	ListCities(ctx *fiber.Ctx) (*model.Response, error)
-	FindCity(ctx *fiber.Ctx) (*model.Response, error)
 	ListDistricts(ctx *fiber.Ctx) (*model.Response, error)
-	FindDistrict(ctx *fiber.Ctx) (*model.Response, error)
 	ListSubdistricts(ctx *fiber.Ctx) (*model.Response, error)
-	FindSubdistrict(ctx *fiber.Ctx) (*model.Response, error)
 }
 
 type locationService struct {

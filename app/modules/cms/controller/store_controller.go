@@ -32,7 +32,7 @@ func StoreControllerProvider(vld *validator.Validate, svc store.StoreService) St
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
 // @Param        data    formData    model.UpsertStoreRequest  true  "Request"
-// @Success      200     {object}    model.StoreDetailResponse
+// @Success      200     {object}    model.storeDetailResponse
 // @Failure      400     {object}    model.Response
 // @Failure      404     {object}    model.Response
 // @Failure      500     {object}    model.Response
@@ -49,7 +49,7 @@ func (ctr *storeController) Create(ctx *fiber.Ctx) (err error) {
 // @Produce      json
 // @Param        code   path      string                       true  "Store Code"
 // @Param        data   formData  model.UpsertStoreRequest  true  "Request"
-// @Success      200    {object}  model.StoreDetailResponse
+// @Success      200    {object}  model.storeDetailResponse
 // @Failure      400    {object}  model.Response
 // @Failure      404    {object}  model.Response
 // @Failure      500    {object}  model.Response
@@ -81,8 +81,8 @@ func (ctr *storeController) Delete(ctx *fiber.Ctx) (err error) {
 // @Tags         Stores
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
-// @Param        q     query    model.StoresListRequest  true  "Request"
-// @Success      200  {object}  model.StoresListResponse
+// @Param        q     query    model.StoreListRequest  true  "Request"
+// @Success      200  {object}  model.storesListResponse
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response
 // @Failure      500  {object}  model.Response
@@ -96,12 +96,12 @@ func (ctr *storeController) List(ctx *fiber.Ctx) (err error) {
 // @Tags         Stores
 // @Accept       x-www-form-urlencoded,json
 // @Produce      json
-// @Param        q     query    model.FindByCodeRequest  true  "Request"
-// @Success      200  {object}  model.StoreDetailResponse
+// @Param        code path      string                     true  "Store Code"
+// @Success      200  {object}  model.storeDetailResponse
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response
 // @Failure      500  {object}  model.Response
-// @Router       /api/store/find [get]
+// @Router       /api/store/{code} [get]
 func (ctr *storeController) Find(ctx *fiber.Ctx) (err error) {
 	return execute(ctx, ctr.StoreService.Find)
 }

@@ -6,42 +6,6 @@ definitions:
       name:
         type: string
     type: object
-  model.ProvinceDetail:
-    properties:
-      createdAt:
-        type: string
-      id:
-        type: integer
-      name:
-        type: string
-      updatedAt:
-        type: string
-    type: object
-  model.ProvinceListResponse:
-    properties:
-      code:
-        description: http status code
-        type: integer
-      data:
-        description: main data
-        items:
-          $ref: '#/definitions/model.ProvinceDetail'
-        type: array
-      errors:
-        additionalProperties: {}
-        description: error data
-        type: object
-      message:
-        description: message from system
-        type: string
-      meta:
-        allOf:
-        - $ref: '#/definitions/model.provinceListMeta'
-        description: support data
-      status:
-        description: http status message
-        type: string
-    type: object
   model.Response:
     properties:
       code:
@@ -89,7 +53,68 @@ definitions:
       subdistrict:
         $ref: '#/definitions/model.Location'
     type: object
-  model.StoreDetailResponse:
+  model.StoreListData:
+    properties:
+      address:
+        type: string
+      cityId:
+        type: integer
+      code:
+        type: string
+      districtId:
+        type: integer
+      icon:
+        type: string
+      isActive:
+        type: boolean
+      latitude:
+        type: string
+      longitude:
+        type: string
+      name:
+        type: string
+      postalCode:
+        type: string
+      provinceId:
+        type: integer
+      subdistrictId:
+        type: integer
+    type: object
+  model.listMeta:
+    properties:
+      filtered:
+        type: integer
+      selected:
+        type: integer
+      total:
+        type: integer
+    type: object
+  model.locationListResponse:
+    properties:
+      code:
+        description: http status code
+        type: integer
+      data:
+        description: main data
+        items:
+          $ref: '#/definitions/model.Location'
+        type: array
+      errors:
+        additionalProperties: {}
+        description: error data
+        type: object
+      message:
+        description: message from system
+        type: string
+      meta:
+        allOf:
+        - $ref: '#/definitions/model.listMeta'
+        description: support data
+      status:
+        description: http status message
+        type: string
+    type: object
+  model.storeDetailResponse:
     properties:
       code:
         description: http status code
@@ -111,7 +136,7 @@ definitions:
         description: http status message
         type: string
     type: object
-  model.StoresListResponse:
+  model.storesListResponse:
     properties:
       code:
         description: http status code
@@ -119,7 +144,7 @@ definitions:
       data:
         description: main data
         items:
-          $ref: '#/definitions/model.StoreDetail'
+          $ref: '#/definitions/model.StoreListData'
         type: array
       errors:
         additionalProperties: {}
@@ -133,15 +158,6 @@ definitions:
       status:
         description: http status message
         type: string
-    type: object
-  model.provinceListMeta:
-    properties:
-      filtered:
-        type: integer
-      selected:
-        type: integer
-      total:
-        type: integer
     type: object
 info:
   contact: {}
@@ -422,7 +438,7 @@ paths:
       summary: Create brand
       tags:
       - Brands
-  /api/brand/find:
+  /api/brand/detail:
     get:
       consumes:
       - application/x-www-form-urlencoded
@@ -712,7 +728,7 @@ paths:
       summary: Create category
       tags:
       - Categories
-  /api/category/find:
+  /api/category/detail:
     get:
       consumes:
       - application/x-www-form-urlencoded
@@ -802,39 +818,6 @@ paths:
       summary: List categories
       tags:
       - Categories
-  /api/location/city/find:
-    get:
-      consumes:
-      - application/x-www-form-urlencoded
-      - application/json
-      description: Retrieve city detail
-      parameters:
-      - in: query
-        name: code
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.StoreDetailResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/model.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/model.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/model.Response'
-      summary: Get detail city
-      tags:
-      - Locations
   /api/location/city/list:
     get:
       consumes:
@@ -846,12 +829,15 @@ paths:
         in: query
         name: limit
         type: integer
+      - in: query
+        name: name
+        type: string
       - default: 0
         in: query
         name: offset
         type: integer
       - enum:
-        - code
+        - id
         - name
         - updated_at
         - created_at
@@ -866,13 +852,17 @@ paths:
         name: orderDirection
         required: true
         type: string
+      - in: query
+        name: provinceId
+        required: true
+        type: string
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.StoresListResponse'
+            $ref: '#/definitions/model.locationListResponse'
         "400":
           description: Bad Request
           schema:
@@ -888,39 +878,6 @@ paths:
       summary: List cities
       tags:
       - Locations
-  /api/location/district/find:
-    get:
-      consumes:
-      - application/x-www-form-urlencoded
-      - application/json
-      description: Retrieve district detail
-      parameters:
-      - in: query
-        name: code
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.StoreDetailResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/model.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/model.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/model.Response'
-      summary: Get detail district
-      tags:
-      - Locations
   /api/location/district/list:
     get:
       consumes:
@@ -928,16 +885,23 @@ paths:
       - application/json
       description: Retrieve districts list
       parameters:
+      - in: query
+        name: cityId
+        required: true
+        type: string
       - default: 10
         in: query
         name: limit
         type: integer
+      - in: query
+        name: name
+        type: string
       - default: 0
         in: query
         name: offset
         type: integer
       - enum:
-        - code
+        - id
         - name
         - updated_at
         - created_at
@@ -958,7 +922,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.StoresListResponse'
+            $ref: '#/definitions/model.locationListResponse'
         "400":
           description: Bad Request
           schema:
@@ -972,39 +936,6 @@ paths:
           schema:
             $ref: '#/definitions/model.Response'
       summary: List districts
-      tags:
-      - Locations
-  /api/location/province/find:
-    get:
-      consumes:
-      - application/x-www-form-urlencoded
-      - application/json
-      description: Retrieve province detail
-      parameters:
-      - in: query
-        name: code
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.StoreDetailResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/model.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/model.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/model.Response'
-      summary: Get detail province
       tags:
       - Locations
   /api/location/province/list:
@@ -1047,7 +978,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.ProvinceListResponse'
+            $ref: '#/definitions/model.locationListResponse'
         "400":
           description: Bad Request
           schema:
@@ -1063,39 +994,6 @@ paths:
       summary: List provinces
       tags:
       - Locations
-  /api/location/subdistrict/find:
-    get:
-      consumes:
-      - application/x-www-form-urlencoded
-      - application/json
-      description: Retrieve subdistrict detail
-      parameters:
-      - in: query
-        name: code
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.StoreDetailResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/model.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/model.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/model.Response'
-      summary: Get detail subdistrict
-      tags:
-      - Locations
   /api/location/subdistrict/list:
     get:
       consumes:
@@ -1103,16 +1001,23 @@ paths:
       - application/json
       description: Retrieve subdistricts list
       parameters:
+      - in: query
+        name: districtId
+        required: true
+        type: string
       - default: 10
         in: query
         name: limit
         type: integer
+      - in: query
+        name: name
+        type: string
       - default: 0
         in: query
         name: offset
         type: integer
       - enum:
-        - code
+        - id
         - name
         - updated_at
         - created_at
@@ -1133,7 +1038,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.StoresListResponse'
+            $ref: '#/definitions/model.locationListResponse'
         "400":
           description: Bad Request
           schema:
@@ -1188,6 +1093,39 @@ paths:
       summary: Delete store
       tags:
       - Stores
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      description: Retrieve store detail
+      parameters:
+      - description: Store Code
+        in: path
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.storeDetailResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Response'
+      summary: Get detail store
+      tags:
+      - Stores
     put:
       consumes:
       - application/x-www-form-urlencoded
@@ -1200,17 +1138,21 @@ paths:
         type: string
       - in: formData
         name: address
+        required: true
         type: string
       - in: formData
         name: cityId
-        type: string
-      - in: formData
+        required: true
+        type: integer
+      - description: store code (unique)
+        in: formData
         name: code
         required: true
         type: string
       - in: formData
         name: districtId
-        type: string
+        required: true
+        type: integer
       - in: formData
         name: icon
         type: string
@@ -1230,20 +1172,23 @@ paths:
         type: string
       - in: formData
         name: postalCode
+        required: true
         type: string
       - in: formData
         name: provinceId
-        type: string
+        required: true
+        type: integer
       - in: formData
         name: subdistrictId
-        type: string
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.StoreDetailResponse'
+            $ref: '#/definitions/model.storeDetailResponse'
         "400":
           description: Bad Request
           schema:
@@ -1269,17 +1214,21 @@ paths:
       parameters:
       - in: formData
         name: address
+        required: true
         type: string
       - in: formData
         name: cityId
-        type: string
-      - in: formData
+        required: true
+        type: integer
+      - description: store code (unique)
+        in: formData
         name: code
         required: true
         type: string
       - in: formData
         name: districtId
-        type: string
+        required: true
+        type: integer
       - in: formData
         name: icon
         type: string
@@ -1299,20 +1248,23 @@ paths:
         type: string
       - in: formData
         name: postalCode
+        required: true
         type: string
       - in: formData
         name: provinceId
-        type: string
+        required: true
+        type: integer
       - in: formData
         name: subdistrictId
-        type: string
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.StoreDetailResponse'
+            $ref: '#/definitions/model.storeDetailResponse'
         "400":
           description: Bad Request
           schema:
@@ -1328,39 +1280,6 @@ paths:
       security:
       - Bearer: []
       summary: Create store
-      tags:
-      - Stores
-  /api/store/find:
-    get:
-      consumes:
-      - application/x-www-form-urlencoded
-      - application/json
-      description: Retrieve store detail
-      parameters:
-      - in: query
-        name: code
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.StoreDetailResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/model.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/model.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/model.Response'
-      summary: Get detail store
       tags:
       - Stores
   /api/store/list:
@@ -1394,13 +1313,17 @@ paths:
         name: orderDirection
         required: true
         type: string
+      - description: Store Code or Store Name
+        in: query
+        name: search
+        type: string
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.StoresListResponse'
+            $ref: '#/definitions/model.storesListResponse'
         "400":
           description: Bad Request
           schema:

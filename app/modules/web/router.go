@@ -44,14 +44,25 @@ func (router *WebRouter) Init(app *fiber.App) {
 	// Categories
 	category := api.Group("/category")
 	category.Get("/list", router.Controller.Category.List)
-	category.Get("/find", router.Controller.Category.Find)
+	category.Get("/detail", router.Controller.Category.Find)
 
 	// Brand
 	brand := api.Group("/brand")
 	brand.Get("/list", router.Controller.Brand.List)
 	brand.Get("/list-by-prefix", router.Controller.Brand.ListByPrefix)
-	brand.Get("/find", router.Controller.Brand.Find)
+	brand.Get("/detail", router.Controller.Brand.Find)
 
+	// Store
+	store := api.Group("/store")
+	store.Get("/list", router.Controller.Store.List)
+	store.Get("/:code", router.Controller.Store.Find)
+
+	// Location
+	location := api.Group("/location")
+	location.Get("/province/list", router.Controller.Location.ListProvinces)
+	location.Get("/city/list", router.Controller.Location.ListCities)
+	location.Get("/district/list", router.Controller.Location.ListDistricts)
+	location.Get("/subdistrict/list", router.Controller.Location.ListSubdistricts)
 }
 
 func RouterProvider(

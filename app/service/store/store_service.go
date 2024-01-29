@@ -2,7 +2,11 @@ package store
 
 import (
 	"github.com/BuildWithYou/fetroshop-api/app/connection"
+	"github.com/BuildWithYou/fetroshop-api/app/domain/cities"
+	"github.com/BuildWithYou/fetroshop-api/app/domain/districts"
+	"github.com/BuildWithYou/fetroshop-api/app/domain/provinces"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/stores"
+	"github.com/BuildWithYou/fetroshop-api/app/domain/subdistricts"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/go-playground/validator/v10"
@@ -20,27 +24,39 @@ type StoreService interface {
 }
 
 type storeService struct {
-	Err       error
-	DB        *gorm.DB
-	Config    *viper.Viper
-	Validate  *validator.Validate
-	StoreRepo stores.StoreRepo
-	Logger    *logger.Logger
+	Err             error
+	DB              *gorm.DB
+	Config          *viper.Viper
+	Validate        *validator.Validate
+	StoreRepo       stores.StoreRepo
+	ProvinceRepo    provinces.ProvinceRepo
+	CityRepo        cities.CityRepo
+	DistrictRepo    districts.DistrictRepo
+	SubdistrictRepo subdistricts.SubdistrictRepo
+	Logger          *logger.Logger
 }
 
 func ServiceProvider(
 	conn *connection.Connection,
 	config *viper.Viper,
 	validate *validator.Validate,
-	logger *logger.Logger,
 	storeRepo stores.StoreRepo,
+	provRepo provinces.ProvinceRepo,
+	cityRepo cities.CityRepo,
+	districtRepo districts.DistrictRepo,
+	subdistrictRepo subdistricts.SubdistrictRepo,
+	logger *logger.Logger,
 ) StoreService {
 	return &storeService{
-		Err:       conn.Err,
-		DB:        conn.DB,
-		Config:    config,
-		Validate:  validate,
-		StoreRepo: storeRepo,
-		Logger:    logger,
+		Err:             conn.Err,
+		DB:              conn.DB,
+		Config:          config,
+		Validate:        validate,
+		StoreRepo:       storeRepo,
+		ProvinceRepo:    provRepo,
+		CityRepo:        cityRepo,
+		DistrictRepo:    districtRepo,
+		SubdistrictRepo: subdistrictRepo,
+		Logger:          logger,
 	}
 }

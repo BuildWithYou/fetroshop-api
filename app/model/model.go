@@ -13,11 +13,17 @@ type FindByCodeRequest struct {
 	Code string `json:"code" validate:"required"`
 }
 
+type FindByIdRequest struct {
+	ID string `json:"id" validate:"required"`
+}
+
 type DeleteRequest struct {
 	ForceDelete *bool `json:"forceDelete" validate:"required"`
 }
 
 // #marked: for swagger generation purposes only
+//
+//lint:ignore U1000 Ignore unused code
 type listMeta struct {
 	Filtered int64 `json:"filtered"`
 	Selected int64 `json:"selected"`

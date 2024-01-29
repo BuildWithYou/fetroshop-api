@@ -228,9 +228,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/brand/find": {
+        "/api/brand/detail": {
             "get": {
-                "description": "Retrieve categories detail",
+                "description": "Retrieve brand detail",
                 "consumes": [
                     "application/x-www-form-urlencoded",
                     "application/json"
@@ -440,9 +440,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/category/find": {
+        "/api/category/detail": {
             "get": {
-                "description": "Retrieve categories detail",
+                "description": "Retrieve category detail",
                 "consumes": [
                     "application/x-www-form-urlencoded",
                     "application/json"
@@ -573,9 +573,505 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/api/location/city/list": {
+            "get": {
+                "description": "Retrieve cities list",
+                "consumes": [
+                    "application/x-www-form-urlencoded",
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Locations"
+                ],
+                "summary": "List cities",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 0,
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "id",
+                            "name",
+                            "updated_at",
+                            "created_at"
+                        ],
+                        "type": "string",
+                        "name": "orderBy",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "ASC",
+                            "DESC"
+                        ],
+                        "type": "string",
+                        "name": "orderDirection",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "provinceId",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.locationListResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/model.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/location/district/list": {
+            "get": {
+                "description": "Retrieve districts list",
+                "consumes": [
+                    "application/x-www-form-urlencoded",
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Locations"
+                ],
+                "summary": "List districts",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "cityId",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 0,
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "id",
+                            "name",
+                            "updated_at",
+                            "created_at"
+                        ],
+                        "type": "string",
+                        "name": "orderBy",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "ASC",
+                            "DESC"
+                        ],
+                        "type": "string",
+                        "name": "orderDirection",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.locationListResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/model.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/location/province/list": {
+            "get": {
+                "description": "Retrieve provinces list",
+                "consumes": [
+                    "application/x-www-form-urlencoded",
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Locations"
+                ],
+                "summary": "List provinces",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 0,
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "id",
+                            "name",
+                            "updated_at",
+                            "created_at"
+                        ],
+                        "type": "string",
+                        "name": "orderBy",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "ASC",
+                            "DESC"
+                        ],
+                        "type": "string",
+                        "name": "orderDirection",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.locationListResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/model.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/location/subdistrict/list": {
+            "get": {
+                "description": "Retrieve subdistricts list",
+                "consumes": [
+                    "application/x-www-form-urlencoded",
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Locations"
+                ],
+                "summary": "List subdistricts",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "districtId",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 0,
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "id",
+                            "name",
+                            "updated_at",
+                            "created_at"
+                        ],
+                        "type": "string",
+                        "name": "orderBy",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "ASC",
+                            "DESC"
+                        ],
+                        "type": "string",
+                        "name": "orderDirection",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.locationListResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/model.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/store/list": {
+            "get": {
+                "description": "Retrieve stores list",
+                "consumes": [
+                    "application/x-www-form-urlencoded",
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Stores"
+                ],
+                "summary": "List stores",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 0,
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "code",
+                            "name",
+                            "updated_at",
+                            "created_at"
+                        ],
+                        "type": "string",
+                        "name": "orderBy",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "ASC",
+                            "DESC"
+                        ],
+                        "type": "string",
+                        "name": "orderDirection",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Store Code or Store Name",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.storesListResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/model.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/store/{code}": {
+            "get": {
+                "description": "Retrieve store detail",
+                "consumes": [
+                    "application/x-www-form-urlencoded",
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Stores"
+                ],
+                "summary": "Get detail store",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Store Code",
+                        "name": "code",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.storeDetailResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/model.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Response"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "model.Location": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "model.Response": {
             "type": "object",
             "properties": {
@@ -585,6 +1081,204 @@ const docTemplate = `{
                 },
                 "data": {
                     "description": "main data"
+                },
+                "errors": {
+                    "description": "error data",
+                    "type": "object",
+                    "additionalProperties": {}
+                },
+                "message": {
+                    "description": "message from system",
+                    "type": "string"
+                },
+                "meta": {
+                    "description": "support data"
+                },
+                "status": {
+                    "description": "http status message",
+                    "type": "string"
+                }
+            }
+        },
+        "model.StoreDetail": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "city": {
+                    "$ref": "#/definitions/model.Location"
+                },
+                "code": {
+                    "type": "string"
+                },
+                "district": {
+                    "$ref": "#/definitions/model.Location"
+                },
+                "icon": {
+                    "type": "string"
+                },
+                "isActive": {
+                    "type": "boolean"
+                },
+                "latitude": {
+                    "type": "string"
+                },
+                "longitude": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "postalCode": {
+                    "type": "string"
+                },
+                "province": {
+                    "$ref": "#/definitions/model.Location"
+                },
+                "subdistrict": {
+                    "$ref": "#/definitions/model.Location"
+                }
+            }
+        },
+        "model.StoreListData": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "cityId": {
+                    "type": "integer"
+                },
+                "code": {
+                    "type": "string"
+                },
+                "districtId": {
+                    "type": "integer"
+                },
+                "icon": {
+                    "type": "string"
+                },
+                "isActive": {
+                    "type": "boolean"
+                },
+                "latitude": {
+                    "type": "string"
+                },
+                "longitude": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "postalCode": {
+                    "type": "string"
+                },
+                "provinceId": {
+                    "type": "integer"
+                },
+                "subdistrictId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.listMeta": {
+            "type": "object",
+            "properties": {
+                "filtered": {
+                    "type": "integer"
+                },
+                "selected": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.locationListResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "http status code",
+                    "type": "integer"
+                },
+                "data": {
+                    "description": "main data",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Location"
+                    }
+                },
+                "errors": {
+                    "description": "error data",
+                    "type": "object",
+                    "additionalProperties": {}
+                },
+                "message": {
+                    "description": "message from system",
+                    "type": "string"
+                },
+                "meta": {
+                    "description": "support data",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/model.listMeta"
+                        }
+                    ]
+                },
+                "status": {
+                    "description": "http status message",
+                    "type": "string"
+                }
+            }
+        },
+        "model.storeDetailResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "http status code",
+                    "type": "integer"
+                },
+                "data": {
+                    "description": "main data",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/model.StoreDetail"
+                        }
+                    ]
+                },
+                "errors": {
+                    "description": "error data",
+                    "type": "object",
+                    "additionalProperties": {}
+                },
+                "message": {
+                    "description": "message from system",
+                    "type": "string"
+                },
+                "meta": {
+                    "description": "support data"
+                },
+                "status": {
+                    "description": "http status message",
+                    "type": "string"
+                }
+            }
+        },
+        "model.storesListResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "http status code",
+                    "type": "integer"
+                },
+                "data": {
+                    "description": "main data",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.StoreListData"
+                    }
                 },
                 "errors": {
                     "description": "error data",

@@ -2,7 +2,7 @@
 /* Table: districts                                             */
 /*==============================================================*/
 create table districts (
-   id                   INT4                 not null,
+   id                   SERIAL                 not null,
    city_id              INT4                 not null,
    name                 VARCHAR(64)          not null,
    created_at           TIMESTAMP            not null,

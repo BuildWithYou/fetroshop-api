@@ -9,17 +9,23 @@ type Controller struct {
 	Auth     AuthController
 	Category CategoryController
 	Brand    BrandController
+	Store    StoreController
+	Location LocationController
 }
 
 func WebControllerProvider(
 	authController AuthController,
 	categoryController CategoryController,
 	brandController BrandController,
+	storeController StoreController,
+	locationController LocationController,
 ) *Controller {
 	return &Controller{
 		Auth:     authController,
 		Category: categoryController,
 		Brand:    brandController,
+		Store:    storeController,
+		Location: locationController,
 	}
 }
 

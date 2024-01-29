@@ -48,7 +48,7 @@ func (ctr *categoryController) List(ctx *fiber.Ctx) (err error) {
 // @Failure      400  {object}  model.Response
 // @Failure      404  {object}  model.Response
 // @Failure      500  {object}  model.Response
-// @Router       /api/category/find [get]
+// @Router       /api/category/detail [get]
 func (ctr *categoryController) Find(ctx *fiber.Ctx) (err error) {
 	return execute(ctx, ctr.CategoryService.Find)
 }
