@@ -9,8 +9,8 @@ services:
       restart: no # available options: no, always, on-failure, unless-stopped, on-abnormal
       working_dir: /app
       ports:
-         - 3000:3000
-         - 3001:3001
+         - ${API_PORT_WEB}:3000
+         - ${API_PORT_CMS}:3001
       networks:
          - fetroshop_network
       volumes:
@@ -21,7 +21,7 @@ services:
       links:
          - "db"
       healthcheck:
-         test: ["CMD", "curl", "-f", "http://localhost:3000/welcome"]
+         test: ["CMD", "curl", "-f", "http://localhost:${API_PORT_WEB}/welcome"]
          interval: 30s
          timeout: 10s
          retries: 5
@@ -38,7 +38,7 @@ services:
          POSTGRES_PASSWORD: postgres
          PGDATA: /var/lib/postgresql/data/pgdata
       ports:
-         - 5432:5432
+         - ${DB_PORT}:5432
       volumes:
          - fetroshop_db_volume:/var/lib/postgresql/data
          - fetroshop_db_volume:/db
@@ -50,9 +50,22 @@ services:
          timeout: 5s
          retries: 5
 
-   migrate:
+   migrate1:
       image: migrate/migrate
-      command: -path=/db/migrations/ -database=postgresql://postgres:postgres@db:5432/fetroshop?sslmode=disable up
+      container_name: migrate1
+      command: ${MIGRATE_COMMAND1}
+      volumes:
+         - fetroshop_db_volume:/db
+      depends_on:
+         db:
+            condition: service_healthy
+      networks:
+         - fetroshop_network
+
+   migrate2:
+      image: migrate/migrate
+      container_name: migrate2
+      command: ${MIGRATE_COMMAND2}
       volumes:
          - fetroshop_db_volume:/db
       depends_on:
@@ -70,7 +83,7 @@ services:
       restart: no # available options: no, always, on-failure, unless-stopped, on-abnormal
       working_dir: /app
       ports:
-         - 3003:3003
+         - ${WEB_PORT}:3003
       networks:
          - fetroshop_network
       volumes:
@@ -81,14 +94,48 @@ services:
       links:
          - "api"
       healthcheck:
-         test: ["CMD", "curl", "-f", "http://localhost:3003"]
+         test: ["CMD", "curl", "-f", "http://localhost:${WEB_PORT}"]
          interval: 30s
          timeout: 10s
          retries: 5
+         
+   minio:
+      image: minio/minio
+      container_name: minio
+      ports:
+         - ${MINIO_PORT_SERVICE}:9000
+         - ${MINIO_PORT_CONSOLE}:9001
+      networks:
+         - fetroshop_network
+      environment:
+         MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+         MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      volumes:
+         - minio_data:/data
+      command: server /data --console-address ":${MINIO_PORT_CONSOLE}"
+      restart: unless-stopped
+
+   createbuckets:
+      image: minio/mc
+      container_name: createbuckets
+      depends_on:
+         - minio
+      environment:
+         MC_HOST_minio: http://${MINIO_ROOT_USER}:${MINIO_ROOT_PASSWORD}@minio:9000
+      entrypoint: 
+         - sh
+         - -c
+         - |
+            until mc ls minio > /dev/null 2>&1; do
+               sleep 0.5
+            done
+
+            mc mb minio/post-bucket
 volumes:
    fetroshop_api_volume:
    fetroshop_web_volume:
    fetroshop_db_volume:
+   minio_data:
 networks:
    fetroshop_network:
       driver: bridge
