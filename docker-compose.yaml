@@ -14,7 +14,7 @@ services:
       networks:
          - fetroshop_network
       volumes:
-         - fetroshop_api_volume:/app
+         - api_volume:/app
       depends_on:
          db:
             condition: service_healthy
@@ -25,7 +25,6 @@ services:
          interval: 30s
          timeout: 10s
          retries: 5
-
    db:
       build:
          context: ./
@@ -40,8 +39,8 @@ services:
       ports:
          - ${DB_PORT}:5432
       volumes:
-         - fetroshop_db_volume:/var/lib/postgresql/data
-         - fetroshop_db_volume:/db
+         - db_volume:/var/lib/postgresql/data
+         - migrate_volume:/db
       networks:
          - fetroshop_network
       healthcheck:
@@ -49,31 +48,28 @@ services:
          interval: 10s
          timeout: 5s
          retries: 5
-
    migrate1:
       image: migrate/migrate
       container_name: migrate1
       command: ${MIGRATE_COMMAND1}
       volumes:
-         - fetroshop_db_volume:/db
+         - migrate_volume:/db
       depends_on:
          db:
             condition: service_healthy
       networks:
          - fetroshop_network
-
    migrate2:
       image: migrate/migrate
       container_name: migrate2
       command: ${MIGRATE_COMMAND2}
       volumes:
-         - fetroshop_db_volume:/db
+         - migrate_volume:/db
       depends_on:
          db:
             condition: service_healthy
       networks:
          - fetroshop_network
-
    web:
       build:
          context: ./
@@ -87,7 +83,7 @@ services:
       networks:
          - fetroshop_network
       volumes:
-         - fetroshop_web_volume:/app
+         - web_volume:/app
       depends_on:
          api:
             condition: service_healthy
@@ -97,8 +93,7 @@ services:
          test: ["CMD", "curl", "-f", "http://localhost:${WEB_PORT}"]
          interval: 30s
          timeout: 10s
-         retries: 5
-         
+         retries: 5         
    minio:
       image: minio/minio
       container_name: minio
@@ -114,27 +109,11 @@ services:
          - minio_data:/data
       command: server /data --console-address ":${MINIO_PORT_CONSOLE}"
       restart: unless-stopped
-
-   createbuckets:
-      image: minio/mc
-      container_name: createbuckets
-      depends_on:
-         - minio
-      environment:
-         MC_HOST_minio: http://${MINIO_ROOT_USER}:${MINIO_ROOT_PASSWORD}@minio:9000
-      entrypoint: 
-         - sh
-         - -c
-         - |
-            until mc ls minio > /dev/null 2>&1; do
-               sleep 0.5
-            done
-
-            mc mb minio/post-bucket
 volumes:
-   fetroshop_api_volume:
-   fetroshop_web_volume:
-   fetroshop_db_volume:
+   api_volume:
+   web_volume:
+   db_volume:
+   migrate_volume:
    minio_data:
 networks:
    fetroshop_network:
