@@ -1,6 +1,9 @@
 package miniohelper
 
 import (
+	"context"
+	"mime/multipart"
+
 	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
@@ -31,4 +34,23 @@ func GetMinio(config *viper.Viper, logger *logger.Logger) *Minio {
 		Client:     minioClient,
 		BucketName: config.GetString("minio.bucketName"),
 	}
+}
+
+func (m *Minio) Upload(ctx context.Context, file *multipart.FileHeader, filePath string) (result minio.UploadInfo, err error) {
+	// get buffer
+	buffer, err := file.Open()
+	if err != nil {
+		return minio.UploadInfo{}, err
+	}
+	defer buffer.Close()
+
+	contentType := file.Header["Content-Type"][0]
+	fileSize := file.Size
+
+	// Upload the zip file with PutObject
+	return m.Client.PutObject(ctx, m.BucketName, filePath, buffer, fileSize, minio.PutObjectOptions{ContentType: contentType})
+}
+
+func (m *Minio) Remove(ctx context.Context, filePath string) (err error) {
+	return m.Client.RemoveObject(ctx, m.BucketName, filePath, minio.RemoveObjectOptions{})
 }

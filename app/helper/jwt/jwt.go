@@ -11,8 +11,6 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-// TODO: include in struct
-
 const CMS_IDENTIFIER = "USER_ID"
 const WEB_IDENTIFIER = "CUSTOMER_ID"
 const ACCESS_IDENTIFIER = "ACCESS_IDENTIFIER"
