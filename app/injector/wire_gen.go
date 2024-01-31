@@ -22,6 +22,7 @@ import (
 	postgres3 "github.com/BuildWithYou/fetroshop-api/app/domain/users/postgres"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/miniohelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/middleware"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/cms"
@@ -65,7 +66,8 @@ func InitializeWebServer() *app.Fetroshop {
 	cityRepo := postgres9.RepoProvider(connectionConnection)
 	districtRepo := postgres10.RepoProvider(connectionConnection)
 	subdistrictRepo := postgres11.RepoProvider(connectionConnection)
-	storeService := store.ServiceProvider(connectionConnection, viper, validate, storeRepo, provinceRepo, cityRepo, districtRepo, subdistrictRepo, loggerLogger)
+	minio := miniohelper.GetMinio(viper, loggerLogger)
+	storeService := store.ServiceProvider(connectionConnection, viper, validate, storeRepo, provinceRepo, cityRepo, districtRepo, subdistrictRepo, loggerLogger, minio)
 	storeController := controller.StoreControllerProvider(validate, storeService)
 	locationService := location.ServiceProvider(connectionConnection, viper, validate, loggerLogger, provinceRepo, cityRepo, districtRepo, subdistrictRepo)
 	locationController := controller.LocationControllerProvider(validate, locationService)
@@ -106,7 +108,8 @@ func InitializeCmsServer() *app.Fetroshop {
 	cityRepo := postgres9.RepoProvider(connectionConnection)
 	districtRepo := postgres10.RepoProvider(connectionConnection)
 	subdistrictRepo := postgres11.RepoProvider(connectionConnection)
-	storeService := store.ServiceProvider(connectionConnection, viper, validate, storeRepo, provinceRepo, cityRepo, districtRepo, subdistrictRepo, loggerLogger)
+	minio := miniohelper.GetMinio(viper, loggerLogger)
+	storeService := store.ServiceProvider(connectionConnection, viper, validate, storeRepo, provinceRepo, cityRepo, districtRepo, subdistrictRepo, loggerLogger, minio)
 	storeController := controller2.StoreControllerProvider(validate, storeService)
 	locationService := location.ServiceProvider(connectionConnection, viper, validate, loggerLogger, provinceRepo, cityRepo, districtRepo, subdistrictRepo)
 	locationController := controller2.LocationControllerProvider(validate, locationService)
@@ -125,7 +128,7 @@ var repoSet = wire.NewSet(postgres4.RepoProvider, postgres2.RepoProvider, postgr
 
 var serviceSet = wire.NewSet(auth.ServiceProvider, category.ServiceProvider, brand.ServiceProvider, store.ServiceProvider, location.ServiceProvider)
 
-var serverSet = wire.NewSet(wire.Value(dbType), confighelper.GetConfig, connection.OpenDBConnection, docs.DocsProvider, middleware.JwtMiddlewareProvider, middleware.DBMiddlewareProvider, validatorhelper.GetValidator, repoSet,
+var serverSet = wire.NewSet(wire.Value(dbType), confighelper.GetConfig, connection.OpenDBConnection, docs.DocsProvider, middleware.JwtMiddlewareProvider, middleware.DBMiddlewareProvider, validatorhelper.GetValidator, miniohelper.GetMinio, repoSet,
 	serviceSet, app.CreateFiber,
 )
 

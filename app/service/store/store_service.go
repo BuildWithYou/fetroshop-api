@@ -8,6 +8,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/domain/stores"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/subdistricts"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/miniohelper"
 	"github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -34,6 +35,7 @@ type storeService struct {
 	DistrictRepo    districts.DistrictRepo
 	SubdistrictRepo subdistricts.SubdistrictRepo
 	Logger          *logger.Logger
+	Minio           *miniohelper.Minio
 }
 
 func ServiceProvider(
@@ -46,6 +48,7 @@ func ServiceProvider(
 	districtRepo districts.DistrictRepo,
 	subdistrictRepo subdistricts.SubdistrictRepo,
 	logger *logger.Logger,
+	myMinio *miniohelper.Minio,
 ) StoreService {
 	return &storeService{
 		Err:             conn.Err,
@@ -58,5 +61,6 @@ func ServiceProvider(
 		DistrictRepo:    districtRepo,
 		SubdistrictRepo: subdistrictRepo,
 		Logger:          logger,
+		Minio:           myMinio,
 	}
 }
