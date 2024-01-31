@@ -29,9 +29,10 @@ func StoreControllerProvider(vld *validator.Validate, svc store.StoreService) St
 // @Summary      Create store
 // @Description
 // @Tags         Stores
-// @Accept       x-www-form-urlencoded,json
+// @Accept       mpfd
 // @Produce      json
 // @Param        data    formData    model.UpsertStoreRequest  true  "Request"
+// @Param        icon    formData    file                      false  "accept image/png, image/jpeg"
 // @Success      200     {object}    model.storeDetailResponse
 // @Failure      400     {object}    model.Response
 // @Failure      404     {object}    model.Response
@@ -45,10 +46,11 @@ func (ctr *storeController) Create(ctx *fiber.Ctx) (err error) {
 // @Summary      Update store
 // @Description
 // @Tags         Stores
-// @Accept       x-www-form-urlencoded,json
+// @Accept       mpfd
 // @Produce      json
 // @Param        code   path      string                       true  "Store Code"
-// @Param        data   formData  model.UpsertStoreRequest  true  "Request"
+// @Param        data   formData  model.UpsertStoreRequest     true  "Request"
+// @Param        icon   formData  file                         false  "accept image/png, image/jpeg"
 // @Success      200    {object}  model.storeDetailResponse
 // @Failure      400    {object}  model.Response
 // @Failure      404    {object}  model.Response

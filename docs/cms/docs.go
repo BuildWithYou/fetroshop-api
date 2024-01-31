@@ -1370,8 +1370,7 @@ const docTemplate = `{
                     }
                 ],
                 "consumes": [
-                    "application/x-www-form-urlencoded",
-                    "application/json"
+                    "multipart/form-data"
                 ],
                 "produces": [
                     "application/json"
@@ -1405,11 +1404,6 @@ const docTemplate = `{
                         "name": "districtId",
                         "in": "formData",
                         "required": true
-                    },
-                    {
-                        "type": "string",
-                        "name": "icon",
-                        "in": "formData"
                     },
                     {
                         "type": "boolean",
@@ -1450,6 +1444,12 @@ const docTemplate = `{
                         "name": "subdistrictId",
                         "in": "formData",
                         "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "accept image/png, image/jpeg",
+                        "name": "icon",
+                        "in": "formData"
                     }
                 ],
                 "responses": {
@@ -1621,8 +1621,7 @@ const docTemplate = `{
                     }
                 ],
                 "consumes": [
-                    "application/x-www-form-urlencoded",
-                    "application/json"
+                    "multipart/form-data"
                 ],
                 "produces": [
                     "application/json"
@@ -1665,11 +1664,6 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "type": "string",
-                        "name": "icon",
-                        "in": "formData"
-                    },
-                    {
                         "type": "boolean",
                         "name": "isActive",
                         "in": "formData",
@@ -1708,6 +1702,12 @@ const docTemplate = `{
                         "name": "subdistrictId",
                         "in": "formData",
                         "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "accept image/png, image/jpeg",
+                        "name": "icon",
+                        "in": "formData"
                     }
                 ],
                 "responses": {
