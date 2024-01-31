@@ -8,6 +8,8 @@ import (
 
 func main() {
 
+	// TODO: check wether minio bucket exist or not
+
 	// Run cms server
 	go func() {
 		cmsApp := injector.InitializeCmsServer()
