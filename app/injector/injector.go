@@ -19,6 +19,7 @@ import (
 	userRepo "github.com/BuildWithYou/fetroshop-api/app/domain/users/postgres"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/miniohelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/validatorhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/middleware"
 	"github.com/BuildWithYou/fetroshop-api/app/modules/cms"
@@ -66,6 +67,7 @@ var serverSet = wire.NewSet(
 	middleware.JwtMiddlewareProvider,
 	middleware.DBMiddlewareProvider,
 	validatorhelper.GetValidator,
+	miniohelper.GetMinio,
 	repoSet,
 	serviceSet,
 	app.CreateFiber,

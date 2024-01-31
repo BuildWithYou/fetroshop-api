@@ -1,6 +1,8 @@
 package store
 
 import (
+	"fmt"
+
 	"github.com/BuildWithYou/fetroshop-api/app/domain/cities"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/districts"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/provinces"
@@ -13,6 +15,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gosimple/slug"
+	"github.com/minio/minio-go/v7"
 	"gopkg.in/guregu/null.v3"
 )
 
@@ -48,7 +51,6 @@ func (svc *storeService) Create(ctx *fiber.Ctx) (*model.Response, error) {
 	code = slug.Make(payload.Code)
 	name = payload.Name
 	isActive = *payload.IsActive
-	icon = null.NewString(payload.Icon, payload.Icon != "") // TODO: need to handle with upload file
 	latitude = null.NewString(payload.Latitude, payload.Latitude != "")
 	longitude = null.NewString(payload.Longitude, payload.Longitude != "")
 	address = payload.Address
@@ -57,6 +59,31 @@ func (svc *storeService) Create(ctx *fiber.Ctx) (*model.Response, error) {
 	districtID = payload.DistrictID
 	subdistrictID = payload.SubdistrictID
 	postalCode = payload.PostalCode
+
+	// parse file input
+	file, err := ctx.FormFile("icon")
+	if err == nil {
+		// get buffer
+		buffer, err := file.Open()
+		if err != nil {
+			return responsehelper.ResponseErrorValidation(fiber.Map{"icon": err.Error()}), nil // #marked: generated message
+		}
+		defer buffer.Close()
+
+		basePath := "store/icon/"
+		fileName := slug.Make(file.Filename)
+		filePath := fmt.Sprint(basePath, fileName)
+		fileBuffer := buffer
+		contentType := file.Header["Content-Type"][0]
+		fileSize := file.Size
+
+		// Upload the zip file with PutObject
+		info, err := svc.Minio.Client.PutObject(ctx.Context(), svc.Minio.BucketName, filePath, fileBuffer, fileSize, minio.PutObjectOptions{ContentType: contentType})
+		if err != nil {
+			return responsehelper.Response500("Error on upload icon", fiber.Map{"icon": err.Error()}), nil // #marked: generated message
+		}
+		icon = null.NewString(info.Key, true)
+	}
 
 	// check user has store
 	existingStore := new(stores.Store)

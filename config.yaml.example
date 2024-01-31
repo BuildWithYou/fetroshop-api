@@ -58,7 +58,7 @@ database:
       dbPassword: postgres
       dbHost: db
       dbPort: 5432
-      dbUrl: postgresql://postgres:postgres@db:5432/fetroshop?sslmode=disable
+      dbParam: sslmode=disable
 
    test:
       dbName: fetroshop_test
@@ -66,7 +66,7 @@ database:
       dbPassword: postgres
       dbHost: db
       dbPort: 5432
-      dbUrl: postgresql://postgres:postgres@db:5432/fetroshop_test?sslmode=disable
+      dbParam: sslmode=disable
 
    # (int) Maximum number of open connections to the database.
    dbMaxOpenConns: 100

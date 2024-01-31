@@ -1362,8 +1362,7 @@
                     }
                 ],
                 "consumes": [
-                    "application/x-www-form-urlencoded",
-                    "application/json"
+                    "multipart/form-data"
                 ],
                 "produces": [
                     "application/json"
@@ -1397,11 +1396,6 @@
                         "name": "districtId",
                         "in": "formData",
                         "required": true
-                    },
-                    {
-                        "type": "string",
-                        "name": "icon",
-                        "in": "formData"
                     },
                     {
                         "type": "boolean",
@@ -1442,6 +1436,12 @@
                         "name": "subdistrictId",
                         "in": "formData",
                         "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "accept image/png, image/jpeg",
+                        "name": "icon",
+                        "in": "formData"
                     }
                 ],
                 "responses": {
@@ -1613,8 +1613,7 @@
                     }
                 ],
                 "consumes": [
-                    "application/x-www-form-urlencoded",
-                    "application/json"
+                    "multipart/form-data"
                 ],
                 "produces": [
                     "application/json"
@@ -1657,11 +1656,6 @@
                         "required": true
                     },
                     {
-                        "type": "string",
-                        "name": "icon",
-                        "in": "formData"
-                    },
-                    {
                         "type": "boolean",
                         "name": "isActive",
                         "in": "formData",
@@ -1700,6 +1694,12 @@
                         "name": "subdistrictId",
                         "in": "formData",
                         "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "accept image/png, image/jpeg",
+                        "name": "icon",
+                        "in": "formData"
                     }
                 ],
                 "responses": {

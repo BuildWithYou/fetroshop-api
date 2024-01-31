@@ -1128,8 +1128,7 @@ paths:
       - Stores
     put:
       consumes:
-      - application/x-www-form-urlencoded
-      - application/json
+      - multipart/form-data
       parameters:
       - description: Store Code
         in: path
@@ -1153,9 +1152,6 @@ paths:
         name: districtId
         required: true
         type: integer
-      - in: formData
-        name: icon
-        type: string
       - in: formData
         name: isActive
         required: true
@@ -1182,6 +1178,10 @@ paths:
         name: subdistrictId
         required: true
         type: integer
+      - description: accept image/png, image/jpeg
+        in: formData
+        name: icon
+        type: file
       produces:
       - application/json
       responses:
@@ -1209,8 +1209,7 @@ paths:
   /api/store/create:
     post:
       consumes:
-      - application/x-www-form-urlencoded
-      - application/json
+      - multipart/form-data
       parameters:
       - in: formData
         name: address
@@ -1229,9 +1228,6 @@ paths:
         name: districtId
         required: true
         type: integer
-      - in: formData
-        name: icon
-        type: string
       - in: formData
         name: isActive
         required: true
@@ -1258,6 +1254,10 @@ paths:
         name: subdistrictId
         required: true
         type: integer
+      - description: accept image/png, image/jpeg
+        in: formData
+        name: icon
+        type: file
       produces:
       - application/json
       responses:

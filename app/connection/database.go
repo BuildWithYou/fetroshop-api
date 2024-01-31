@@ -1,6 +1,7 @@
 package connection
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/BuildWithYou/fetroshop-api/app/helper/errorhelper"
@@ -29,11 +30,41 @@ func OpenDBConnection(dbType DBType, config *viper.Viper, lg *loggerHelper.Logge
 	switch dbType {
 	case DB_TEST:
 		{
-			dialect = postgres.Open(config.GetString("database.test.dbUrl"))
+			dbName := config.GetString("database.test.dbName")
+			dbUsername := config.GetString("database.test.dbUsername")
+			dbPassword := config.GetString("database.test.dbPassword")
+			dbHost := config.GetString("database.test.dbHost")
+			dbPort := config.GetInt("database.test.dbPort")
+			dbParam := config.GetString("database.test.dbParam")
+			dbUrl := fmt.Sprintf(
+				"postgresql://%s:%s@%s:%d/%s?%s",
+				dbUsername,
+				dbPassword,
+				dbHost,
+				dbPort,
+				dbName,
+				dbParam,
+			)
+			dialect = postgres.Open(dbUrl)
 		}
 	case DB_MAIN:
 		{
-			dialect = postgres.Open(config.GetString("database.main.dbUrl"))
+			dbName := config.GetString("database.main.dbName")
+			dbUsername := config.GetString("database.main.dbUsername")
+			dbPassword := config.GetString("database.main.dbPassword")
+			dbHost := config.GetString("database.main.dbHost")
+			dbPort := config.GetInt("database.main.dbPort")
+			dbParam := config.GetString("database.main.dbParam")
+			dbUrl := fmt.Sprintf(
+				"postgresql://%s:%s@%s:%d/%s?%s",
+				dbUsername,
+				dbPassword,
+				dbHost,
+				dbPort,
+				dbName,
+				dbParam,
+			)
+			dialect = postgres.Open(dbUrl)
 		}
 	default:
 		{
