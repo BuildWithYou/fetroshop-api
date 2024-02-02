@@ -18,6 +18,8 @@ services:
       depends_on:
          db:
             condition: service_healthy
+         minio:
+            condition: service_healthy
       links:
          - "db"
       healthcheck:
@@ -108,6 +110,11 @@ services:
       volumes:
          - minio_data:/data
       command: server /data --console-address ":${MINIO_PORT_CONSOLE}"
+      healthcheck:
+         test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+         interval: 30s
+         timeout: 10s
+         retries: 3
       restart: unless-stopped
 volumes:
    api_volume:
