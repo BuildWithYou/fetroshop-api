@@ -2,12 +2,15 @@ package store
 
 import (
 	"fmt"
+	"path/filepath"
+	"time"
 
 	"github.com/BuildWithYou/fetroshop-api/app/domain/cities"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/districts"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/provinces"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/stores"
 	"github.com/BuildWithYou/fetroshop-api/app/domain/subdistricts"
+	"github.com/BuildWithYou/fetroshop-api/app/helper/constant"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/gormhelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/jwt"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/responsehelper"
@@ -15,7 +18,6 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gosimple/slug"
-	"github.com/minio/minio-go/v7"
 	"gopkg.in/guregu/null.v3"
 )
 
@@ -59,31 +61,6 @@ func (svc *storeService) Create(ctx *fiber.Ctx) (*model.Response, error) {
 	districtID = payload.DistrictID
 	subdistrictID = payload.SubdistrictID
 	postalCode = payload.PostalCode
-
-	// parse file input
-	file, err := ctx.FormFile("icon")
-	if err == nil {
-		// get buffer
-		buffer, err := file.Open()
-		if err != nil {
-			return responsehelper.ResponseErrorValidation(fiber.Map{"icon": err.Error()}), nil // #marked: generated message
-		}
-		defer buffer.Close()
-
-		basePath := "store/icon/"
-		fileName := slug.Make(file.Filename)
-		filePath := fmt.Sprint(basePath, fileName)
-		fileBuffer := buffer
-		contentType := file.Header["Content-Type"][0]
-		fileSize := file.Size
-
-		// Upload the zip file with PutObject
-		info, err := svc.Minio.Client.PutObject(ctx.Context(), svc.Minio.BucketName, filePath, fileBuffer, fileSize, minio.PutObjectOptions{ContentType: contentType})
-		if err != nil {
-			return responsehelper.Response500("Error on upload icon", fiber.Map{"icon": err.Error()}), nil // #marked: generated message
-		}
-		icon = null.NewString(info.Key, true)
-	}
 
 	// check user has store
 	existingStore := new(stores.Store)
@@ -149,6 +126,20 @@ func (svc *storeService) Create(ctx *fiber.Ctx) (*model.Response, error) {
 	}
 	if gormhelper.IsErrRecordNotFound(result.Error) {
 		return responsehelper.ResponseErrorValidation(fiber.Map{"subdistrictId": "subdistrictId is invalid or not match with districtId"}), nil // #marked: message
+	}
+
+	// parse file input
+	file, err := ctx.FormFile("icon")
+	if err == nil {
+		identifier := time.Now().Unix()
+		fileName := fmt.Sprintf("store-icon-%s-%d%s", code, identifier, filepath.Ext(file.Filename))
+		filePath := fmt.Sprint(constant.PATH_STORE_ICON, "/", fileName)
+		info, err := svc.Minio.Upload(ctx.Context(), file, filePath)
+		if err != nil {
+			svc.Logger.UseError(err)
+			return responsehelper.Response500("Error on upload icon", fiber.Map{"icon": err.Error()}), nil // #marked: generated message
+		}
+		icon = null.NewString(info.Key, true)
 	}
 
 	// create new store

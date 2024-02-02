@@ -10,6 +10,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/recover"
+	"github.com/gofiber/template/html/v2"
 	"github.com/gofiber/utils"
 	"github.com/spf13/viper"
 )
@@ -23,12 +24,13 @@ type Fetroshop struct {
 }
 
 type ServerConfig struct {
-	Config *viper.Viper
-	Host   string
-	Port   int
-	Router Router
-	Static map[string]string
-	Logger *logger.Logger
+	Config     *viper.Viper
+	Host       string
+	Port       int
+	Router     Router
+	Static     map[string]string
+	Logger     *logger.Logger
+	ViewEngine *html.Engine
 }
 
 // CreateFiber initializes a Fiber app with the given server configuration and returns a Fetroshop instance.
@@ -44,6 +46,7 @@ func CreateFiber(serverConfig *ServerConfig) *Fetroshop {
 		WriteTimeout: time.Second * time.Duration(serverConfig.Config.GetInt("fiber.writeTimeout")),
 		ReadTimeout:  time.Second * time.Duration(serverConfig.Config.GetInt("fiber.readTimeout")),
 		Prefork:      serverConfig.Config.GetBool("fiber.prefork"),
+		Views:        serverConfig.ViewEngine,
 		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
 			// Status code defaults to 500
 			code := fiber.StatusInternalServerError

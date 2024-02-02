@@ -4,6 +4,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/confighelper"
 	"github.com/BuildWithYou/fetroshop-api/app/helper/logger"
+	"github.com/gofiber/template/html/v2"
 )
 
 //	@title			               Fetroshop CMS API
@@ -26,6 +27,7 @@ func CmsServerConfigProvider(webRouter app.Router, logger *logger.Logger) *app.S
 		Static: map[string]string{
 			"/swagger": "docs",
 		},
-		Logger: logger,
+		Logger:     logger,
+		ViewEngine: html.New("./docs/swagger-ui", ".gohtml"),
 	}
 }
