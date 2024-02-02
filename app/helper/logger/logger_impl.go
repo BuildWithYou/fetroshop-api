@@ -70,11 +70,11 @@ func (lg *Logger) UseError(err error) {
 }
 
 func (lg *Logger) Fatal(args ...interface{}) {
+	lg.logConsoleTemplate(true).Error(args...)
 	lg.logFileTemplate(true).Fatal(args...)
-	lg.logConsoleTemplate(true).Fatal(args...)
 }
 
 func (lg *Logger) Panic(args ...interface{}) {
+	lg.logConsoleTemplate(true).Error(args...)
 	lg.logFileTemplate(true).Panic(args...)
-	lg.logConsoleTemplate(true).Panic(args...)
 }

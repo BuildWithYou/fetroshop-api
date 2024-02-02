@@ -1,3 +1,4 @@
 config.yaml
 .vscode
 cover.out
+.env

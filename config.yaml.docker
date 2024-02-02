@@ -111,3 +111,9 @@ swagger:
 
    # Controls the default expansion setting for the operations and tags. 'list' (default, expands only the tags), 'full' (expands the tags and operations), 'none' (expands nothing)
    docExpansion: none
+minio:
+   endpoint: minio:9000
+   accessKeyId: miniouser
+   secretAccessKey: miniopassword
+   bucketName: fetroshop
+   useSSL: false
