@@ -1053,7 +1053,7 @@
         }
     },
     "definitions": {
-        "model.Location": {
+        "model.IDName": {
             "type": "object",
             "properties": {
                 "id": {
@@ -1099,13 +1099,13 @@
                     "type": "string"
                 },
                 "city": {
-                    "$ref": "#/definitions/model.Location"
+                    "$ref": "#/definitions/model.IDName"
                 },
                 "code": {
                     "type": "string"
                 },
                 "district": {
-                    "$ref": "#/definitions/model.Location"
+                    "$ref": "#/definitions/model.IDName"
                 },
                 "icon": {
                     "type": "string"
@@ -1126,10 +1126,10 @@
                     "type": "string"
                 },
                 "province": {
-                    "$ref": "#/definitions/model.Location"
+                    "$ref": "#/definitions/model.IDName"
                 },
                 "subdistrict": {
-                    "$ref": "#/definitions/model.Location"
+                    "$ref": "#/definitions/model.IDName"
                 }
             }
         },
@@ -1199,7 +1199,7 @@
                     "description": "main data",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.Location"
+                        "$ref": "#/definitions/model.IDName"
                     }
                 },
                 "errors": {

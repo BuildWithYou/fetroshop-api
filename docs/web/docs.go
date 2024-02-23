@@ -1061,7 +1061,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "model.Location": {
+        "model.IDName": {
             "type": "object",
             "properties": {
                 "id": {
@@ -1107,13 +1107,13 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "city": {
-                    "$ref": "#/definitions/model.Location"
+                    "$ref": "#/definitions/model.IDName"
                 },
                 "code": {
                     "type": "string"
                 },
                 "district": {
-                    "$ref": "#/definitions/model.Location"
+                    "$ref": "#/definitions/model.IDName"
                 },
                 "icon": {
                     "type": "string"
@@ -1134,10 +1134,10 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "province": {
-                    "$ref": "#/definitions/model.Location"
+                    "$ref": "#/definitions/model.IDName"
                 },
                 "subdistrict": {
-                    "$ref": "#/definitions/model.Location"
+                    "$ref": "#/definitions/model.IDName"
                 }
             }
         },
@@ -1207,7 +1207,7 @@ const docTemplate = `{
                     "description": "main data",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.Location"
+                        "$ref": "#/definitions/model.IDName"
                     }
                 },
                 "errors": {

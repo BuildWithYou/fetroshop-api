@@ -1,10 +1,5 @@
 package model
 
-type Location struct {
-	ID   int64  `json:"id"`
-	Name string `json:"name"`
-}
-
 // Province
 type ProvinceListRequest struct {
 	Name           string `json:"name"`
@@ -21,7 +16,7 @@ type locationListResponse struct {
 	Code    int            `json:"code"`    // http status code
 	Status  string         `json:"status"`  // http status message
 	Message string         `json:"message"` // message from system
-	Data    []Location     `json:"data"`    // main data
+	Data    []IDName       `json:"data"`    // main data
 	Meta    listMeta       `json:"meta"`    // support data
 	Errors  map[string]any `json:"errors"`  // error data
 }

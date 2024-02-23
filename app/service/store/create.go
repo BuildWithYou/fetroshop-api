@@ -180,19 +180,19 @@ func (svc *storeService) Create(ctx *fiber.Ctx) (*model.Response, error) {
 			Latitude:  newStore.Latitude.Ptr(),
 			Longitude: newStore.Longitude.Ptr(),
 			Address:   newStore.Address,
-			Province: model.Location{
+			Province: model.IDName{
 				ID:   newStore.ProvinceID,
 				Name: province.Name,
 			},
-			City: model.Location{
+			City: model.IDName{
 				ID:   newStore.CityID,
 				Name: city.Name,
 			},
-			District: model.Location{
+			District: model.IDName{
 				ID:   newStore.DistrictID,
 				Name: district.Name,
 			},
-			Subdistrict: model.Location{
+			Subdistrict: model.IDName{
 				ID:   newStore.SubdistrictID,
 				Name: subdistrict.Name,
 			},

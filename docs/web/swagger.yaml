@@ -1,5 +1,5 @@
 definitions:
-  model.Location:
+  model.IDName:
     properties:
       id:
         type: integer
@@ -31,11 +31,11 @@ definitions:
       address:
         type: string
       city:
-        $ref: '#/definitions/model.Location'
+        $ref: "#/definitions/model.IDName"
       code:
         type: string
       district:
-        $ref: '#/definitions/model.Location'
+        $ref: "#/definitions/model.IDName"
       icon:
         type: string
       isActive:
@@ -49,9 +49,9 @@ definitions:
       postalCode:
         type: string
       province:
-        $ref: '#/definitions/model.Location'
+        $ref: "#/definitions/model.IDName"
       subdistrict:
-        $ref: '#/definitions/model.Location'
+        $ref: "#/definitions/model.IDName"
     type: object
   model.StoreListData:
     properties:
@@ -97,7 +97,7 @@ definitions:
       data:
         description: main data
         items:
-          $ref: '#/definitions/model.Location'
+          $ref: "#/definitions/model.IDName"
         type: array
       errors:
         additionalProperties: {}
@@ -108,7 +108,7 @@ definitions:
         type: string
       meta:
         allOf:
-        - $ref: '#/definitions/model.listMeta'
+          - $ref: "#/definitions/model.listMeta"
         description: support data
       status:
         description: http status message
@@ -121,7 +121,7 @@ definitions:
         type: integer
       data:
         allOf:
-        - $ref: '#/definitions/model.StoreDetail'
+          - $ref: "#/definitions/model.StoreDetail"
         description: main data
       errors:
         additionalProperties: {}
@@ -144,7 +144,7 @@ definitions:
       data:
         description: main data
         items:
-          $ref: '#/definitions/model.StoreListData'
+          $ref: "#/definitions/model.StoreListData"
         type: array
       errors:
         additionalProperties: {}
@@ -161,7 +161,8 @@ definitions:
     type: object
 info:
   contact: {}
-  description: Fetroshop API is a robust and efficient backend solution designed to
+  description:
+    Fetroshop API is a robust and efficient backend solution designed to
     power the online store app named Fetroshop. Developed using the Go programming
     language, this API serves as the backbone for managing the Content Management
     System (CMS) and handling various store-related functionalities.
@@ -171,700 +172,700 @@ paths:
   /api/auth/login:
     post:
       consumes:
-      - application/x-www-form-urlencoded
-      - application/json
+        - application/x-www-form-urlencoded
+        - application/json
       parameters:
-      - in: formData
-        name: password
-        required: true
-        type: string
-      - in: formData
-        name: username
-        required: true
-        type: string
+        - in: formData
+          name: password
+          required: true
+          type: string
+        - in: formData
+          name: username
+          required: true
+          type: string
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
       summary: Login for customers
       tags:
-      - Authentication
+        - Authentication
   /api/auth/logout:
     post:
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
       security:
-      - Bearer: []
+        - Bearer: []
       summary: Logout for customers
       tags:
-      - Authentication
+        - Authentication
   /api/auth/refresh:
     post:
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
       security:
-      - Bearer: []
+        - Bearer: []
       summary: Refresh for customers
       tags:
-      - Authentication
+        - Authentication
   /api/auth/register:
     post:
       consumes:
-      - application/x-www-form-urlencoded
-      - application/json
+        - application/x-www-form-urlencoded
+        - application/json
       parameters:
-      - in: formData
-        name: email
-        required: true
-        type: string
-      - in: formData
-        name: fullName
-        required: true
-        type: string
-      - in: formData
-        minLength: 8
-        name: password
-        required: true
-        type: string
-      - in: formData
-        name: phone
-        required: true
-        type: string
-      - in: formData
-        name: username
-        required: true
-        type: string
+        - in: formData
+          name: email
+          required: true
+          type: string
+        - in: formData
+          name: fullName
+          required: true
+          type: string
+        - in: formData
+          minLength: 8
+          name: password
+          required: true
+          type: string
+        - in: formData
+          name: phone
+          required: true
+          type: string
+        - in: formData
+          name: username
+          required: true
+          type: string
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
       summary: Register new user
       tags:
-      - Authentication
+        - Authentication
   /api/brand/detail:
     get:
       consumes:
-      - application/x-www-form-urlencoded
-      - application/json
+        - application/x-www-form-urlencoded
+        - application/json
       description: Retrieve brand detail
       parameters:
-      - in: query
-        name: code
-        required: true
-        type: string
+        - in: query
+          name: code
+          required: true
+          type: string
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
       summary: Get detail brand
       tags:
-      - Brands
+        - Brands
   /api/brand/list:
     get:
       consumes:
-      - application/x-www-form-urlencoded
-      - application/json
+        - application/x-www-form-urlencoded
+        - application/json
       description: Retrieve brands list
       parameters:
-      - default: 10
-        in: query
-        name: limit
-        type: integer
-      - default: 0
-        in: query
-        name: offset
-        type: integer
-      - enum:
-        - code
-        - name
-        - updated_at
-        - created_at
-        in: query
-        name: orderBy
-        required: true
-        type: string
-      - enum:
-        - ASC
-        - DESC
-        in: query
-        name: orderDirection
-        required: true
-        type: string
+        - default: 10
+          in: query
+          name: limit
+          type: integer
+        - default: 0
+          in: query
+          name: offset
+          type: integer
+        - enum:
+            - code
+            - name
+            - updated_at
+            - created_at
+          in: query
+          name: orderBy
+          required: true
+          type: string
+        - enum:
+            - ASC
+            - DESC
+          in: query
+          name: orderDirection
+          required: true
+          type: string
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
       summary: List brands
       tags:
-      - Brands
+        - Brands
   /api/brand/list-by-prefix:
     get:
       consumes:
-      - application/x-www-form-urlencoded
-      - application/json
+        - application/x-www-form-urlencoded
+        - application/json
       description: Retrieve brands list by prefix
       parameters:
-      - default: 10
-        in: query
-        name: limit
-        type: integer
-      - default: 0
-        in: query
-        name: offset
-        type: integer
-      - enum:
-        - code
-        - name
-        - updated_at
-        - created_at
-        in: query
-        name: orderBy
-        required: true
-        type: string
-      - enum:
-        - ASC
-        - DESC
-        in: query
-        name: orderDirection
-        required: true
-        type: string
-      - in: query
-        name: prefix
-        required: true
-        type: string
+        - default: 10
+          in: query
+          name: limit
+          type: integer
+        - default: 0
+          in: query
+          name: offset
+          type: integer
+        - enum:
+            - code
+            - name
+            - updated_at
+            - created_at
+          in: query
+          name: orderBy
+          required: true
+          type: string
+        - enum:
+            - ASC
+            - DESC
+          in: query
+          name: orderDirection
+          required: true
+          type: string
+        - in: query
+          name: prefix
+          required: true
+          type: string
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
       summary: List brands by prefix
       tags:
-      - Brands
+        - Brands
   /api/category/detail:
     get:
       consumes:
-      - application/x-www-form-urlencoded
-      - application/json
+        - application/x-www-form-urlencoded
+        - application/json
       description: Retrieve category detail
       parameters:
-      - in: query
-        name: code
-        required: true
-        type: string
+        - in: query
+          name: code
+          required: true
+          type: string
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
       summary: Get detail category
       tags:
-      - Categories
+        - Categories
   /api/category/list:
     get:
       consumes:
-      - application/x-www-form-urlencoded
-      - application/json
+        - application/x-www-form-urlencoded
+        - application/json
       description: Retrieve categories list
       parameters:
-      - default: 10
-        in: query
-        name: limit
-        type: integer
-      - default: 0
-        in: query
-        name: offset
-        type: integer
-      - enum:
-        - display_order
-        - code
-        - name
-        - updated_at
-        - created_at
-        in: query
-        name: orderBy
-        required: true
-        type: string
-      - enum:
-        - ASC
-        - DESC
-        in: query
-        name: orderDirection
-        required: true
-        type: string
-      - in: query
-        name: parentCode
-        type: string
+        - default: 10
+          in: query
+          name: limit
+          type: integer
+        - default: 0
+          in: query
+          name: offset
+          type: integer
+        - enum:
+            - display_order
+            - code
+            - name
+            - updated_at
+            - created_at
+          in: query
+          name: orderBy
+          required: true
+          type: string
+        - enum:
+            - ASC
+            - DESC
+          in: query
+          name: orderDirection
+          required: true
+          type: string
+        - in: query
+          name: parentCode
+          type: string
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
       summary: List categories
       tags:
-      - Categories
+        - Categories
   /api/location/city/list:
     get:
       consumes:
-      - application/x-www-form-urlencoded
-      - application/json
+        - application/x-www-form-urlencoded
+        - application/json
       description: Retrieve cities list
       parameters:
-      - default: 10
-        in: query
-        name: limit
-        type: integer
-      - in: query
-        name: name
-        type: string
-      - default: 0
-        in: query
-        name: offset
-        type: integer
-      - enum:
-        - id
-        - name
-        - updated_at
-        - created_at
-        in: query
-        name: orderBy
-        required: true
-        type: string
-      - enum:
-        - ASC
-        - DESC
-        in: query
-        name: orderDirection
-        required: true
-        type: string
-      - in: query
-        name: provinceId
-        required: true
-        type: string
+        - default: 10
+          in: query
+          name: limit
+          type: integer
+        - in: query
+          name: name
+          type: string
+        - default: 0
+          in: query
+          name: offset
+          type: integer
+        - enum:
+            - id
+            - name
+            - updated_at
+            - created_at
+          in: query
+          name: orderBy
+          required: true
+          type: string
+        - enum:
+            - ASC
+            - DESC
+          in: query
+          name: orderDirection
+          required: true
+          type: string
+        - in: query
+          name: provinceId
+          required: true
+          type: string
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.locationListResponse'
+            $ref: "#/definitions/model.locationListResponse"
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
       summary: List cities
       tags:
-      - Locations
+        - Locations
   /api/location/district/list:
     get:
       consumes:
-      - application/x-www-form-urlencoded
-      - application/json
+        - application/x-www-form-urlencoded
+        - application/json
       description: Retrieve districts list
       parameters:
-      - in: query
-        name: cityId
-        required: true
-        type: string
-      - default: 10
-        in: query
-        name: limit
-        type: integer
-      - in: query
-        name: name
-        type: string
-      - default: 0
-        in: query
-        name: offset
-        type: integer
-      - enum:
-        - id
-        - name
-        - updated_at
-        - created_at
-        in: query
-        name: orderBy
-        required: true
-        type: string
-      - enum:
-        - ASC
-        - DESC
-        in: query
-        name: orderDirection
-        required: true
-        type: string
+        - in: query
+          name: cityId
+          required: true
+          type: string
+        - default: 10
+          in: query
+          name: limit
+          type: integer
+        - in: query
+          name: name
+          type: string
+        - default: 0
+          in: query
+          name: offset
+          type: integer
+        - enum:
+            - id
+            - name
+            - updated_at
+            - created_at
+          in: query
+          name: orderBy
+          required: true
+          type: string
+        - enum:
+            - ASC
+            - DESC
+          in: query
+          name: orderDirection
+          required: true
+          type: string
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.locationListResponse'
+            $ref: "#/definitions/model.locationListResponse"
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
       summary: List districts
       tags:
-      - Locations
+        - Locations
   /api/location/province/list:
     get:
       consumes:
-      - application/x-www-form-urlencoded
-      - application/json
+        - application/x-www-form-urlencoded
+        - application/json
       description: Retrieve provinces list
       parameters:
-      - default: 10
-        in: query
-        name: limit
-        type: integer
-      - in: query
-        name: name
-        type: string
-      - default: 0
-        in: query
-        name: offset
-        type: integer
-      - enum:
-        - id
-        - name
-        - updated_at
-        - created_at
-        in: query
-        name: orderBy
-        required: true
-        type: string
-      - enum:
-        - ASC
-        - DESC
-        in: query
-        name: orderDirection
-        required: true
-        type: string
+        - default: 10
+          in: query
+          name: limit
+          type: integer
+        - in: query
+          name: name
+          type: string
+        - default: 0
+          in: query
+          name: offset
+          type: integer
+        - enum:
+            - id
+            - name
+            - updated_at
+            - created_at
+          in: query
+          name: orderBy
+          required: true
+          type: string
+        - enum:
+            - ASC
+            - DESC
+          in: query
+          name: orderDirection
+          required: true
+          type: string
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.locationListResponse'
+            $ref: "#/definitions/model.locationListResponse"
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
       summary: List provinces
       tags:
-      - Locations
+        - Locations
   /api/location/subdistrict/list:
     get:
       consumes:
-      - application/x-www-form-urlencoded
-      - application/json
+        - application/x-www-form-urlencoded
+        - application/json
       description: Retrieve subdistricts list
       parameters:
-      - in: query
-        name: districtId
-        required: true
-        type: string
-      - default: 10
-        in: query
-        name: limit
-        type: integer
-      - in: query
-        name: name
-        type: string
-      - default: 0
-        in: query
-        name: offset
-        type: integer
-      - enum:
-        - id
-        - name
-        - updated_at
-        - created_at
-        in: query
-        name: orderBy
-        required: true
-        type: string
-      - enum:
-        - ASC
-        - DESC
-        in: query
-        name: orderDirection
-        required: true
-        type: string
+        - in: query
+          name: districtId
+          required: true
+          type: string
+        - default: 10
+          in: query
+          name: limit
+          type: integer
+        - in: query
+          name: name
+          type: string
+        - default: 0
+          in: query
+          name: offset
+          type: integer
+        - enum:
+            - id
+            - name
+            - updated_at
+            - created_at
+          in: query
+          name: orderBy
+          required: true
+          type: string
+        - enum:
+            - ASC
+            - DESC
+          in: query
+          name: orderDirection
+          required: true
+          type: string
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.locationListResponse'
+            $ref: "#/definitions/model.locationListResponse"
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
       summary: List subdistricts
       tags:
-      - Locations
+        - Locations
   /api/store/{code}:
     get:
       consumes:
-      - application/x-www-form-urlencoded
-      - application/json
+        - application/x-www-form-urlencoded
+        - application/json
       description: Retrieve store detail
       parameters:
-      - description: Store Code
-        in: path
-        name: code
-        required: true
-        type: string
+        - description: Store Code
+          in: path
+          name: code
+          required: true
+          type: string
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.storeDetailResponse'
+            $ref: "#/definitions/model.storeDetailResponse"
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
       summary: Get detail store
       tags:
-      - Stores
+        - Stores
   /api/store/list:
     get:
       consumes:
-      - application/x-www-form-urlencoded
-      - application/json
+        - application/x-www-form-urlencoded
+        - application/json
       description: Retrieve stores list
       parameters:
-      - default: 10
-        in: query
-        name: limit
-        type: integer
-      - default: 0
-        in: query
-        name: offset
-        type: integer
-      - enum:
-        - code
-        - name
-        - updated_at
-        - created_at
-        in: query
-        name: orderBy
-        required: true
-        type: string
-      - enum:
-        - ASC
-        - DESC
-        in: query
-        name: orderDirection
-        required: true
-        type: string
-      - description: Store Code or Store Name
-        in: query
-        name: search
-        type: string
+        - default: 10
+          in: query
+          name: limit
+          type: integer
+        - default: 0
+          in: query
+          name: offset
+          type: integer
+        - enum:
+            - code
+            - name
+            - updated_at
+            - created_at
+          in: query
+          name: orderBy
+          required: true
+          type: string
+        - enum:
+            - ASC
+            - DESC
+          in: query
+          name: orderDirection
+          required: true
+          type: string
+        - description: Store Code or Store Name
+          in: query
+          name: search
+          type: string
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.storesListResponse'
+            $ref: "#/definitions/model.storesListResponse"
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/model.Response'
+            $ref: "#/definitions/model.Response"
       summary: List stores
       tags:
-      - Stores
+        - Stores
 securityDefinitions:
   Bearer:
     description: Use format 'Bearer YOUR_TOKEN'

@@ -40,19 +40,19 @@ func (svc *storeService) Find(ctx *fiber.Ctx) (*model.Response, error) {
 			Latitude:  store.Latitude.Ptr(),
 			Longitude: store.Longitude.Ptr(),
 			Address:   store.Address,
-			Province: model.Location{
+			Province: model.IDName{
 				ID:   store.Province.ID,
 				Name: store.Province.Name,
 			},
-			City: model.Location{
+			City: model.IDName{
 				ID:   store.City.ID,
 				Name: store.City.Name,
 			},
-			District: model.Location{
+			District: model.IDName{
 				ID:   store.District.ID,
 				Name: store.District.Name,
 			},
-			Subdistrict: model.Location{
+			Subdistrict: model.IDName{
 				ID:   store.Subdistrict.ID,
 				Name: store.Subdistrict.Name,
 			},
