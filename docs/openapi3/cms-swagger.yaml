@@ -1197,9 +1197,11 @@ paths:
                            type: integer
                            format: int32
                         icon:
-                           type: string
-                           description: "accept image/png, image/jpeg"
-                           format: binary
+                           type: array
+                           items:
+                              type: string
+                              description: "accept image/png, image/jpeg"
+                              format: binary
             required: true
          responses:
             "200":
