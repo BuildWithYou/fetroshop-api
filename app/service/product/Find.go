@@ -5,7 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func (ps *productService) Create(ctx *fiber.Ctx) (*model.Response, error) {
+func (ps *productService) Find(ctx *fiber.Ctx) (*model.Response, error) {
 	// TODO: implement me
 	return nil, nil
 }
