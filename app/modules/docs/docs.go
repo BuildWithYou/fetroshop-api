@@ -40,7 +40,7 @@ func (d *Docs) createSwagger(sc *swaggerConfig) func(*fiber.Ctx) error {
 func (d *Docs) SwaggerWeb() func(*fiber.Ctx) error {
 	url := d.Config.GetString("app.web.url")
 	swaggerUiUrl := fmt.Sprintf("%s/swagger/swagger-ui", url)
-	swaggerJsonUrl := fmt.Sprintf("%s/swagger/web/swagger.json", url)
+	swaggerJsonUrl := fmt.Sprintf("%s/swagger/openapi2/web/swagger.json", url)
 	return d.createSwagger(&swaggerConfig{
 		swaggerUiUrl:   swaggerUiUrl,
 		title:          "Fetroshop Web API",
@@ -53,7 +53,7 @@ func (d *Docs) SwaggerWeb() func(*fiber.Ctx) error {
 func (d *Docs) SwaggerCms() func(*fiber.Ctx) error {
 	url := d.Config.GetString("app.cms.url")
 	swaggerUiUrl := fmt.Sprintf("%s/swagger/swagger-ui", url)
-	swaggerJsonUrl := fmt.Sprintf("%s/swagger/cms/swagger.json", url)
+	swaggerJsonUrl := fmt.Sprintf("%s/swagger/openapi2/cms/swagger.json", url)
 	return d.createSwagger(&swaggerConfig{
 		swaggerUiUrl:   swaggerUiUrl,
 		title:          "Fetroshop CMS API",

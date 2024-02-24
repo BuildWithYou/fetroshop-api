@@ -13,12 +13,12 @@ You can access the documentation in `http://localhost:3000/documentation` for we
 
 For Web
 ```
-   swag init -d "app/modules/web,app/model" -g web.go -o docs/web
+   swag init -d "app/modules/web,app/model" -g web.go -o docs/openapi2/web
 ```
 
 For CMS
 ```
-   swag init -d "app/modules/cms,app/model" -g cms.go -o docs/cms
+   swag init -d "app/modules/cms,app/model" -g cms.go -o docs/openapi2/cms
 ```
 
 Migration
