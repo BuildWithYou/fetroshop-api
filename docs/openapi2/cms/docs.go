@@ -616,7 +616,7 @@ const docTemplate = `{
                     {
                         "type": "boolean",
                         "name": "forceDelete",
-                        "in": "formData",
+                        "in": "query",
                         "required": true
                     }
                 ],
@@ -980,7 +980,7 @@ const docTemplate = `{
                     {
                         "type": "boolean",
                         "name": "forceDelete",
-                        "in": "formData",
+                        "in": "query",
                         "required": true
                     }
                 ],
@@ -1815,7 +1815,7 @@ const docTemplate = `{
                     {
                         "type": "boolean",
                         "name": "forceDelete",
-                        "in": "formData",
+                        "in": "query",
                         "required": true
                     }
                 ],
@@ -2250,7 +2250,7 @@ const docTemplate = `{
                     {
                         "type": "boolean",
                         "name": "forceDelete",
-                        "in": "formData",
+                        "in": "query",
                         "required": true
                     }
                 ],

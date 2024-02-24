@@ -431,7 +431,7 @@ paths:
         name: code
         required: true
         type: string
-      - in: formData
+      - in: query
         name: forceDelete
         required: true
         type: boolean
@@ -707,7 +707,7 @@ paths:
         name: code
         required: true
         type: string
-      - in: formData
+      - in: query
         name: forceDelete
         required: true
         type: boolean
@@ -1180,7 +1180,7 @@ paths:
         name: code
         required: true
         type: string
-      - in: formData
+      - in: query
         name: forceDelete
         required: true
         type: boolean
@@ -1499,7 +1499,7 @@ paths:
         name: code
         required: true
         type: string
-      - in: formData
+      - in: query
         name: forceDelete
         required: true
         type: boolean

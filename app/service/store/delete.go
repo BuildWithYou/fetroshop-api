@@ -20,8 +20,8 @@ func (svc *storeService) Delete(ctx *fiber.Ctx) (*model.Response, error) {
 		return responsehelper.ResponseErrorValidation(errValidation), nil
 	}
 
-	bodyPayload := new(model.DeleteRequest)
-	errValidation, errParsing = validatorhelper.ValidateBodyPayload(ctx, svc.Validate, bodyPayload)
+	queryPayload := new(model.DeleteRequest)
+	errValidation, errParsing = validatorhelper.ValidateQueryPayload(ctx, svc.Validate, queryPayload)
 	if errParsing != nil {
 		svc.Logger.UseError(errParsing)
 		return nil, errParsing
@@ -31,7 +31,7 @@ func (svc *storeService) Delete(ctx *fiber.Ctx) (*model.Response, error) {
 	}
 
 	// find store
-	_ = *bodyPayload.ForceDelete // TODO: implement force delete in case store has products or transactions
+	_ = *queryPayload.ForceDelete // TODO: implement force delete in case store has products or transactions
 	store := new(stores.Store)
 	result := svc.StoreRepo.Find(store, fiber.Map{"code": pathPayload.Code})
 	if gormhelper.IsErrNotNilNotRecordNotFound(result.Error) {

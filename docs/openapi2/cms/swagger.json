@@ -608,7 +608,7 @@
                     {
                         "type": "boolean",
                         "name": "forceDelete",
-                        "in": "formData",
+                        "in": "query",
                         "required": true
                     }
                 ],
@@ -972,7 +972,7 @@
                     {
                         "type": "boolean",
                         "name": "forceDelete",
-                        "in": "formData",
+                        "in": "query",
                         "required": true
                     }
                 ],
@@ -1807,7 +1807,7 @@
                     {
                         "type": "boolean",
                         "name": "forceDelete",
-                        "in": "formData",
+                        "in": "query",
                         "required": true
                     }
                 ],
@@ -2242,7 +2242,7 @@
                     {
                         "type": "boolean",
                         "name": "forceDelete",
-                        "in": "formData",
+                        "in": "query",
                         "required": true
                     }
                 ],
