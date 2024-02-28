@@ -11,6 +11,7 @@ type Controller struct {
 	Brand    BrandController
 	Store    StoreController
 	Location LocationController
+	Product  ProductController
 }
 
 func CmsControllerProvider(
@@ -19,6 +20,7 @@ func CmsControllerProvider(
 	brandController BrandController,
 	storeController StoreController,
 	locationController LocationController,
+	productController ProductController,
 ) *Controller {
 	return &Controller{
 		Auth:     authController,
@@ -26,6 +28,7 @@ func CmsControllerProvider(
 		Brand:    brandController,
 		Store:    storeController,
 		Location: locationController,
+		Product:  productController,
 	}
 }
 
