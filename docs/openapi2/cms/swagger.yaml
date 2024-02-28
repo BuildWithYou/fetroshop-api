@@ -1262,6 +1262,12 @@ paths:
         name: hasMultipleVarian
         required: true
         type: boolean
+      - collectionFormat: csv
+        in: formData
+        items:
+          type: string
+        name: imageUrl
+        type: array
       - in: formData
         name: isActive
         required: true
@@ -1291,10 +1297,6 @@ paths:
         required: true
         type: string
       - in: formData
-        name: slug
-        required: true
-        type: string
-      - in: formData
         name: storeId
         required: true
         type: integer
@@ -1302,6 +1304,12 @@ paths:
         name: varianCode
         required: true
         type: string
+      - collectionFormat: csv
+        in: formData
+        items:
+          type: string
+        name: videoUrl
+        type: array
       - in: formData
         name: virtualQuantity
         required: true
@@ -1355,6 +1363,12 @@ paths:
         name: hasMultipleVarian
         required: true
         type: boolean
+      - collectionFormat: csv
+        in: formData
+        items:
+          type: string
+        name: imageUrl
+        type: array
       - in: formData
         name: isActive
         required: true
@@ -1384,10 +1398,6 @@ paths:
         required: true
         type: string
       - in: formData
-        name: slug
-        required: true
-        type: string
-      - in: formData
         name: storeId
         required: true
         type: integer
@@ -1395,6 +1405,12 @@ paths:
         name: varianCode
         required: true
         type: string
+      - collectionFormat: csv
+        in: formData
+        items:
+          type: string
+        name: videoUrl
+        type: array
       - in: formData
         name: virtualQuantity
         required: true

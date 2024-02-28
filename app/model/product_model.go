@@ -1,21 +1,22 @@
 package model
 
 type UpsertProductRequest struct {
-	StoreID           int64  `json:"storeId" validate:"required"`
-	BrandID           int64  `json:"brandId" validate:"required"`
-	Slug              string `json:"slug" validate:"required"`
-	Name              string `json:"name" validate:"required"`
-	IsActive          bool   `json:"isActive" validate:"required"`
-	Price             int64  `json:"price" validate:"required"`
-	Description       string `json:"description" validate:"required"`
-	MinimumPurchase   int64  `json:"minimumPurchase" validate:"required"`
-	VarianCode        string `json:"varianCode" validate:"required"`
-	Sku               string `json:"sku" validate:"required"`
-	HasMultipleVarian bool   `json:"hasMultipleVarian" validate:"required"`
-	ShortDescription  string `json:"shortDescription" validate:"required"`
-	Weight            int64  `json:"weight" validate:"required"`
-	Quantity          int64  `json:"quantity" validate:"required"`
-	VirtualQuantity   int64  `json:"virtualQuantity" validate:"required"`
+	StoreID           int64    `form:"storeId" validate:"required"`
+	BrandID           int64    `form:"brandId" validate:"required"`
+	Name              string   `form:"name" validate:"required"`
+	IsActive          bool     `form:"isActive" validate:"required"`
+	Price             int64    `form:"price" validate:"required"`
+	Description       string   `form:"description" validate:"required"`
+	MinimumPurchase   int64    `form:"minimumPurchase" validate:"required"`
+	VarianCode        string   `form:"varianCode" validate:"required"`
+	Sku               string   `form:"sku" validate:"required"`
+	HasMultipleVarian bool     `form:"hasMultipleVarian" validate:"required"`
+	ShortDescription  string   `form:"shortDescription" validate:"required"`
+	Weight            int64    `form:"weight" validate:"required"`
+	Quantity          int64    `form:"quantity" validate:"required"`
+	VirtualQuantity   int64    `form:"virtualQuantity" validate:"required"`
+	ImageUrl          []string `form:"imageUrl"`
+	VideoUrl          []string `form:"videoUrl"`
 }
 
 type ProductListRequest struct {

@@ -1399,6 +1399,15 @@ const docTemplate = `{
                         "required": true
                     },
                     {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "csv",
+                        "name": "imageUrl",
+                        "in": "formData"
+                    },
+                    {
                         "type": "boolean",
                         "name": "isActive",
                         "in": "formData",
@@ -1441,12 +1450,6 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "type": "string",
-                        "name": "slug",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
                         "type": "integer",
                         "name": "storeId",
                         "in": "formData",
@@ -1457,6 +1460,15 @@ const docTemplate = `{
                         "name": "varianCode",
                         "in": "formData",
                         "required": true
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "csv",
+                        "name": "videoUrl",
+                        "in": "formData"
                     },
                     {
                         "type": "integer",
@@ -1682,6 +1694,15 @@ const docTemplate = `{
                         "required": true
                     },
                     {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "csv",
+                        "name": "imageUrl",
+                        "in": "formData"
+                    },
+                    {
                         "type": "boolean",
                         "name": "isActive",
                         "in": "formData",
@@ -1724,12 +1745,6 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "type": "string",
-                        "name": "slug",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
                         "type": "integer",
                         "name": "storeId",
                         "in": "formData",
@@ -1740,6 +1755,15 @@ const docTemplate = `{
                         "name": "varianCode",
                         "in": "formData",
                         "required": true
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "csv",
+                        "name": "videoUrl",
+                        "in": "formData"
                     },
                     {
                         "type": "integer",

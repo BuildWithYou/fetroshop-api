@@ -1152,7 +1152,6 @@ paths:
                         - quantity
                         - shortDescription
                         - sku
-                        - slug
                         - storeId
                         - varianCode
                         - virtualQuantity
@@ -1166,6 +1165,10 @@ paths:
                            type: string
                         hasMultipleVarian:
                            type: boolean
+                        imageUrl:
+                           type: array
+                           items:
+                              type: string
                         isActive:
                            type: boolean
                         minimumPurchase:
@@ -1183,20 +1186,22 @@ paths:
                            type: string
                         sku:
                            type: string
-                        slug:
-                           type: string
                         storeId:
                            type: integer
                            format: int32
                         varianCode:
                            type: string
+                        videoUrl:
+                           type: array
+                           items:
+                              type: string
                         virtualQuantity:
                            type: integer
                            format: int32
                         weight:
                            type: integer
                            format: int32
-                        icon:
+                        mediaFile:
                            type: array
                            items:
                               type: string
@@ -1359,7 +1364,6 @@ paths:
                         - quantity
                         - shortDescription
                         - sku
-                        - slug
                         - storeId
                         - varianCode
                         - virtualQuantity
@@ -1373,6 +1377,10 @@ paths:
                            type: string
                         hasMultipleVarian:
                            type: boolean
+                        imageUrl:
+                           type: array
+                           items:
+                              type: string
                         isActive:
                            type: boolean
                         minimumPurchase:
@@ -1390,13 +1398,15 @@ paths:
                            type: string
                         sku:
                            type: string
-                        slug:
-                           type: string
                         storeId:
                            type: integer
                            format: int32
                         varianCode:
                            type: string
+                        videoUrl:
+                           type: array
+                           items:
+                              type: string
                         virtualQuantity:
                            type: integer
                            format: int32
