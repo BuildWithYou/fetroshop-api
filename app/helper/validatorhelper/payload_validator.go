@@ -3,6 +3,7 @@ package validatorhelper
 import (
 	"fmt"
 	"reflect"
+	"regexp"
 	"strings"
 
 	"github.com/go-playground/validator/v10"
@@ -58,13 +59,30 @@ func generateErrorMessage(err error) (errValidation fiber.Map) {
 	}
 
 	return errValidation
+}
 
+func handleParsingError(errParsing error) (fiber.Map, error) {
+	if strings.HasPrefix(errParsing.Error(), "failed to decode: schema: error converting value for") {
+		// Compile the regex pattern
+		regex := regexp.MustCompile(`failed to decode: schema: error converting value for "(.*?)"`)
+
+		// Find the submatches using the regex
+		matches := regex.FindStringSubmatch(errParsing.Error())
+
+		// Check if there is a match and print the captured value
+		if len(matches) >= 2 {
+			capturedValue := matches[1]
+			return fiber.Map{capturedValue: errParsing.Error()}, nil
+		}
+	}
+
+	return nil, errParsing
 }
 
 func ValidateBodyPayload(ctx *fiber.Ctx, vld *validator.Validate, payload interface{}) (errValidation fiber.Map, errParsing error) {
 	errParsing = ctx.BodyParser(payload)
 	if errParsing != nil {
-		return nil, errParsing
+		return handleParsingError(errParsing)
 	}
 
 	err := vld.Struct(payload)
@@ -77,9 +95,8 @@ func ValidateBodyPayload(ctx *fiber.Ctx, vld *validator.Validate, payload interf
 }
 
 func ValidateQueryPayload(ctx *fiber.Ctx, vld *validator.Validate, payload interface{}) (errValidation fiber.Map, errParsing error) {
-	errParsing = ctx.QueryParser(payload)
 	if errParsing != nil {
-		return nil, errParsing
+		return handleParsingError(errParsing)
 	}
 
 	err := vld.Struct(payload)
@@ -94,7 +111,7 @@ func ValidateQueryPayload(ctx *fiber.Ctx, vld *validator.Validate, payload inter
 func ValidateParamPayload(ctx *fiber.Ctx, vld *validator.Validate, payload interface{}) (errValidation fiber.Map, errParsing error) {
 	errParsing = ctx.ParamsParser(payload)
 	if errParsing != nil {
-		return nil, errParsing
+		return handleParsingError(errParsing)
 	}
 
 	err := vld.Struct(payload)
@@ -109,7 +126,7 @@ func ValidateParamPayload(ctx *fiber.Ctx, vld *validator.Validate, payload inter
 func ValidateCookiePayload(ctx *fiber.Ctx, vld *validator.Validate, payload interface{}) (errValidation fiber.Map, errParsing error) {
 	errParsing = ctx.CookieParser(payload)
 	if errParsing != nil {
-		return nil, errParsing
+		return handleParsingError(errParsing)
 	}
 
 	err := vld.Struct(payload)
