@@ -5,7 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func (ps *productService) Delete(ctx *fiber.Ctx) (*model.Response, error) {
+func (svc *productService) Delete(ctx *fiber.Ctx) (*model.Response, error) {
 	// TODO: implement me
 	return nil, nil
 }

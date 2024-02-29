@@ -1142,9 +1142,8 @@ paths:
                multipart/form-data:
                   schema:
                      required:
-                        - brandId
+                        - brandCode
                         - description
-                        - hasMultipleVarian
                         - isActive
                         - minimumPurchase
                         - name
@@ -1152,21 +1151,18 @@ paths:
                         - quantity
                         - shortDescription
                         - sku
-                        - storeId
+                        - storeCode
                         - varianCode
-                        - virtualQuantity
                         - weight
                      type: object
                      properties:
-                        brandId:
-                           type: integer
-                           format: int32
+                        brandCode:
+                           type: string
                         description:
                            type: string
-                        hasMultipleVarian:
-                           type: boolean
                         imageUrl:
                            type: array
+                           description: "<i>example:</i> https://example.com/image.png"
                            items:
                               type: string
                         isActive:
@@ -1186,26 +1182,24 @@ paths:
                            type: string
                         sku:
                            type: string
-                        storeId:
-                           type: integer
-                           format: int32
+                        storeCode:
+                           type: string
                         varianCode:
                            type: string
                         videoUrl:
                            type: array
+                           description: "<i>example:</i> https://example.com/video.mp4"
                            items:
                               type: string
-                        virtualQuantity:
-                           type: integer
-                           format: int32
                         weight:
                            type: integer
                            format: int32
+                           description: gram
                         mediaFile:
                            type: array
+                           description: "accept image/png, image/jpeg, video/mp4"
                            items:
                               type: string
-                              description: "accept image/png, image/jpeg"
                               format: binary
             required: true
          responses:

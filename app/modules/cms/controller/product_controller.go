@@ -31,12 +31,12 @@ func ProductControllerProvider(vld *validator.Validate, svc product.ProductServi
 // @Tags         Products
 // @Accept       mpfd
 // @Produce      json
-// @Param        data    formData    model.UpsertProductRequest  true  "Request"
-// @Param        icon    formData    file                      false  "accept image/png, image/jpeg"
-// @Success      200     {object}    model.productDetailResponse
-// @Failure      400     {object}    model.Response
-// @Failure      404     {object}    model.Response
-// @Failure      500     {object}    model.Response
+// @Param        data        formData    model.UpsertProductRequest  true   "Request"
+// @Param        mediaFile   formData    file                        false  "accept image/png, image/jpeg"
+// @Success      200         {object}    model.productDetailResponse
+// @Failure      400         {object}    model.Response
+// @Failure      404         {object}    model.Response
+// @Failure      500         {object}    model.Response
 // @Router       /api/product/create  [post]
 // @Security Bearer
 func (ctr *productController) Create(ctx *fiber.Ctx) (err error) {
@@ -48,13 +48,13 @@ func (ctr *productController) Create(ctx *fiber.Ctx) (err error) {
 // @Tags         Products
 // @Accept       mpfd
 // @Produce      json
-// @Param        code   path      string                       true  "Product Code"
-// @Param        data   formData  model.UpsertProductRequest     true  "Request"
-// @Param        icon   formData  file                         false  "accept image/png, image/jpeg"
-// @Success      200    {object}  model.productDetailResponse
-// @Failure      400    {object}  model.Response
-// @Failure      404    {object}  model.Response
-// @Failure      500    {object}  model.Response
+// @Param        code        path      string                       true   "Product Code"
+// @Param        data        formData  model.UpsertProductRequest   true   "Request"
+// @Param        mediaFile   formData  file                         false  "accept image/png, image/jpeg"
+// @Success      200         {object}  model.productDetailResponse
+// @Failure      400         {object}  model.Response
+// @Failure      404         {object}  model.Response
+// @Failure      500         {object}  model.Response
 // @Router       /api/product/{code} [put]
 // @Security Bearer
 func (ctr *productController) Update(ctx *fiber.Ctx) (err error) {

@@ -1,22 +1,20 @@
 package model
 
 type UpsertProductRequest struct {
-	StoreID           int64    `form:"storeId" validate:"required"`
-	BrandID           int64    `form:"brandId" validate:"required"`
-	Name              string   `form:"name" validate:"required"`
-	IsActive          bool     `form:"isActive" validate:"required"`
-	Price             int64    `form:"price" validate:"required"`
-	Description       string   `form:"description" validate:"required"`
-	MinimumPurchase   int64    `form:"minimumPurchase" validate:"required"`
-	VarianCode        string   `form:"varianCode" validate:"required"`
-	Sku               string   `form:"sku" validate:"required"`
-	HasMultipleVarian bool     `form:"hasMultipleVarian" validate:"required"`
-	ShortDescription  string   `form:"shortDescription" validate:"required"`
-	Weight            int64    `form:"weight" validate:"required"`
-	Quantity          int64    `form:"quantity" validate:"required"`
-	VirtualQuantity   int64    `form:"virtualQuantity" validate:"required"`
-	ImageUrl          []string `form:"imageUrl"`
-	VideoUrl          []string `form:"videoUrl"`
+	StoreCode        string   `form:"storeCode" validate:"required"`
+	BrandCode        string   `form:"brandCode" validate:"required"`
+	Name             string   `form:"name" validate:"required"`
+	IsActive         bool     `form:"isActive" validate:"required,boolean"`
+	Price            int64    `form:"price" validate:"required,number"`
+	Description      string   `form:"description" validate:"required"`
+	MinimumPurchase  int64    `form:"minimumPurchase" validate:"required,number"`
+	VarianCode       string   `form:"varianCode" validate:"required"`
+	Sku              string   `form:"sku" validate:"required"`
+	ShortDescription string   `form:"shortDescription" validate:"required"`
+	Weight           int64    `form:"weight" validate:"required,number"` // gram
+	Quantity         int64    `form:"quantity" validate:"required,number"`
+	ImageUrl         []string `form:"imageUrl"`
+	VideoUrl         []string `form:"videoUrl"`
 }
 
 type ProductListRequest struct {
