@@ -95,6 +95,7 @@ func ValidateBodyPayload(ctx *fiber.Ctx, vld *validator.Validate, payload interf
 }
 
 func ValidateQueryPayload(ctx *fiber.Ctx, vld *validator.Validate, payload interface{}) (errValidation fiber.Map, errParsing error) {
+	errParsing = ctx.QueryParser(payload)
 	if errParsing != nil {
 		return handleParsingError(errParsing)
 	}

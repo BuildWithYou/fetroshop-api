@@ -1,7 +1,6 @@
 package validatorhelper
 
 import (
-	"fmt"
 	"net/url"
 	"reflect"
 	"strings"
@@ -39,7 +38,6 @@ func IsNotZero(value int64) bool {
 func IsValidUrl(urlInput string) bool {
 	uri, err := url.Parse(urlInput)
 
-	fmt.Println(uri)
 	if err != nil {
 		return false
 	}
