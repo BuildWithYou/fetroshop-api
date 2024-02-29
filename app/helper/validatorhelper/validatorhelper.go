@@ -1,6 +1,7 @@
 package validatorhelper
 
 import (
+	"net/url"
 	"reflect"
 	"strings"
 
@@ -32,4 +33,18 @@ func IsZero(value int64) bool {
 
 func IsNotZero(value int64) bool {
 	return value != int64(0)
+}
+
+func IsValidUrl(urlInput string) bool {
+	uri, err := url.Parse(urlInput)
+
+	if err != nil {
+		return false
+	}
+
+	if uri.Scheme != "http" && uri.Scheme != "https" {
+		return false
+	}
+
+	return true
 }

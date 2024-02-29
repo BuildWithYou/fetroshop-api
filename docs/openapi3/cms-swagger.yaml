@@ -1,0 +1,2095 @@
+openapi: 3.0.1
+info:
+   title: Fetroshop CMS API
+   description:
+      "Fetroshop API is a robust and efficient backend solution designed\
+      \ to power the online store app named Fetroshop. Developed using the Go programming\
+      \ language, this API serves as the backbone for managing the Content Management\
+      \ System (CMS) and handling various store-related functionalities."
+   contact: {}
+   version: "1.0"
+servers:
+   - url: /
+paths:
+   /api/auth/login:
+      post:
+         tags:
+            - Authentication
+         summary: Login for users
+         requestBody:
+            content:
+               application/x-www-form-urlencoded:
+                  schema:
+                     required:
+                        - password
+                        - username
+                     type: object
+                     properties:
+                        password:
+                           type: string
+                        username:
+                           type: string
+               application/json:
+                  schema:
+                     required:
+                        - password
+                        - username
+                     type: object
+                     properties:
+                        password:
+                           type: string
+                        username:
+                           type: string
+            required: true
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+   /api/auth/logout:
+      post:
+         tags:
+            - Authentication
+         summary: Logout for users
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+         security:
+            - Bearer: []
+   /api/auth/refresh:
+      post:
+         tags:
+            - Authentication
+         summary: Refresh for customers
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+         security:
+            - Bearer: []
+   /api/auth/register:
+      post:
+         tags:
+            - Authentication
+         summary: Register new user
+         requestBody:
+            content:
+               application/x-www-form-urlencoded:
+                  schema:
+                     required:
+                        - email
+                        - fullName
+                        - password
+                        - phone
+                        - username
+                     type: object
+                     properties:
+                        email:
+                           type: string
+                        fullName:
+                           type: string
+                        password:
+                           minLength: 8
+                           type: string
+                        phone:
+                           type: string
+                        username:
+                           type: string
+               application/json:
+                  schema:
+                     required:
+                        - email
+                        - fullName
+                        - password
+                        - phone
+                        - username
+                     type: object
+                     properties:
+                        email:
+                           type: string
+                        fullName:
+                           type: string
+                        password:
+                           minLength: 8
+                           type: string
+                        phone:
+                           type: string
+                        username:
+                           type: string
+            required: true
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+   /api/brand/create:
+      post:
+         tags:
+            - Brands
+         summary: Create brand
+         requestBody:
+            content:
+               application/x-www-form-urlencoded:
+                  schema:
+                     required:
+                        - code
+                        - isActive
+                        - name
+                     type: object
+                     properties:
+                        code:
+                           type: string
+                        icon:
+                           type: string
+                        isActive:
+                           type: boolean
+                        name:
+                           type: string
+               application/json:
+                  schema:
+                     required:
+                        - code
+                        - isActive
+                        - name
+                     type: object
+                     properties:
+                        code:
+                           type: string
+                        icon:
+                           type: string
+                        isActive:
+                           type: boolean
+                        name:
+                           type: string
+            required: true
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+         security:
+            - Bearer: []
+   /api/brand/detail:
+      get:
+         tags:
+            - Brands
+         summary: Get detail brand
+         description: Retrieve brand detail
+         parameters:
+            - name: code
+              in: query
+              required: true
+              schema:
+                 type: string
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+   /api/brand/list:
+      get:
+         tags:
+            - Brands
+         summary: List brands
+         description: Retrieve brands list
+         parameters:
+            - name: limit
+              in: query
+              schema:
+                 type: integer
+                 default: 10
+            - name: offset
+              in: query
+              schema:
+                 type: integer
+                 default: 0
+            - name: orderBy
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - code
+                    - name
+                    - updated_at
+                    - created_at
+            - name: orderDirection
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - ASC
+                    - DESC
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+   /api/brand/list-by-prefix:
+      get:
+         tags:
+            - Brands
+         summary: List brands by prefix
+         description: Retrieve brands list by prefix
+         parameters:
+            - name: limit
+              in: query
+              schema:
+                 type: integer
+                 default: 10
+            - name: offset
+              in: query
+              schema:
+                 type: integer
+                 default: 0
+            - name: orderBy
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - code
+                    - name
+                    - updated_at
+                    - created_at
+            - name: orderDirection
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - ASC
+                    - DESC
+            - name: prefix
+              in: query
+              required: true
+              schema:
+                 type: string
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+   /api/brand/{code}:
+      put:
+         tags:
+            - Brands
+         summary: Update brand
+         parameters:
+            - name: code
+              in: path
+              description: Brand Code
+              required: true
+              schema:
+                 type: string
+         requestBody:
+            content:
+               application/x-www-form-urlencoded:
+                  schema:
+                     required:
+                        - code
+                        - isActive
+                        - name
+                     type: object
+                     properties:
+                        code:
+                           type: string
+                        icon:
+                           type: string
+                        isActive:
+                           type: boolean
+                        name:
+                           type: string
+               application/json:
+                  schema:
+                     required:
+                        - code
+                        - isActive
+                        - name
+                     type: object
+                     properties:
+                        code:
+                           type: string
+                        icon:
+                           type: string
+                        isActive:
+                           type: boolean
+                        name:
+                           type: string
+            required: true
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+         security:
+            - Bearer: []
+      delete:
+         tags:
+            - Brands
+         summary: Delete brand
+         parameters:
+            - name: code
+              in: path
+              description: Brand Code
+              required: true
+              schema:
+                 type: string
+            - name: forceDelete
+              in: query
+              required: true
+              schema:
+                 type: boolean
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+         security:
+            - Bearer: []
+   /api/category/create:
+      post:
+         tags:
+            - Categories
+         summary: Create category
+         requestBody:
+            content:
+               application/x-www-form-urlencoded:
+                  schema:
+                     required:
+                        - code
+                        - displayOrder
+                        - isActive
+                        - name
+                     type: object
+                     properties:
+                        code:
+                           type: string
+                        displayOrder:
+                           type: integer
+                           format: int32
+                        icon:
+                           type: string
+                        isActive:
+                           type: boolean
+                        name:
+                           type: string
+                        parentCode:
+                           type: string
+               application/json:
+                  schema:
+                     required:
+                        - code
+                        - displayOrder
+                        - isActive
+                        - name
+                     type: object
+                     properties:
+                        code:
+                           type: string
+                        displayOrder:
+                           type: integer
+                           format: int32
+                        icon:
+                           type: string
+                        isActive:
+                           type: boolean
+                        name:
+                           type: string
+                        parentCode:
+                           type: string
+            required: true
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+         security:
+            - Bearer: []
+   /api/category/detail:
+      get:
+         tags:
+            - Categories
+         summary: Get detail category
+         description: Retrieve category detail
+         parameters:
+            - name: code
+              in: query
+              required: true
+              schema:
+                 type: string
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+   /api/category/list:
+      get:
+         tags:
+            - Categories
+         summary: List categories
+         description: Retrieve categories list
+         parameters:
+            - name: limit
+              in: query
+              schema:
+                 type: integer
+                 default: 10
+            - name: offset
+              in: query
+              schema:
+                 type: integer
+                 default: 0
+            - name: orderBy
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - display_order
+                    - code
+                    - name
+                    - updated_at
+                    - created_at
+            - name: orderDirection
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - ASC
+                    - DESC
+            - name: parentCode
+              in: query
+              schema:
+                 type: string
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+   /api/category/{code}:
+      put:
+         tags:
+            - Categories
+         summary: Update category
+         parameters:
+            - name: code
+              in: path
+              description: Category Code
+              required: true
+              schema:
+                 type: string
+         requestBody:
+            content:
+               application/x-www-form-urlencoded:
+                  schema:
+                     required:
+                        - code
+                        - displayOrder
+                        - isActive
+                        - name
+                     type: object
+                     properties:
+                        code:
+                           type: string
+                        displayOrder:
+                           type: integer
+                           format: int32
+                        icon:
+                           type: string
+                        isActive:
+                           type: boolean
+                        name:
+                           type: string
+                        parentCode:
+                           type: string
+               application/json:
+                  schema:
+                     required:
+                        - code
+                        - displayOrder
+                        - isActive
+                        - name
+                     type: object
+                     properties:
+                        code:
+                           type: string
+                        displayOrder:
+                           type: integer
+                           format: int32
+                        icon:
+                           type: string
+                        isActive:
+                           type: boolean
+                        name:
+                           type: string
+                        parentCode:
+                           type: string
+            required: true
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+         security:
+            - Bearer: []
+      delete:
+         tags:
+            - Categories
+         summary: Delete category
+         parameters:
+            - name: code
+              in: path
+              description: Category Code
+              required: true
+              schema:
+                 type: string
+            - name: forceDelete
+              in: query
+              required: true
+              schema:
+                 type: boolean
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+         security:
+            - Bearer: []
+   /api/location/city/list:
+      get:
+         tags:
+            - Locations
+         summary: List cities
+         description: Retrieve cities list
+         parameters:
+            - name: limit
+              in: query
+              schema:
+                 type: integer
+                 default: 10
+            - name: name
+              in: query
+              schema:
+                 type: string
+            - name: offset
+              in: query
+              schema:
+                 type: integer
+                 default: 0
+            - name: orderBy
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - id
+                    - name
+                    - updated_at
+                    - created_at
+            - name: orderDirection
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - ASC
+                    - DESC
+            - name: provinceId
+              in: query
+              required: true
+              schema:
+                 type: string
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.locationListResponse"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+   /api/location/district/list:
+      get:
+         tags:
+            - Locations
+         summary: List districts
+         description: Retrieve districts list
+         parameters:
+            - name: cityId
+              in: query
+              required: true
+              schema:
+                 type: string
+            - name: limit
+              in: query
+              schema:
+                 type: integer
+                 default: 10
+            - name: name
+              in: query
+              schema:
+                 type: string
+            - name: offset
+              in: query
+              schema:
+                 type: integer
+                 default: 0
+            - name: orderBy
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - id
+                    - name
+                    - updated_at
+                    - created_at
+            - name: orderDirection
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - ASC
+                    - DESC
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.locationListResponse"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+   /api/location/province/list:
+      get:
+         tags:
+            - Locations
+         summary: List provinces
+         description: Retrieve provinces list
+         parameters:
+            - name: limit
+              in: query
+              schema:
+                 type: integer
+                 default: 10
+            - name: name
+              in: query
+              schema:
+                 type: string
+            - name: offset
+              in: query
+              schema:
+                 type: integer
+                 default: 0
+            - name: orderBy
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - id
+                    - name
+                    - updated_at
+                    - created_at
+            - name: orderDirection
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - ASC
+                    - DESC
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.locationListResponse"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+   /api/location/subdistrict/list:
+      get:
+         tags:
+            - Locations
+         summary: List subdistricts
+         description: Retrieve subdistricts list
+         parameters:
+            - name: districtId
+              in: query
+              required: true
+              schema:
+                 type: string
+            - name: limit
+              in: query
+              schema:
+                 type: integer
+                 default: 10
+            - name: name
+              in: query
+              schema:
+                 type: string
+            - name: offset
+              in: query
+              schema:
+                 type: integer
+                 default: 0
+            - name: orderBy
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - id
+                    - name
+                    - updated_at
+                    - created_at
+            - name: orderDirection
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - ASC
+                    - DESC
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.locationListResponse"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+   /api/product/create:
+      post:
+         tags:
+            - Products
+         summary: Create product
+         requestBody:
+            content:
+               multipart/form-data:
+                  schema:
+                     required:
+                        - brandCode
+                        - description
+                        - isActive
+                        - minimumPurchase
+                        - name
+                        - price
+                        - quantity
+                        - shortDescription
+                        - sku
+                        - storeCode
+                        - varianCode
+                        - weight
+                     type: object
+                     properties:
+                        brandCode:
+                           type: string
+                        description:
+                           type: string
+                        imageUrl:
+                           type: array
+                           description: "<i>example:</i> https://example.com/image.png"
+                           items:
+                              type: string
+                        isActive:
+                           type: boolean
+                        minimumPurchase:
+                           type: integer
+                           format: int32
+                        name:
+                           type: string
+                        price:
+                           type: integer
+                           format: int32
+                        quantity:
+                           type: integer
+                           format: int32
+                        shortDescription:
+                           type: string
+                        sku:
+                           type: string
+                        storeCode:
+                           type: string
+                        varianCode:
+                           type: string
+                        videoUrl:
+                           type: array
+                           description: "<i>example:</i> https://example.com/video.mp4"
+                           items:
+                              type: string
+                        weight:
+                           type: integer
+                           format: int32
+                           description: gram
+                        mediaFile:
+                           type: array
+                           description: "accept image/png, image/jpeg, video/mp4"
+                           items:
+                              type: string
+                              format: binary
+            required: true
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.productDetailResponse"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+         security:
+            - Bearer: []
+   /api/product/list:
+      get:
+         tags:
+            - Products
+         summary: List products
+         description: Retrieve products list
+         parameters:
+            - name: limit
+              in: query
+              schema:
+                 type: integer
+                 default: 10
+            - name: offset
+              in: query
+              schema:
+                 type: integer
+                 default: 0
+            - name: orderBy
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - code
+                    - name
+                    - updated_at
+                    - created_at
+            - name: orderDirection
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - ASC
+                    - DESC
+            - name: search
+              in: query
+              description: Product Code or Product Name
+              schema:
+                 type: string
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.productsListResponse"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+   /api/product/{code}:
+      get:
+         tags:
+            - Products
+         summary: Get detail product
+         description: Retrieve product detail
+         parameters:
+            - name: code
+              in: path
+              description: Product Code
+              required: true
+              schema:
+                 type: string
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.productDetailResponse"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+      put:
+         tags:
+            - Products
+         summary: Update product
+         parameters:
+            - name: code
+              in: path
+              description: Product Code
+              required: true
+              schema:
+                 type: string
+         requestBody:
+            content:
+               multipart/form-data:
+                  schema:
+                     required:
+                        - brandId
+                        - description
+                        - hasMultipleVarian
+                        - isActive
+                        - minimumPurchase
+                        - name
+                        - price
+                        - quantity
+                        - shortDescription
+                        - sku
+                        - storeId
+                        - varianCode
+                        - virtualQuantity
+                        - weight
+                     type: object
+                     properties:
+                        brandId:
+                           type: integer
+                           format: int32
+                        description:
+                           type: string
+                        hasMultipleVarian:
+                           type: boolean
+                        imageUrl:
+                           type: array
+                           items:
+                              type: string
+                        isActive:
+                           type: boolean
+                        minimumPurchase:
+                           type: integer
+                           format: int32
+                        name:
+                           type: string
+                        price:
+                           type: integer
+                           format: int32
+                        quantity:
+                           type: integer
+                           format: int32
+                        shortDescription:
+                           type: string
+                        sku:
+                           type: string
+                        storeId:
+                           type: integer
+                           format: int32
+                        varianCode:
+                           type: string
+                        videoUrl:
+                           type: array
+                           items:
+                              type: string
+                        virtualQuantity:
+                           type: integer
+                           format: int32
+                        weight:
+                           type: integer
+                           format: int32
+                        icon:
+                           type: string
+                           description: "accept image/png, image/jpeg"
+                           format: binary
+            required: true
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.productDetailResponse"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+         security:
+            - Bearer: []
+      delete:
+         tags:
+            - Products
+         summary: Delete product
+         parameters:
+            - name: code
+              in: path
+              description: Product Code
+              required: true
+              schema:
+                 type: string
+            - name: forceDelete
+              in: query
+              required: true
+              schema:
+                 type: boolean
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+         security:
+            - Bearer: []
+   /api/store/create:
+      post:
+         tags:
+            - Stores
+         summary: Create store
+         requestBody:
+            content:
+               multipart/form-data:
+                  schema:
+                     required:
+                        - address
+                        - cityId
+                        - code
+                        - districtId
+                        - isActive
+                        - name
+                        - postalCode
+                        - provinceId
+                        - subdistrictId
+                     type: object
+                     properties:
+                        address:
+                           type: string
+                        cityId:
+                           type: integer
+                           format: int32
+                        code:
+                           type: string
+                           description: store code (unique)
+                        districtId:
+                           type: integer
+                           format: int32
+                        isActive:
+                           type: boolean
+                        latitude:
+                           type: string
+                        longitude:
+                           type: string
+                        name:
+                           type: string
+                        postalCode:
+                           type: string
+                        provinceId:
+                           type: integer
+                           format: int32
+                        subdistrictId:
+                           type: integer
+                           format: int32
+                        icon:
+                           type: string
+                           description: "accept image/png, image/jpeg"
+                           format: binary
+            required: true
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.storeDetailResponse"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+         security:
+            - Bearer: []
+   /api/store/list:
+      get:
+         tags:
+            - Stores
+         summary: List stores
+         description: Retrieve stores list
+         parameters:
+            - name: limit
+              in: query
+              schema:
+                 type: integer
+                 default: 10
+            - name: offset
+              in: query
+              schema:
+                 type: integer
+                 default: 0
+            - name: orderBy
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - code
+                    - name
+                    - updated_at
+                    - created_at
+            - name: orderDirection
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - ASC
+                    - DESC
+            - name: search
+              in: query
+              description: Store Code or Store Name
+              schema:
+                 type: string
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.storesListResponse"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+   /api/store/{code}:
+      get:
+         tags:
+            - Stores
+         summary: Get detail store
+         description: Retrieve store detail
+         parameters:
+            - name: code
+              in: path
+              description: Store Code
+              required: true
+              schema:
+                 type: string
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.storeDetailResponse"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+      put:
+         tags:
+            - Stores
+         summary: Update store
+         parameters:
+            - name: code
+              in: path
+              description: Store Code
+              required: true
+              schema:
+                 type: string
+         requestBody:
+            content:
+               multipart/form-data:
+                  schema:
+                     required:
+                        - address
+                        - cityId
+                        - code
+                        - districtId
+                        - isActive
+                        - name
+                        - postalCode
+                        - provinceId
+                        - subdistrictId
+                     type: object
+                     properties:
+                        address:
+                           type: string
+                        cityId:
+                           type: integer
+                           format: int32
+                        code:
+                           type: string
+                           description: store code (unique)
+                        districtId:
+                           type: integer
+                           format: int32
+                        isActive:
+                           type: boolean
+                        latitude:
+                           type: string
+                        longitude:
+                           type: string
+                        name:
+                           type: string
+                        postalCode:
+                           type: string
+                        provinceId:
+                           type: integer
+                           format: int32
+                        subdistrictId:
+                           type: integer
+                           format: int32
+                        icon:
+                           type: string
+                           description: "accept image/png, image/jpeg"
+                           format: binary
+            required: true
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.storeDetailResponse"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+         security:
+            - Bearer: []
+      delete:
+         tags:
+            - Stores
+         summary: Delete store
+         parameters:
+            - name: code
+              in: path
+              description: Store Code
+              required: true
+              schema:
+                 type: string
+            - name: forceDelete
+              in: query
+              required: true
+              schema:
+                 type: boolean
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+         security:
+            - Bearer: []
+components:
+   schemas:
+      model.IDName:
+         type: object
+         properties:
+            id:
+               type: integer
+            name:
+               type: string
+      model.ProductDetail:
+         type: object
+         properties:
+            brand:
+               $ref: "#/components/schemas/model.IDName"
+            brandId:
+               type: integer
+            description:
+               type: string
+            hasMultipleVarian:
+               type: boolean
+            isActive:
+               type: boolean
+            minimumPurchase:
+               type: integer
+            name:
+               type: string
+            price:
+               type: integer
+            quantity:
+               type: integer
+            shortDescription:
+               type: string
+            sku:
+               type: string
+            slug:
+               type: string
+            store:
+               $ref: "#/components/schemas/model.IDName"
+            storeId:
+               type: integer
+            varianCode:
+               type: string
+            virtualQuantity:
+               type: integer
+            weight:
+               type: integer
+      model.ProductListData:
+         type: object
+         properties:
+            brandId:
+               type: integer
+            description:
+               type: string
+            hasMultipleVarian:
+               type: boolean
+            isActive:
+               type: boolean
+            minimumPurchase:
+               type: integer
+            name:
+               type: string
+            price:
+               type: integer
+            quantity:
+               type: integer
+            shortDescription:
+               type: string
+            sku:
+               type: string
+            slug:
+               type: string
+            storeId:
+               type: integer
+            varianCode:
+               type: string
+            virtualQuantity:
+               type: integer
+            weight:
+               type: integer
+      model.Response:
+         type: object
+         properties:
+            code:
+               type: integer
+               description: http status code
+            data:
+               type: object
+               description: main data
+            errors:
+               type: object
+               additionalProperties:
+                  type: object
+               description: error data
+            message:
+               type: string
+               description: message from system
+            meta:
+               type: object
+               description: support data
+            status:
+               type: string
+               description: http status message
+      model.StoreDetail:
+         type: object
+         properties:
+            address:
+               type: string
+            city:
+               $ref: "#/components/schemas/model.IDName"
+            code:
+               type: string
+            district:
+               $ref: "#/components/schemas/model.IDName"
+            icon:
+               type: string
+            isActive:
+               type: boolean
+            latitude:
+               type: string
+            longitude:
+               type: string
+            name:
+               type: string
+            postalCode:
+               type: string
+            province:
+               $ref: "#/components/schemas/model.IDName"
+            subdistrict:
+               $ref: "#/components/schemas/model.IDName"
+      model.StoreListData:
+         type: object
+         properties:
+            address:
+               type: string
+            cityId:
+               type: integer
+            code:
+               type: string
+            districtId:
+               type: integer
+            icon:
+               type: string
+            isActive:
+               type: boolean
+            latitude:
+               type: string
+            longitude:
+               type: string
+            name:
+               type: string
+            postalCode:
+               type: string
+            provinceId:
+               type: integer
+            subdistrictId:
+               type: integer
+      model.listMeta:
+         type: object
+         properties:
+            filtered:
+               type: integer
+            selected:
+               type: integer
+            total:
+               type: integer
+      model.locationListResponse:
+         type: object
+         properties:
+            code:
+               type: integer
+               description: http status code
+            data:
+               type: array
+               description: main data
+               items:
+                  $ref: "#/components/schemas/model.IDName"
+            errors:
+               type: object
+               additionalProperties:
+                  type: object
+               description: error data
+            message:
+               type: string
+               description: message from system
+            meta:
+               type: object
+               description: support data
+               allOf:
+                  - $ref: "#/components/schemas/model.listMeta"
+            status:
+               type: string
+               description: http status message
+      model.productDetailResponse:
+         type: object
+         properties:
+            code:
+               type: integer
+               description: http status code
+            data:
+               type: object
+               description: main data
+               allOf:
+                  - $ref: "#/components/schemas/model.ProductDetail"
+            errors:
+               type: object
+               additionalProperties:
+                  type: object
+               description: error data
+            message:
+               type: string
+               description: message from system
+            meta:
+               type: object
+               description: support data
+            status:
+               type: string
+               description: http status message
+      model.productsListResponse:
+         type: object
+         properties:
+            code:
+               type: integer
+               description: http status code
+            data:
+               type: array
+               description: main data
+               items:
+                  $ref: "#/components/schemas/model.ProductListData"
+            errors:
+               type: object
+               additionalProperties:
+                  type: object
+               description: error data
+            message:
+               type: string
+               description: message from system
+            meta:
+               type: object
+               description: support data
+            status:
+               type: string
+               description: http status message
+      model.storeDetailResponse:
+         type: object
+         properties:
+            code:
+               type: integer
+               description: http status code
+            data:
+               type: object
+               description: main data
+               allOf:
+                  - $ref: "#/components/schemas/model.StoreDetail"
+            errors:
+               type: object
+               additionalProperties:
+                  type: object
+               description: error data
+            message:
+               type: string
+               description: message from system
+            meta:
+               type: object
+               description: support data
+            status:
+               type: string
+               description: http status message
+      model.storesListResponse:
+         type: object
+         properties:
+            code:
+               type: integer
+               description: http status code
+            data:
+               type: array
+               description: main data
+               items:
+                  $ref: "#/components/schemas/model.StoreListData"
+            errors:
+               type: object
+               additionalProperties:
+                  type: object
+               description: error data
+            message:
+               type: string
+               description: message from system
+            meta:
+               type: object
+               description: support data
+            status:
+               type: string
+               description: http status message
+   securitySchemes:
+      Bearer:
+         type: apiKey
+         description: Use format 'Bearer YOUR_TOKEN'
+         name: Authorization
+         in: header
+x-original-swagger-version: "2.0"

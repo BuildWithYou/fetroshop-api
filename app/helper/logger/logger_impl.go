@@ -70,11 +70,13 @@ func (lg *Logger) UseError(err error) {
 }
 
 func (lg *Logger) Fatal(args ...interface{}) {
-	lg.logConsoleTemplate(true).Error(args...)
+	errorArg := append([]interface{}{"Panic Error: "}, args...)
+	lg.logConsoleTemplate(true).Error(errorArg...)
 	lg.logFileTemplate(true).Fatal(args...)
 }
 
 func (lg *Logger) Panic(args ...interface{}) {
-	lg.logConsoleTemplate(true).Error(args...)
+	errorArg := append([]interface{}{"Panic Error: "}, args...)
+	lg.logConsoleTemplate(true).Error(errorArg...)
 	lg.logFileTemplate(true).Panic(args...)
 }

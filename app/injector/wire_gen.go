@@ -34,6 +34,7 @@ import (
 	"github.com/BuildWithYou/fetroshop-api/app/service/brand"
 	"github.com/BuildWithYou/fetroshop-api/app/service/category"
 	"github.com/BuildWithYou/fetroshop-api/app/service/location"
+	"github.com/BuildWithYou/fetroshop-api/app/service/product"
 	"github.com/BuildWithYou/fetroshop-api/app/service/store"
 	"github.com/google/wire"
 )
@@ -113,7 +114,9 @@ func InitializeCmsServer() *app.Fetroshop {
 	storeController := controller2.StoreControllerProvider(validate, storeService)
 	locationService := location.ServiceProvider(connectionConnection, viper, validate, loggerLogger, provinceRepo, cityRepo, districtRepo, subdistrictRepo)
 	locationController := controller2.LocationControllerProvider(validate, locationService)
-	controllerController := controller2.CmsControllerProvider(authController, categoryController, brandController, storeController, locationController)
+	productService := product.ServiceProvider(connectionConnection, viper, validate, loggerLogger, minio)
+	productController := controller2.ProductControllerProvider(validate, productService)
+	controllerController := controller2.CmsControllerProvider(authController, categoryController, brandController, storeController, locationController, productController)
 	router := cms.RouterProvider(docsDocs, jwtMiddleware, dbMiddleware, controllerController, loggerLogger)
 	serverConfig := cms.CmsServerConfigProvider(router, loggerLogger)
 	fetroshop := app.CreateFiber(serverConfig)
@@ -126,7 +129,7 @@ var dbType connection.DBType = connection.DB_MAIN
 
 var repoSet = wire.NewSet(postgres4.RepoProvider, postgres2.RepoProvider, postgres3.RepoProvider, postgres.RepoProvider, postgres5.RepoProvider, postgres6.RepoProvider, postgres7.RepoProvider, postgres8.RepoProvider, postgres9.RepoProvider, postgres10.RepoProvider, postgres11.RepoProvider)
 
-var serviceSet = wire.NewSet(auth.ServiceProvider, category.ServiceProvider, brand.ServiceProvider, store.ServiceProvider, location.ServiceProvider)
+var serviceSet = wire.NewSet(auth.ServiceProvider, category.ServiceProvider, brand.ServiceProvider, store.ServiceProvider, location.ServiceProvider, product.ServiceProvider)
 
 var serverSet = wire.NewSet(wire.Value(dbType), confighelper.GetConfig, connection.OpenDBConnection, docs.DocsProvider, middleware.JwtMiddlewareProvider, middleware.DBMiddlewareProvider, validatorhelper.GetValidator, miniohelper.GetMinio, repoSet,
 	serviceSet, app.CreateFiber,
@@ -136,4 +139,4 @@ var serverSet = wire.NewSet(wire.Value(dbType), confighelper.GetConfig, connecti
 var webControllerSet = wire.NewSet(controller.WebControllerProvider, controller.AuthControllerProvider, controller.CategoryControllerProvider, controller.BrandControllerProvider, controller.StoreControllerProvider, controller.LocationControllerProvider)
 
 // cms dependencies
-var cmsControllerSet = wire.NewSet(controller2.CmsControllerProvider, controller2.AuthControllerProvider, controller2.CategoryControllerProvider, controller2.BrandControllerProvider, controller2.StoreControllerProvider, controller2.LocationControllerProvider)
+var cmsControllerSet = wire.NewSet(controller2.CmsControllerProvider, controller2.AuthControllerProvider, controller2.CategoryControllerProvider, controller2.BrandControllerProvider, controller2.StoreControllerProvider, controller2.LocationControllerProvider, controller2.ProductControllerProvider)

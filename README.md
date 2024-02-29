@@ -13,12 +13,12 @@ You can access the documentation in `http://localhost:3000/documentation` for we
 
 For Web
 ```
-   swag init -d "app/modules/web,app/model" -g web.go -o docs/web
+   swag init -d "app/modules/web,app/model" -g web.go -o docs/openapi2/web
 ```
 
 For CMS
 ```
-   swag init -d "app/modules/cms,app/model" -g cms.go -o docs/cms
+   swag init -d "app/modules/cms,app/model" -g cms.go -o docs/openapi2/cms
 ```
 
 Migration
@@ -47,9 +47,16 @@ Installation
 =================
 Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum quam aut at. Nostrum ut id mollitia at quidem debitis iste tempore culpa, tenetur perferendis porro impedit est molestias laborum accusamus? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum repellendus architecto, tempore eius incidunt nam ex recusandae! Sint officia saepe animi quis odio consequuntur expedita sed ipsa laudantium! Expedita, illum. Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur, ab. Eos cupiditate velit, minima voluptates quae enim delectus iste rem similique et autem est voluptas ipsum ratione ipsa magni nemo.
 
+## Local
+1. Pull this repository
+2. Copy `config.yaml.example` then rename it to `config.yaml`
+3. Setup postgre database and minio and update config.yaml file
+4. Execute `go run .`
+
 ## Docker
 1. Pull this repository
-2. Build docker image using this command
+2. Copy `.env.example` file and rename it to `.env`
+3. Build docker image using this command
    ```
    docker-compose up
    ```

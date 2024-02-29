@@ -21,6 +21,11 @@ type DeleteRequest struct {
 	ForceDelete *bool `json:"forceDelete" validate:"required"`
 }
 
+type IDName struct {
+	ID   int64  `json:"id"`
+	Name string `json:"name"`
+}
+
 // #marked: for swagger generation purposes only
 //
 //lint:ignore U1000 Ignore unused code

@@ -62,16 +62,16 @@ type StoreListData struct {
 }
 
 type StoreDetail struct {
-	Code        string   `json:"code"`
-	Name        string   `json:"name"`
-	IsActive    bool     `json:"isActive"`
-	Icon        *string  `json:"icon"`
-	Latitude    *string  `json:"latitude"`
-	Longitude   *string  `json:"longitude"`
-	Address     string   `json:"address"`
-	Province    Location `json:"province"`
-	City        Location `json:"city"`
-	District    Location `json:"district"`
-	Subdistrict Location `json:"subdistrict"`
-	PostalCode  string   `json:"postalCode"`
+	Code        string  `json:"code"`
+	Name        string  `json:"name"`
+	IsActive    bool    `json:"isActive"`
+	Icon        *string `json:"icon"`
+	Latitude    *string `json:"latitude"`
+	Longitude   *string `json:"longitude"`
+	Address     string  `json:"address"`
+	Province    IDName  `json:"province"`
+	City        IDName  `json:"city"`
+	District    IDName  `json:"district"`
+	Subdistrict IDName  `json:"subdistrict"`
+	PostalCode  string  `json:"postalCode"`
 }

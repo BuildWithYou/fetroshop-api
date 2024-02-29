@@ -1,10 +1,80 @@
 definitions:
-  model.Location:
+  model.IDName:
     properties:
       id:
         type: integer
       name:
         type: string
+    type: object
+  model.ProductDetail:
+    properties:
+      brand:
+        $ref: '#/definitions/model.IDName'
+      brandId:
+        type: integer
+      description:
+        type: string
+      hasMultipleVarian:
+        type: boolean
+      isActive:
+        type: boolean
+      minimumPurchase:
+        type: integer
+      name:
+        type: string
+      price:
+        type: integer
+      quantity:
+        type: integer
+      shortDescription:
+        type: string
+      sku:
+        type: string
+      slug:
+        type: string
+      store:
+        $ref: '#/definitions/model.IDName'
+      storeId:
+        type: integer
+      varianCode:
+        type: string
+      virtualQuantity:
+        type: integer
+      weight:
+        type: integer
+    type: object
+  model.ProductListData:
+    properties:
+      brandId:
+        type: integer
+      description:
+        type: string
+      hasMultipleVarian:
+        type: boolean
+      isActive:
+        type: boolean
+      minimumPurchase:
+        type: integer
+      name:
+        type: string
+      price:
+        type: integer
+      quantity:
+        type: integer
+      shortDescription:
+        type: string
+      sku:
+        type: string
+      slug:
+        type: string
+      storeId:
+        type: integer
+      varianCode:
+        type: string
+      virtualQuantity:
+        type: integer
+      weight:
+        type: integer
     type: object
   model.Response:
     properties:
@@ -31,11 +101,11 @@ definitions:
       address:
         type: string
       city:
-        $ref: '#/definitions/model.Location'
+        $ref: '#/definitions/model.IDName'
       code:
         type: string
       district:
-        $ref: '#/definitions/model.Location'
+        $ref: '#/definitions/model.IDName'
       icon:
         type: string
       isActive:
@@ -49,9 +119,9 @@ definitions:
       postalCode:
         type: string
       province:
-        $ref: '#/definitions/model.Location'
+        $ref: '#/definitions/model.IDName'
       subdistrict:
-        $ref: '#/definitions/model.Location'
+        $ref: '#/definitions/model.IDName'
     type: object
   model.StoreListData:
     properties:
@@ -97,7 +167,7 @@ definitions:
       data:
         description: main data
         items:
-          $ref: '#/definitions/model.Location'
+          $ref: '#/definitions/model.IDName'
         type: array
       errors:
         additionalProperties: {}
@@ -109,6 +179,51 @@ definitions:
       meta:
         allOf:
         - $ref: '#/definitions/model.listMeta'
+        description: support data
+      status:
+        description: http status message
+        type: string
+    type: object
+  model.productDetailResponse:
+    properties:
+      code:
+        description: http status code
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/model.ProductDetail'
+        description: main data
+      errors:
+        additionalProperties: {}
+        description: error data
+        type: object
+      message:
+        description: message from system
+        type: string
+      meta:
+        description: support data
+      status:
+        description: http status message
+        type: string
+    type: object
+  model.productsListResponse:
+    properties:
+      code:
+        description: http status code
+        type: integer
+      data:
+        description: main data
+        items:
+          $ref: '#/definitions/model.ProductListData'
+        type: array
+      errors:
+        additionalProperties: {}
+        description: error data
+        type: object
+      message:
+        description: message from system
+        type: string
+      meta:
         description: support data
       status:
         description: http status message
@@ -316,7 +431,7 @@ paths:
         name: code
         required: true
         type: string
-      - in: formData
+      - in: query
         name: forceDelete
         required: true
         type: boolean
@@ -592,7 +707,7 @@ paths:
         name: code
         required: true
         type: string
-      - in: formData
+      - in: query
         name: forceDelete
         required: true
         type: boolean
@@ -1054,6 +1169,341 @@ paths:
       summary: List subdistricts
       tags:
       - Locations
+  /api/product/{code}:
+    delete:
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      parameters:
+      - description: Product Code
+        in: path
+        name: code
+        required: true
+        type: string
+      - in: query
+        name: forceDelete
+        required: true
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Response'
+      security:
+      - Bearer: []
+      summary: Delete product
+      tags:
+      - Products
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      description: Retrieve product detail
+      parameters:
+      - description: Product Code
+        in: path
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.productDetailResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Response'
+      summary: Get detail product
+      tags:
+      - Products
+    put:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Product Code
+        in: path
+        name: code
+        required: true
+        type: string
+      - in: formData
+        name: brandId
+        required: true
+        type: integer
+      - in: formData
+        name: description
+        required: true
+        type: string
+      - in: formData
+        name: hasMultipleVarian
+        required: true
+        type: boolean
+      - collectionFormat: csv
+        in: formData
+        items:
+          type: string
+        name: imageUrl
+        type: array
+      - in: formData
+        name: isActive
+        required: true
+        type: boolean
+      - in: formData
+        name: minimumPurchase
+        required: true
+        type: integer
+      - in: formData
+        name: name
+        required: true
+        type: string
+      - in: formData
+        name: price
+        required: true
+        type: integer
+      - in: formData
+        name: quantity
+        required: true
+        type: integer
+      - in: formData
+        name: shortDescription
+        required: true
+        type: string
+      - in: formData
+        name: sku
+        required: true
+        type: string
+      - in: formData
+        name: storeId
+        required: true
+        type: integer
+      - in: formData
+        name: varianCode
+        required: true
+        type: string
+      - collectionFormat: csv
+        in: formData
+        items:
+          type: string
+        name: videoUrl
+        type: array
+      - in: formData
+        name: virtualQuantity
+        required: true
+        type: integer
+      - in: formData
+        name: weight
+        required: true
+        type: integer
+      - description: accept image/png, image/jpeg
+        in: formData
+        name: icon
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.productDetailResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Response'
+      security:
+      - Bearer: []
+      summary: Update product
+      tags:
+      - Products
+  /api/product/create:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - in: formData
+        name: brandId
+        required: true
+        type: integer
+      - in: formData
+        name: description
+        required: true
+        type: string
+      - in: formData
+        name: hasMultipleVarian
+        required: true
+        type: boolean
+      - collectionFormat: csv
+        in: formData
+        items:
+          type: string
+        name: imageUrl
+        type: array
+      - in: formData
+        name: isActive
+        required: true
+        type: boolean
+      - in: formData
+        name: minimumPurchase
+        required: true
+        type: integer
+      - in: formData
+        name: name
+        required: true
+        type: string
+      - in: formData
+        name: price
+        required: true
+        type: integer
+      - in: formData
+        name: quantity
+        required: true
+        type: integer
+      - in: formData
+        name: shortDescription
+        required: true
+        type: string
+      - in: formData
+        name: sku
+        required: true
+        type: string
+      - in: formData
+        name: storeId
+        required: true
+        type: integer
+      - in: formData
+        name: varianCode
+        required: true
+        type: string
+      - collectionFormat: csv
+        in: formData
+        items:
+          type: string
+        name: videoUrl
+        type: array
+      - in: formData
+        name: virtualQuantity
+        required: true
+        type: integer
+      - in: formData
+        name: weight
+        required: true
+        type: integer
+      - description: accept image/png, image/jpeg
+        in: formData
+        name: icon
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.productDetailResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Response'
+      security:
+      - Bearer: []
+      summary: Create product
+      tags:
+      - Products
+  /api/product/list:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      description: Retrieve products list
+      parameters:
+      - default: 10
+        in: query
+        name: limit
+        type: integer
+      - default: 0
+        in: query
+        name: offset
+        type: integer
+      - enum:
+        - code
+        - name
+        - updated_at
+        - created_at
+        in: query
+        name: orderBy
+        required: true
+        type: string
+      - enum:
+        - ASC
+        - DESC
+        in: query
+        name: orderDirection
+        required: true
+        type: string
+      - description: Product Code or Product Name
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.productsListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Response'
+      summary: List products
+      tags:
+      - Products
   /api/store/{code}:
     delete:
       consumes:
@@ -1065,7 +1515,7 @@ paths:
         name: code
         required: true
         type: string
-      - in: formData
+      - in: query
         name: forceDelete
         required: true
         type: boolean

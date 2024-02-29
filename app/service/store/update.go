@@ -201,19 +201,19 @@ func (svc *storeService) Update(ctx *fiber.Ctx) (*model.Response, error) {
 			Latitude:  updatedStore.Latitude.Ptr(),
 			Longitude: updatedStore.Longitude.Ptr(),
 			Address:   updatedStore.Address,
-			Province: model.Location{
+			Province: model.IDName{
 				ID:   updatedStore.ProvinceID,
 				Name: province.Name,
 			},
-			City: model.Location{
+			City: model.IDName{
 				ID:   updatedStore.CityID,
 				Name: city.Name,
 			},
-			District: model.Location{
+			District: model.IDName{
 				ID:   updatedStore.DistrictID,
 				Name: district.Name,
 			},
-			Subdistrict: model.Location{
+			Subdistrict: model.IDName{
 				ID:   updatedStore.SubdistrictID,
 				Name: subdistrict.Name,
 			},

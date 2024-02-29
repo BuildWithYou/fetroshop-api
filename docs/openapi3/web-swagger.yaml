@@ -1,0 +1,1024 @@
+openapi: 3.0.1
+info:
+   title: Fetroshop Web API
+   description:
+      "Fetroshop API is a robust and efficient backend solution designed\
+      \ to power the online store app named Fetroshop. Developed using the Go programming\
+      \ language, this API serves as the backbone for managing the Content Management\
+      \ System (CMS) and handling various store-related functionalities."
+   contact: {}
+   version: "1.0"
+servers:
+   - url: /
+paths:
+   /api/auth/login:
+      post:
+         tags:
+            - Authentication
+         summary: Login for customers
+         requestBody:
+            content:
+               application/x-www-form-urlencoded:
+                  schema:
+                     required:
+                        - password
+                        - username
+                     type: object
+                     properties:
+                        password:
+                           type: string
+                        username:
+                           type: string
+               application/json:
+                  schema:
+                     required:
+                        - password
+                        - username
+                     type: object
+                     properties:
+                        password:
+                           type: string
+                        username:
+                           type: string
+            required: true
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+   /api/auth/logout:
+      post:
+         tags:
+            - Authentication
+         summary: Logout for customers
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+         security:
+            - Bearer: []
+   /api/auth/refresh:
+      post:
+         tags:
+            - Authentication
+         summary: Refresh for customers
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+         security:
+            - Bearer: []
+   /api/auth/register:
+      post:
+         tags:
+            - Authentication
+         summary: Register new user
+         requestBody:
+            content:
+               application/x-www-form-urlencoded:
+                  schema:
+                     required:
+                        - email
+                        - fullName
+                        - password
+                        - phone
+                        - username
+                     type: object
+                     properties:
+                        email:
+                           type: string
+                        fullName:
+                           type: string
+                        password:
+                           minLength: 8
+                           type: string
+                        phone:
+                           type: string
+                        username:
+                           type: string
+               application/json:
+                  schema:
+                     required:
+                        - email
+                        - fullName
+                        - password
+                        - phone
+                        - username
+                     type: object
+                     properties:
+                        email:
+                           type: string
+                        fullName:
+                           type: string
+                        password:
+                           minLength: 8
+                           type: string
+                        phone:
+                           type: string
+                        username:
+                           type: string
+            required: true
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+   /api/brand/detail:
+      get:
+         tags:
+            - Brands
+         summary: Get detail brand
+         description: Retrieve brand detail
+         parameters:
+            - name: code
+              in: query
+              required: true
+              schema:
+                 type: string
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+   /api/brand/list:
+      get:
+         tags:
+            - Brands
+         summary: List brands
+         description: Retrieve brands list
+         parameters:
+            - name: limit
+              in: query
+              schema:
+                 type: integer
+                 default: 10
+            - name: offset
+              in: query
+              schema:
+                 type: integer
+                 default: 0
+            - name: orderBy
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - code
+                    - name
+                    - updated_at
+                    - created_at
+            - name: orderDirection
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - ASC
+                    - DESC
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+   /api/brand/list-by-prefix:
+      get:
+         tags:
+            - Brands
+         summary: List brands by prefix
+         description: Retrieve brands list by prefix
+         parameters:
+            - name: limit
+              in: query
+              schema:
+                 type: integer
+                 default: 10
+            - name: offset
+              in: query
+              schema:
+                 type: integer
+                 default: 0
+            - name: orderBy
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - code
+                    - name
+                    - updated_at
+                    - created_at
+            - name: orderDirection
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - ASC
+                    - DESC
+            - name: prefix
+              in: query
+              required: true
+              schema:
+                 type: string
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+   /api/category/detail:
+      get:
+         tags:
+            - Categories
+         summary: Get detail category
+         description: Retrieve category detail
+         parameters:
+            - name: code
+              in: query
+              required: true
+              schema:
+                 type: string
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+   /api/category/list:
+      get:
+         tags:
+            - Categories
+         summary: List categories
+         description: Retrieve categories list
+         parameters:
+            - name: limit
+              in: query
+              schema:
+                 type: integer
+                 default: 10
+            - name: offset
+              in: query
+              schema:
+                 type: integer
+                 default: 0
+            - name: orderBy
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - display_order
+                    - code
+                    - name
+                    - updated_at
+                    - created_at
+            - name: orderDirection
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - ASC
+                    - DESC
+            - name: parentCode
+              in: query
+              schema:
+                 type: string
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+   /api/location/city/list:
+      get:
+         tags:
+            - Locations
+         summary: List cities
+         description: Retrieve cities list
+         parameters:
+            - name: limit
+              in: query
+              schema:
+                 type: integer
+                 default: 10
+            - name: name
+              in: query
+              schema:
+                 type: string
+            - name: offset
+              in: query
+              schema:
+                 type: integer
+                 default: 0
+            - name: orderBy
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - id
+                    - name
+                    - updated_at
+                    - created_at
+            - name: orderDirection
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - ASC
+                    - DESC
+            - name: provinceId
+              in: query
+              required: true
+              schema:
+                 type: string
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.locationListResponse"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+   /api/location/district/list:
+      get:
+         tags:
+            - Locations
+         summary: List districts
+         description: Retrieve districts list
+         parameters:
+            - name: cityId
+              in: query
+              required: true
+              schema:
+                 type: string
+            - name: limit
+              in: query
+              schema:
+                 type: integer
+                 default: 10
+            - name: name
+              in: query
+              schema:
+                 type: string
+            - name: offset
+              in: query
+              schema:
+                 type: integer
+                 default: 0
+            - name: orderBy
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - id
+                    - name
+                    - updated_at
+                    - created_at
+            - name: orderDirection
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - ASC
+                    - DESC
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.locationListResponse"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+   /api/location/province/list:
+      get:
+         tags:
+            - Locations
+         summary: List provinces
+         description: Retrieve provinces list
+         parameters:
+            - name: limit
+              in: query
+              schema:
+                 type: integer
+                 default: 10
+            - name: name
+              in: query
+              schema:
+                 type: string
+            - name: offset
+              in: query
+              schema:
+                 type: integer
+                 default: 0
+            - name: orderBy
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - id
+                    - name
+                    - updated_at
+                    - created_at
+            - name: orderDirection
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - ASC
+                    - DESC
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.locationListResponse"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+   /api/location/subdistrict/list:
+      get:
+         tags:
+            - Locations
+         summary: List subdistricts
+         description: Retrieve subdistricts list
+         parameters:
+            - name: districtId
+              in: query
+              required: true
+              schema:
+                 type: string
+            - name: limit
+              in: query
+              schema:
+                 type: integer
+                 default: 10
+            - name: name
+              in: query
+              schema:
+                 type: string
+            - name: offset
+              in: query
+              schema:
+                 type: integer
+                 default: 0
+            - name: orderBy
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - id
+                    - name
+                    - updated_at
+                    - created_at
+            - name: orderDirection
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - ASC
+                    - DESC
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.locationListResponse"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+   /api/store/list:
+      get:
+         tags:
+            - Stores
+         summary: List stores
+         description: Retrieve stores list
+         parameters:
+            - name: limit
+              in: query
+              schema:
+                 type: integer
+                 default: 10
+            - name: offset
+              in: query
+              schema:
+                 type: integer
+                 default: 0
+            - name: orderBy
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - code
+                    - name
+                    - updated_at
+                    - created_at
+            - name: orderDirection
+              in: query
+              required: true
+              schema:
+                 type: string
+                 enum:
+                    - ASC
+                    - DESC
+            - name: search
+              in: query
+              description: Store Code or Store Name
+              schema:
+                 type: string
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.storesListResponse"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+   /api/store/{code}:
+      get:
+         tags:
+            - Stores
+         summary: Get detail store
+         description: Retrieve store detail
+         parameters:
+            - name: code
+              in: path
+              description: Store Code
+              required: true
+              schema:
+                 type: string
+         responses:
+            "200":
+               description: OK
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.storeDetailResponse"
+            "400":
+               description: Bad Request
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "404":
+               description: Not Found
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+            "500":
+               description: Internal Server Error
+               content:
+                  application/json:
+                     schema:
+                        $ref: "#/components/schemas/model.Response"
+components:
+   schemas:
+      model.IDName:
+         type: object
+         properties:
+            id:
+               type: integer
+            name:
+               type: string
+      model.Response:
+         type: object
+         properties:
+            code:
+               type: integer
+               description: http status code
+            data:
+               type: object
+               description: main data
+            errors:
+               type: object
+               additionalProperties:
+                  type: object
+               description: error data
+            message:
+               type: string
+               description: message from system
+            meta:
+               type: object
+               description: support data
+            status:
+               type: string
+               description: http status message
+      model.StoreDetail:
+         type: object
+         properties:
+            address:
+               type: string
+            city:
+               $ref: "#/components/schemas/model.IDName"
+            code:
+               type: string
+            district:
+               $ref: "#/components/schemas/model.IDName"
+            icon:
+               type: string
+            isActive:
+               type: boolean
+            latitude:
+               type: string
+            longitude:
+               type: string
+            name:
+               type: string
+            postalCode:
+               type: string
+            province:
+               $ref: "#/components/schemas/model.IDName"
+            subdistrict:
+               $ref: "#/components/schemas/model.IDName"
+      model.StoreListData:
+         type: object
+         properties:
+            address:
+               type: string
+            cityId:
+               type: integer
+            code:
+               type: string
+            districtId:
+               type: integer
+            icon:
+               type: string
+            isActive:
+               type: boolean
+            latitude:
+               type: string
+            longitude:
+               type: string
+            name:
+               type: string
+            postalCode:
+               type: string
+            provinceId:
+               type: integer
+            subdistrictId:
+               type: integer
+      model.listMeta:
+         type: object
+         properties:
+            filtered:
+               type: integer
+            selected:
+               type: integer
+            total:
+               type: integer
+      model.locationListResponse:
+         type: object
+         properties:
+            code:
+               type: integer
+               description: http status code
+            data:
+               type: array
+               description: main data
+               items:
+                  $ref: "#/components/schemas/model.IDName"
+            errors:
+               type: object
+               additionalProperties:
+                  type: object
+               description: error data
+            message:
+               type: string
+               description: message from system
+            meta:
+               type: object
+               description: support data
+               allOf:
+                  - $ref: "#/components/schemas/model.listMeta"
+            status:
+               type: string
+               description: http status message
+      model.storeDetailResponse:
+         type: object
+         properties:
+            code:
+               type: integer
+               description: http status code
+            data:
+               type: object
+               description: main data
+               allOf:
+                  - $ref: "#/components/schemas/model.StoreDetail"
+            errors:
+               type: object
+               additionalProperties:
+                  type: object
+               description: error data
+            message:
+               type: string
+               description: message from system
+            meta:
+               type: object
+               description: support data
+            status:
+               type: string
+               description: http status message
+      model.storesListResponse:
+         type: object
+         properties:
+            code:
+               type: integer
+               description: http status code
+            data:
+               type: array
+               description: main data
+               items:
+                  $ref: "#/components/schemas/model.StoreListData"
+            errors:
+               type: object
+               additionalProperties:
+                  type: object
+               description: error data
+            message:
+               type: string
+               description: message from system
+            meta:
+               type: object
+               description: support data
+            status:
+               type: string
+               description: http status message
+   securitySchemes:
+      Bearer:
+         type: apiKey
+         description: Use format 'Bearer YOUR_TOKEN'
+         name: Authorization
+         in: header
+x-original-swagger-version: "2.0"

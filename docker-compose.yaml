@@ -33,11 +33,14 @@ services:
          dockerfile: postgres.Dockerfile
       image: fetroshop-db
       container_name: fetroshop-db
-      restart: no # available options: no, always, on-failure, unless-stopped, on-abnormal
+      restart: unless-stopped # available options: no, always, on-failure, unless-stopped, on-abnormal
       working_dir: /
       environment:
-         POSTGRES_PASSWORD: postgres
          PGDATA: /var/lib/postgresql/data/pgdata
+         POSTGRES_USER: ${POSTGRES_USER}
+         POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+         DB_NAME: ${DB_NAME}
+         DB_NAME2: ${DB_NAME2}
       ports:
          - ${DB_PORT}:5432
       volumes:
@@ -72,30 +75,30 @@ services:
             condition: service_healthy
       networks:
          - fetroshop_network
-   web:
-      build:
-         context: ./
-         dockerfile: fetroshop-web.Dockerfile
-      image: fetroshop-web
-      container_name: fetroshop-web
-      restart: no # available options: no, always, on-failure, unless-stopped, on-abnormal
-      working_dir: /app
-      ports:
-         - ${WEB_PORT}:3003
-      networks:
-         - fetroshop_network
-      volumes:
-         - web_volume:/app
-      depends_on:
-         api:
-            condition: service_healthy
-      links:
-         - "api"
-      healthcheck:
-         test: ["CMD", "curl", "-f", "http://localhost:${WEB_PORT}"]
-         interval: 30s
-         timeout: 10s
-         retries: 5         
+   # web:
+   #    build:
+   #       context: ./
+   #       dockerfile: fetroshop-web.Dockerfile
+   #    image: fetroshop-web
+   #    container_name: fetroshop-web
+   #    restart: no # available options: no, always, on-failure, unless-stopped, on-abnormal
+   #    working_dir: /app
+   #    ports:
+   #       - ${WEB_PORT}:3003
+   #    networks:
+   #       - fetroshop_network
+   #    volumes:
+   #       - web_volume:/app
+   #    depends_on:
+   #       api:
+   #          condition: service_healthy
+   #    links:
+   #       - "api"
+   #    healthcheck:
+   #       test: ["CMD", "curl", "-f", "http://localhost:${WEB_PORT}"]
+   #       interval: 30s
+   #       timeout: 10s
+   #       retries: 5         
    minio:
       image: minio/minio
       container_name: minio
