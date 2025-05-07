@@ -1,4 +1,7 @@
-config.yaml
-.vscode
-cover.out
-.env
+/nbproject/
+/.idea/*
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+*.sublime-project
